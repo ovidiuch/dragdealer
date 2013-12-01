@@ -37,6 +37,9 @@ describe("When dragging a Dragdealer instance", function() {
     helpers.dragTo('simple-slider', 50, 0);
     expect('simple-slider').toHavePosition(50, 0);
 
+    // The slider gets a force of 4x the last movement and keeps dividing it in
+    // half with every interval loop, normally we'd never move an entire 50px
+    // with one mouse move
     helpers.drop('simple-slider');
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(250, 0);
