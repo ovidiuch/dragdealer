@@ -13,7 +13,7 @@ describe("When dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(100, 0);
   });
 
-  it("Should constrain handle position under the wrapper bounds on drag", function() {
+  it("Should constrain handle position under the wrapper bounds", function() {
     helpers.initDragdealer('simple-slider', {
       slide: false
     });
