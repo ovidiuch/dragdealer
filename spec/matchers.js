@@ -1,4 +1,5 @@
 var matchers = {
+
   toHavePosition: function(x, y) {
     var $handle = $('#' + this.actual).find('.handle'),
         position = $handle.position();

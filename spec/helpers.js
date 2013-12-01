@@ -1,11 +1,13 @@
 var helpers = {
+
   initDragdealer: function(dragdealerId, options) {
     loadFixtures(dragdealerId + '.html');
     loadStyleFixtures(dragdealerId + '.css');
 
     new Dragdealer(dragdealerId, options);
   },
-  dragTo: function(dragdealerId, x, y, callback) {
+
+  dragTo: function(dragdealerId, x, y) {
     var $handle = $('#' + dragdealerId).find('.handle'),
         curPosition = $handle.offset();
 
