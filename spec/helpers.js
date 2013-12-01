@@ -26,5 +26,10 @@ var helpers = {
     // Dragdealer internal animation delay is 25ms (this should be fixed and
     // dragdealer should be updated instantly on mousemove or mouseup)
     jasmine.Clock.tick(26);
+  },
+
+  drop: function(dragdealerId, x, y) {
+    var $handle = $('#' + dragdealerId).find('.handle');
+    $handle.simulate('mouseup');
   }
 };
