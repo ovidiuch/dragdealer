@@ -21,6 +21,32 @@ describe("Dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(0, 0);
   });
 
+  it("should not move strictly horizontal slider vertically", function() {
+    helpers.initDragdealer('square-slider', {
+      horizontal: true,
+      vertical: false
+    });
+
+    helpers.dragTo('square-slider', 0, 100);
+    expect('square-slider').toHavePosition(0, 0);
+
+    helpers.dragTo('square-slider', 200, 200);
+    expect('square-slider').toHavePosition(200, 0);
+  });
+
+  it("should not move strictly vertical slider horizontally", function() {
+    helpers.initDragdealer('square-slider', {
+      horizontal: false,
+      vertical: true
+    });
+
+    helpers.dragTo('square-slider', 100, 0);
+    expect('square-slider').toHavePosition(0, 0);
+
+    helpers.dragTo('square-slider', 200, 200);
+    expect('square-slider').toHavePosition(0, 200);
+  });
+
   it("should constrain handle position under the wrapper bounds", function() {
     helpers.initDragdealer('simple-slider');
 
@@ -35,6 +61,28 @@ describe("Dragging a Dragdealer instance", function() {
 
     helpers.dragTo('simple-slider', 500, 0);
     expect('simple-slider').toHavePosition(400, 0);
+  });
+
+  it("should constrain handle position under the wrapper padding bounds", function() {
+    helpers.initDragdealer('square-slider', {
+      horizontal: true,
+      vertical: true,
+      top: 10,
+      bottom: 20,
+      left: 30,
+      right: 40
+    });
+    helpers.dragTo('square-slider', -1000, -1000);
+    expect('square-slider').toHavePosition(30, 10);
+
+    helpers.dragTo('square-slider', 1000, -1000);
+    expect('square-slider').toHavePosition(360, 10);
+
+    helpers.dragTo('square-slider', 1000, 1000);
+    expect('square-slider').toHavePosition(360, 380);
+
+    helpers.dragTo('square-slider', -1000, 1000);
+    expect('square-slider').toHavePosition(30, 380);
   });
 
   it("should slide handle after releasing drag", function() {
