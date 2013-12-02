@@ -8,19 +8,21 @@ var helpers = {
   },
 
   dragTo: function(dragdealerId, x, y) {
-    var $handle = $('#' + dragdealerId).find('.handle'),
-        curPosition = $handle.offset();
+    var $wrapper = $('#' + dragdealerId),
+        $handle = $wrapper.find('.handle'),
+        wrapperPosition = $wrapper.offset(),
+        handlePosition = $handle.offset();
 
     // Move to current handle position and press
     $handle.simulate('mousemove', {
-      clientX: curPosition.left,
-      clientY: curPosition.top
+      clientX: handlePosition.left,
+      clientY: handlePosition.top
     });
 
     $handle.simulate('mousedown');
     $handle.simulate('mousemove', {
-      clientX: curPosition.left + (x || 0),
-      clientY: curPosition.top + (y || 0)
+      clientX: wrapperPosition.left + x,
+      clientY: wrapperPosition.top + y
     });
 
     // Dragdealer internal animation delay is 25ms (this should be fixed and
