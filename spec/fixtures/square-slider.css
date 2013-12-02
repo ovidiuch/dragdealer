@@ -1,0 +1,8 @@
+#square-slider {
+  width: 500px;
+  height: 500px;
+}
+#square-slider .handle {
+  width: 100px;
+  height: 100px;
+}
