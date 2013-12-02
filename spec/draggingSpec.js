@@ -6,9 +6,7 @@ describe("Dragging a Dragdealer instance", function() {
   });
 
   it("should move handle along with mouse after pressing", function() {
-    helpers.initDragdealer('simple-slider', {
-      slide: false
-    });
+    helpers.initDragdealer('simple-slider');
     helpers.dragTo('simple-slider', 100, 0);
     expect('simple-slider').toHavePosition(100, 0);
   });
@@ -22,9 +20,7 @@ describe("Dragging a Dragdealer instance", function() {
   });
 
   it("should constrain handle position under the wrapper bounds", function() {
-    helpers.initDragdealer('simple-slider', {
-      slide: false
-    });
+    helpers.initDragdealer('simple-slider');
     helpers.dragTo('simple-slider', -100, 0);
     expect('simple-slider').toHavePosition(0, 0);
 
