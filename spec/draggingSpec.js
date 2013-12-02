@@ -82,6 +82,41 @@ describe("Dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(240, 0);
   });
 
+  it("should slide handle to projected step after releasing drag", function() {
+    helpers.initDragdealer('simple-slider', {
+      // The slider gets a force of 4x the last movement
+      slide: true,
+      // Considering the simple slider has a wrapper of 500px width and a
+      // handle of 100px width, the step positions will be 80, 160, 240, 320
+      // and 400
+      steps: 6
+    });
+
+    helpers.dragTo('simple-slider', 25, 0); // will slide to 125, 0
+    helpers.drop('simple-slider');
+    expect('simple-slider').toHavePosition(25, 0);
+    jasmine.Clock.tick(3000);
+    expect('simple-slider').toHavePosition(160, 0);
+
+    helpers.dragTo('simple-slider', 155, 0); // will slide to 135, 0
+    helpers.drop('simple-slider');
+    expect('simple-slider').toHavePosition(155, 0);
+    jasmine.Clock.tick(3000);
+    expect('simple-slider').toHavePosition(160, 0);
+
+    helpers.dragTo('simple-slider', 185, 0); // will slide to 285, 0
+    helpers.drop('simple-slider');
+    expect('simple-slider').toHavePosition(185, 0);
+    jasmine.Clock.tick(3000);
+    expect('simple-slider').toHavePosition(320, 0);
+
+    helpers.dragTo('simple-slider', 270, 0); // will slide to 70
+    helpers.drop('simple-slider');
+    expect('simple-slider').toHavePosition(270, 0);
+    jasmine.Clock.tick(3000);
+    expect('simple-slider').toHavePosition(80, 0);
+  });
+
   it("should snap handle to closest step after releasing drag", function() {
     // Considering the simple slider has a wrapper of 500px width and a handle
     // of 100px width, the step positions will be 80, 160, 240, 320 and 400
