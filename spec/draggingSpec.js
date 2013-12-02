@@ -47,42 +47,69 @@ describe("Dragging a Dragdealer instance", function() {
     expect('square-slider').toHavePosition(0, 200);
   });
 
-  it("should constrain handle position under the wrapper bounds", function() {
-    helpers.initDragdealer('simple-slider');
+  describe("should constrain handle position under the wrapper bounds", function() {
 
-    helpers.dragTo('simple-slider', -100, 0);
-    expect('simple-slider').toHavePosition(0, 0);
+    it("when wrapper is bigger than handle", function() {
+      helpers.initDragdealer('simple-slider');
 
-    helpers.dragTo('simple-slider', 0, -100);
-    expect('simple-slider').toHavePosition(0, 0);
+      helpers.dragTo('simple-slider', -100, 0);
+      expect('simple-slider').toHavePosition(0, 0);
 
-    helpers.dragTo('simple-slider', 0, 100);
-    expect('simple-slider').toHavePosition(0, 0);
+      helpers.dragTo('simple-slider', 0, -100);
+      expect('simple-slider').toHavePosition(0, 0);
 
-    helpers.dragTo('simple-slider', 500, 0);
-    expect('simple-slider').toHavePosition(400, 0);
-  });
+      helpers.dragTo('simple-slider', 0, 100);
+      expect('simple-slider').toHavePosition(0, 0);
 
-  it("should constrain handle position under the wrapper padding bounds", function() {
-    helpers.initDragdealer('square-slider', {
-      horizontal: true,
-      vertical: true,
-      top: 10,
-      bottom: 20,
-      left: 30,
-      right: 40
+      helpers.dragTo('simple-slider', 500, 0);
+      expect('simple-slider').toHavePosition(400, 0);
     });
-    helpers.dragTo('square-slider', -1000, -1000);
-    expect('square-slider').toHavePosition(30, 10);
 
-    helpers.dragTo('square-slider', 1000, -1000);
-    expect('square-slider').toHavePosition(360, 10);
+    it("when wrapper is bigger than handle and has padding", function() {
+      helpers.initDragdealer('square-slider', {
+        horizontal: true,
+        vertical: true,
+        top: 10,
+        bottom: 20,
+        left: 30,
+        right: 40
+      });
 
-    helpers.dragTo('square-slider', 1000, 1000);
-    expect('square-slider').toHavePosition(360, 380);
+      helpers.dragTo('square-slider', -1000, -1000);
+      expect('square-slider').toHavePosition(30, 10);
 
-    helpers.dragTo('square-slider', -1000, 1000);
-    expect('square-slider').toHavePosition(30, 380);
+      helpers.dragTo('square-slider', 1000, -1000);
+      expect('square-slider').toHavePosition(360, 10);
+
+      helpers.dragTo('square-slider', 1000, 1000);
+      expect('square-slider').toHavePosition(360, 380);
+
+      helpers.dragTo('square-slider', -1000, 1000);
+      expect('square-slider').toHavePosition(30, 380);
+    });
+
+    it("when (masked) handle is bigger than wrapper", function() {
+      helpers.initDragdealer('content-slider', {
+        horizontal: true,
+        vertical: true,
+        top: 10,
+        bottom: 10,
+        left: 10,
+        right: 10
+      });
+
+      helpers.dragTo('content-slider', 1000, 1000);
+      expect('content-slider').toHavePosition(10, 10);
+
+      helpers.dragTo('content-slider', -1000, 1000);
+      expect('content-slider').toHavePosition(-510, 10);
+
+      helpers.dragTo('content-slider', -1000, -1000);
+      expect('content-slider').toHavePosition(-510, -510);
+
+      helpers.dragTo('content-slider', 1000, -1000);
+      expect('content-slider').toHavePosition(10, -510);
+    });
   });
 
   it("should slide handle after releasing drag", function() {
@@ -193,7 +220,7 @@ describe("Dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(240, 0);
   });
 
-  it("should drag loose handle outside wrapper", function() {
+  it("should drag loose handle outside bigger wrapper", function() {
     // Any positon offset outside the wrapper bounds will be split by 4
     helpers.initDragdealer('simple-slider', {
       loose: true
@@ -215,5 +242,26 @@ describe("Dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(450, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(400, 0);
+  });
+
+  it("should drag loose handle inside smaller wrapper", function() {
+    // Any positon offset outside the wrapper bounds will be split by 4
+    helpers.initDragdealer('content-slider', {
+      horizontal: true,
+      vertical: true,
+      loose: true
+    });
+
+    helpers.dragTo('content-slider', 100, 200);
+    helpers.drop('content-slider');
+    expect('content-slider').toHavePosition(25, 50);
+    jasmine.Clock.tick(3000);
+    expect('content-slider').toHavePosition(0, 0);
+
+    helpers.dragTo('content-slider', -2000, -1000);
+    helpers.drop('content-slider');
+    expect('content-slider').toHavePosition(-875, -625);
+    jasmine.Clock.tick(3000);
+    expect('content-slider').toHavePosition(-500, -500);
   });
 });
