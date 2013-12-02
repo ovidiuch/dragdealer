@@ -82,7 +82,7 @@ describe("Dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(240, 0);
   });
 
-it("should snap handle to closest step after releasing drag", function() {
+  it("should snap handle to closest step after releasing drag", function() {
     // Considering the simple slider has a wrapper of 500px width and a handle
     // of 100px width, the step positions will be 80, 160, 240, 320 and 400
     helpers.initDragdealer('simple-slider', {
