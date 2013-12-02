@@ -1,11 +1,11 @@
-describe("When dragging a Dragdealer instance", function() {
+describe("Dragging a Dragdealer instance", function() {
 
   beforeEach(function() {
     this.addMatchers(matchers);
     jasmine.Clock.useMock();
   });
 
-  it("Should move handle along with mouse after pressing", function() {
+  it("should move handle along with mouse after pressing", function() {
     helpers.initDragdealer('simple-slider', {
       slide: false
     });
@@ -13,7 +13,7 @@ describe("When dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(100, 0);
   });
 
-  it("Should not be able to move disabled Dragdealer", function() {
+  it("should not move disabled Dragdealer", function() {
     helpers.initDragdealer('simple-slider', {
       disabled: true
     });
@@ -21,7 +21,7 @@ describe("When dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(0, 0);
   });
 
-  it("Should constrain handle position under the wrapper bounds", function() {
+  it("should constrain handle position under the wrapper bounds", function() {
     helpers.initDragdealer('simple-slider', {
       slide: false
     });
@@ -38,7 +38,7 @@ describe("When dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(400, 0);
   });
 
-  it("Should slide handle after releasing drag", function() {
+  it("should slide handle after releasing drag", function() {
     helpers.initDragdealer('simple-slider', {
       slide: true
     });
@@ -53,7 +53,7 @@ describe("When dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(250, 0);
   });
 
-  it("Should slide handle to closest step after releasing drag", function() {
+  it("should slide handle to closest step after releasing drag", function() {
     // Considering the simple slider has a wrapper of 500px width and a handle
     // of 100px width, the step positions will be 80, 160, 240, 320 and 400
     helpers.initDragdealer('simple-slider', {
@@ -86,7 +86,7 @@ describe("When dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(240, 0);
   });
 
-it("Should snap handle to closest step after releasing drag", function() {
+it("should snap handle to closest step after releasing drag", function() {
     // Considering the simple slider has a wrapper of 500px width and a handle
     // of 100px width, the step positions will be 80, 160, 240, 320 and 400
     helpers.initDragdealer('simple-slider', {
