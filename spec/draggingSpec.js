@@ -7,6 +7,7 @@ describe("Dragging a Dragdealer instance", function() {
 
   it("should move handle along with mouse after pressing", function() {
     helpers.initDragdealer('simple-slider');
+
     helpers.dragTo('simple-slider', 100, 0);
     expect('simple-slider').toHavePosition(100, 0);
   });
@@ -15,12 +16,14 @@ describe("Dragging a Dragdealer instance", function() {
     helpers.initDragdealer('simple-slider', {
       disabled: true
     });
+
     helpers.dragTo('simple-slider', 100, 0);
     expect('simple-slider').toHavePosition(0, 0);
   });
 
   it("should constrain handle position under the wrapper bounds", function() {
     helpers.initDragdealer('simple-slider');
+
     helpers.dragTo('simple-slider', -100, 0);
     expect('simple-slider').toHavePosition(0, 0);
 
@@ -38,6 +41,7 @@ describe("Dragging a Dragdealer instance", function() {
     helpers.initDragdealer('simple-slider', {
       slide: true
     });
+
     helpers.dragTo('simple-slider', 50, 0);
     expect('simple-slider').toHavePosition(50, 0);
 
@@ -49,11 +53,12 @@ describe("Dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(250, 0);
   });
 
-  it("should slide handle to closest step after releasing drag", function() {
-    // Considering the simple slider has a wrapper of 500px width and a handle
-    // of 100px width, the step positions will be 80, 160, 240, 320 and 400
+  it("should pull handle to closest step after releasing drag", function() {
     helpers.initDragdealer('simple-slider', {
       slide: false,
+      // Considering the simple slider has a wrapper of 500px width and a
+      // handle of 100px width, the step positions will be 80, 160, 240, 320
+      // and 400
       steps: 6
     });
 
@@ -118,10 +123,11 @@ describe("Dragging a Dragdealer instance", function() {
   });
 
   it("should snap handle to closest step after releasing drag", function() {
-    // Considering the simple slider has a wrapper of 500px width and a handle
-    // of 100px width, the step positions will be 80, 160, 240, 320 and 400
     helpers.initDragdealer('simple-slider', {
       slide: false,
+      // Considering the simple slider has a wrapper of 500px width and a
+      // handle of 100px width, the step positions will be 80, 160, 240, 320
+      // and 400
       steps: 6,
       snap: true
     });
