@@ -64,25 +64,21 @@ describe("Dragging a Dragdealer instance", function() {
 
     helpers.dragTo('simple-slider', 100, 0);
     helpers.drop('simple-slider');
-    expect('simple-slider').toHavePosition(100, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(80, 0);
 
     helpers.dragTo('simple-slider', 50, 0);
     helpers.drop('simple-slider');
-    expect('simple-slider').toHavePosition(50, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(80, 0);
 
     helpers.dragTo('simple-slider', 350, 0);
     helpers.drop('simple-slider');
-    expect('simple-slider').toHavePosition(350, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(320, 0);
 
     helpers.dragTo('simple-slider', 210, 0);
     helpers.drop('simple-slider');
-    expect('simple-slider').toHavePosition(210, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(240, 0);
   });
@@ -99,25 +95,21 @@ describe("Dragging a Dragdealer instance", function() {
 
     helpers.dragTo('simple-slider', 25, 0); // will slide to 125, 0
     helpers.drop('simple-slider');
-    expect('simple-slider').toHavePosition(25, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(160, 0);
 
     helpers.dragTo('simple-slider', 155, 0); // will slide to 135, 0
     helpers.drop('simple-slider');
-    expect('simple-slider').toHavePosition(155, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(160, 0);
 
     helpers.dragTo('simple-slider', 185, 0); // will slide to 285, 0
     helpers.drop('simple-slider');
-    expect('simple-slider').toHavePosition(185, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(320, 0);
 
     helpers.dragTo('simple-slider', 270, 0); // will slide to 70
     helpers.drop('simple-slider');
-    expect('simple-slider').toHavePosition(270, 0);
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(80, 0);
   });
