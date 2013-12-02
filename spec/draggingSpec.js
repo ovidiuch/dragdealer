@@ -93,22 +93,26 @@ describe("Dragging a Dragdealer instance", function() {
       steps: 6
     });
 
-    helpers.dragTo('simple-slider', 25, 0); // will slide to 125, 0
+    // is dragged 25px to the right, and will slide 125px, to 125, 0
+    helpers.dragTo('simple-slider', 25, 0);
     helpers.drop('simple-slider');
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(160, 0);
 
-    helpers.dragTo('simple-slider', 155, 0); // will slide to 135, 0
+    // is dragged 15px to the left, and will slide 75px, to 135, 0
+    helpers.dragTo('simple-slider', 155, 0);
     helpers.drop('simple-slider');
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(160, 0);
 
-    helpers.dragTo('simple-slider', 185, 0); // will slide to 285, 0
+    // is dragged 25px to the right, and will slide 125px, to 285, 0
+    helpers.dragTo('simple-slider', 185, 0);
     helpers.drop('simple-slider');
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(320, 0);
 
-    helpers.dragTo('simple-slider', 270, 0); // will slide to 70
+    // is dragged 20px to the left, and will slide 250px, to 70, 0
+    helpers.dragTo('simple-slider', 270, 0);
     helpers.drop('simple-slider');
     jasmine.Clock.tick(3000);
     expect('simple-slider').toHavePosition(80, 0);
