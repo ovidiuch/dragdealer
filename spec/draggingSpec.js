@@ -111,4 +111,28 @@ it("should snap handle to closest step after releasing drag", function() {
     helpers.drop('simple-slider');
     expect('simple-slider').toHavePosition(240, 0);
   });
+
+  it("should drag loose handle outside wrapper", function() {
+    // Any positon offset outside the wrapper bounds will be split by 4
+    helpers.initDragdealer('simple-slider', {
+      loose: true
+    });
+
+    // This goes outside the wrapper with 100px, so the exceeding offset will
+    // be 25px
+    helpers.dragTo('simple-slider', -100, 0);
+    helpers.drop('simple-slider');
+    expect('simple-slider').toHavePosition(-25, 0);
+    jasmine.Clock.tick(3000);
+    expect('simple-slider').toHavePosition(0, 0);
+
+    // This goes outside the wrapper with 200px, since 400px is the rightmost
+    // position of a 100px wide handle inside a 500px wide wrapper, so the
+    // exceeding offset will be 50px
+    helpers.dragTo('simple-slider', 600, 0);
+    helpers.drop('simple-slider');
+    expect('simple-slider').toHavePosition(450, 0);
+    jasmine.Clock.tick(3000);
+    expect('simple-slider').toHavePosition(400, 0);
+  });
 });
