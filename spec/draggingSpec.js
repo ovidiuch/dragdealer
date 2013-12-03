@@ -1,4 +1,4 @@
-describe("Dragging a Dragdealer instance", function() {
+describe("Dragging Dragdealer", function() {
 
   beforeEach(function() {
     this.addMatchers(matchers);

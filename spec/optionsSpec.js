@@ -6,7 +6,7 @@ describe("Initializing Dragdealer", function() {
   });
 
   // FIXME
-  xit("should set .disabled class on handle when setting disabled true", function() {
+  xit("should set .disabled class when setting disabled true", function() {
     helpers.initDragdealer('simple-slider', {
       disabled: true
     });
