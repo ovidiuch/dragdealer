@@ -52,4 +52,48 @@ describe("Dragdealer API", function() {
     helpers.dragTo('simple-slider', 200, 0);
     expect('simple-slider').toHavePosition(200, 0);
   });
+
+  it("should slide handle to position on setValue(x, y)", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      horizontal: true,
+      vertical: true
+    });
+
+    dragdealer.setValue(1, 0.5);
+    jasmine.Clock.tick(3000);
+    expect('square-slider').toHavePosition(400, 200);
+  });
+
+  // FIXME
+  xit("should snap handle to position on setValue(x, y, true)", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      horizontal: true,
+      vertical: true
+    });
+
+    dragdealer.setValue(1, 0.5, true);
+    jasmine.Clock.tick(25);
+    expect('square-slider').toHavePosition(400, 200);
+  });
+
+  it("should slide handle to step position on setStep(x, y)", function() {
+    var dragdealer = helpers.initDragdealer('simple-slider', {
+      steps: 6
+    });
+
+    dragdealer.setStep(2, 0);
+    jasmine.Clock.tick(3000);
+    expect('simple-slider').toHavePosition(80, 0);
+  });
+
+  // FIXME
+  xit("should snap handle to step position on setStep(x, y, true)", function() {
+    var dragdealer = helpers.initDragdealer('simple-slider', {
+      steps: 6
+    });
+
+    dragdealer.setStep(2, 0, true);
+    jasmine.Clock.tick(25);
+    expect('simple-slider').toHavePosition(80, 0);
+  });
 });
