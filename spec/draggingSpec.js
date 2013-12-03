@@ -21,7 +21,7 @@ describe("Dragging a Dragdealer instance", function() {
     expect('simple-slider').toHavePosition(0, 0);
   });
 
-  it("should not move strictly horizontal slider vertically", function() {
+  it("should not drag horizontal slider vertically", function() {
     helpers.initDragdealer('square-slider', {
       horizontal: true,
       vertical: false
@@ -34,7 +34,7 @@ describe("Dragging a Dragdealer instance", function() {
     expect('square-slider').toHavePosition(200, 0);
   });
 
-  it("should not move strictly vertical slider horizontally", function() {
+  it("should not drag vertical slider horizontally", function() {
     helpers.initDragdealer('square-slider', {
       horizontal: false,
       vertical: true
@@ -88,7 +88,7 @@ describe("Dragging a Dragdealer instance", function() {
       expect('square-slider').toHavePosition(30, 380);
     });
 
-    it("when (masked) handle is bigger than wrapper", function() {
+    it("when handle is bigger than wrapper", function() {
       helpers.initDragdealer('content-slider', {
         horizontal: true,
         vertical: true,
