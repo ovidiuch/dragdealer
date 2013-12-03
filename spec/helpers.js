@@ -4,7 +4,7 @@ var helpers = {
     loadFixtures(dragdealerId + '.html');
     loadStyleFixtures(dragdealerId + '.css');
 
-    new Dragdealer(dragdealerId, options);
+    return new Dragdealer(dragdealerId, options);
   },
 
   dragTo: function(dragdealerId, x, y) {
