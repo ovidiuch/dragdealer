@@ -13,8 +13,7 @@ describe("Dragdealer API", function() {
     expect($('#simple-slider .handle')).toHaveClass('disabled');
   });
 
-  // FIXME
-  xit("should unset .disabled class on enable()", function() {
+  it("should unset .disabled class on enable()", function() {
     var dragdealer = helpers.initDragdealer('simple-slider', {
       disabled: true
     });
@@ -64,8 +63,7 @@ describe("Dragdealer API", function() {
     expect('square-slider').toHavePosition(400, 200);
   });
 
-  // FIXME
-  xit("should snap handle to position on setValue(x, y, true)", function() {
+  it("should snap handle to position on setValue(x, y, true)", function() {
     var dragdealer = helpers.initDragdealer('square-slider', {
       horizontal: true,
       vertical: true
@@ -86,8 +84,7 @@ describe("Dragdealer API", function() {
     expect('simple-slider').toHavePosition(80, 0);
   });
 
-  // FIXME
-  xit("should snap handle to step position on setStep(x, y, true)", function() {
+  it("should snap handle to step position on setStep(x, y, true)", function() {
     var dragdealer = helpers.initDragdealer('simple-slider', {
       steps: 6
     });

@@ -5,8 +5,7 @@ describe("Initializing Dragdealer", function() {
     jasmine.Clock.useMock();
   });
 
-  // FIXME
-  xit("should set .disabled class when setting disabled true", function() {
+  it("should set .disabled class when setting disabled true", function() {
     helpers.initDragdealer('simple-slider', {
       disabled: true
     });
