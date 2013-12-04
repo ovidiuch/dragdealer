@@ -132,7 +132,7 @@ describe("Dragging Dragdealer", function() {
     helpers.initDragdealer('simple-slider', {
       slide: false,
       // Considering the simple slider has a wrapper of 500px width and a
-      // handle of 100px width, the step positions will be 80, 160, 240, 320
+      // handle of 100px width, the step positions will be 0, 80, 160, 240, 320
       // and 400
       steps: 6
     });
@@ -163,7 +163,7 @@ describe("Dragging Dragdealer", function() {
       // The slider gets a force of 4x the last movement
       slide: true,
       // Considering the simple slider has a wrapper of 500px width and a
-      // handle of 100px width, the step positions will be 80, 160, 240, 320
+      // handle of 100px width, the step positions will be 0, 80, 160, 240, 320
       // and 400
       steps: 6
     });
@@ -197,7 +197,7 @@ describe("Dragging Dragdealer", function() {
     helpers.initDragdealer('simple-slider', {
       slide: false,
       // Considering the simple slider has a wrapper of 500px width and a
-      // handle of 100px width, the step positions will be 80, 160, 240, 320
+      // handle of 100px width, the step positions will be 0, 80, 160, 240, 320
       // and 400
       steps: 6,
       snap: true
