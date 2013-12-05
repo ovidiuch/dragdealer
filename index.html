@@ -1,0 +1,47 @@
+<html>
+<head>
+  <title>Dragdealer.js 0.9.6</title>
+
+  <link href="lib/jasmine.css" type="text/css" rel="stylesheet">
+  <script src="lib/jquery-1.10.2.min.js"></script>
+  <script src="lib/jquery.simulate.js"></script>
+  <script src="lib/jasmine.js"></script>
+  <script src="lib/jasmine-html.js"></script>
+  <script src="lib/jasmine-jquery.js"></script>
+
+  <link href="src/dragdealer.css" type="text/css" rel="stylesheet">
+  <script src="src/dragdealer.js"></script>
+
+  <script src="spec/helpers.js"></script>
+  <script src="spec/matchers.js"></script>
+  <script src="spec/optionsSpec.js"></script>
+  <script src="spec/draggingSpec.js"></script>
+  <script src="spec/callbacksSpec.js"></script>
+  <script src="spec/apiSpec.js"></script>
+  <script src="spec/browser-runner.js"></script>
+
+  <style>
+body {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+#demo-slider {
+  border-radius: 3px;
+}
+#demo-slider .handle {
+  border-radius: 3px;
+}
+  </style>
+  <script>
+$(function() {
+  new Dragdealer('demo-slider');
+});
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div id="demo-slider" class="dragdealer">
+      <div class="handle red-bar">drag me</div>
+    </div>
+  </div>
+</body>
