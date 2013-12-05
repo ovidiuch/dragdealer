@@ -1,0 +1,20 @@
+{
+  "name": "dragdealer",
+  "version": "0.9.5",
+  "description": "Drag-based JavaScript component that embraces endless UI solutions",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/skidding/dragdealer.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-cli": "~0.1.6",
+    "grunt-saucelabs": "~4.0.2",
+    "grunt-contrib-connect": "~0.1.2",
+    "grunt-contrib-watch": "~0.2.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  }
+}
