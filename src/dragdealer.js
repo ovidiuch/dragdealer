@@ -6,61 +6,6 @@
  * http://skidding.mit-license.org
  */
 
-/* Cursor */
-
-var Cursor = {
-  x: 0,
-  y: 0,
-  init: function() {
-    this.setEvent('mouse');
-    this.setEvent('touch');
-  },
-  setEvent: function(type) {
-    var moveHandler = document['on' + type + 'move'] || function() {};
-    document['on' + type + 'move'] = function(e) {
-      moveHandler(e);
-      Cursor.refresh(e);
-    };
-  },
-  refresh: function(e) {
-    if (!e) {
-      e = window.event;
-    }
-    if (e.type == 'mousemove') {
-      this.set(e);
-    } else if (e.touches) {
-      this.set(e.touches[0]);
-    }
-  },
-  set: function(e) {
-    if (e.pageX || e.pageY) {
-      this.x = e.pageX;
-      this.y = e.pageY;
-    } else if (e.clientX || e.clientY) {
-      this.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-      this.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-    }
-  }
-};
-Cursor.init();
-
-/* Position */
-
-var Position = {
-  get: function(obj) {
-    var curleft = 0,
-        curtop = 0;
-    if (obj.offsetParent) {
-      do {
-        curleft += obj.offsetLeft;
-        curtop += obj.offsetTop;
-      }
-      while ((obj = obj.offsetParent));
-    }
-    return [curleft, curtop];
-  }
-};
-
 /* Dragdealer */
 
 var Dragdealer = function(wrapper, options) {
@@ -486,5 +431,60 @@ Dragdealer.prototype = {
       e.stopPropagation();
     }
     e.cancelBubble = true;
+  }
+};
+
+/* Cursor */
+
+var Cursor = {
+  x: 0,
+  y: 0,
+  init: function() {
+    this.setEvent('mouse');
+    this.setEvent('touch');
+  },
+  setEvent: function(type) {
+    var moveHandler = document['on' + type + 'move'] || function() {};
+    document['on' + type + 'move'] = function(e) {
+      moveHandler(e);
+      Cursor.refresh(e);
+    };
+  },
+  refresh: function(e) {
+    if (!e) {
+      e = window.event;
+    }
+    if (e.type == 'mousemove') {
+      this.set(e);
+    } else if (e.touches) {
+      this.set(e.touches[0]);
+    }
+  },
+  set: function(e) {
+    if (e.pageX || e.pageY) {
+      this.x = e.pageX;
+      this.y = e.pageY;
+    } else if (e.clientX || e.clientY) {
+      this.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+      this.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+  }
+};
+Cursor.init();
+
+/* Position */
+
+var Position = {
+  get: function(obj) {
+    var curleft = 0,
+        curtop = 0;
+    if (obj.offsetParent) {
+      do {
+        curleft += obj.offsetLeft;
+        curtop += obj.offsetTop;
+      }
+      while ((obj = obj.offsetParent));
+    }
+    return [curleft, curtop];
   }
 };
