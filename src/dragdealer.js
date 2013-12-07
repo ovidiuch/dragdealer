@@ -6,9 +6,154 @@
  * http://skidding.mit-license.org
  */
 
-/* Dragdealer */
-
 var Dragdealer = function(wrapper, options) {
+  /**
+   * Drag-based component that works around two basic DOM elements.
+   *
+   *   - The wrapper: The top-level element with the .dragdealer class. We
+   *                  create a Dragdealer instance with the wrapper as the
+   *                  first constructor parameter (it can either receive the ID
+   *                  of the wrapper, or the element itself.) The wrapper
+   *                  establishes the dragging bounds.
+   *
+   *   - The handle: A child of the wrapper element, with a required .handle
+   *                 class. This will be the dragged element, constrained by
+   *                 the wrapper's bounds.
+   *
+   *
+   * The handle can be both smaller or bigger than the wrapper.
+   *
+   *   - When the handle is smaller, Dragdealer will act as a regular slider,
+   *     enabling the handle to be dragged from one side of the wrapper to
+   *     another.
+   *
+   *   - When the handle is bigger, Dragdealer will act a mask for a draggable
+   *     surface, where the handle is the draggable surface contrained by the
+   *     smaller bounds of the wrapper. The drag action in this case is used
+   *     to reveal and "discover" partial content at a time.
+   *
+   *
+   * Simple usage:
+   *
+   *   // JavaScript
+   *   new Dragdealer('simple-slider');
+   *
+   *   <!-- HTML -->
+   *   <div id="simple-slider" class="dragdealer">
+   *     <div class="handle">drag me</div>
+   *   </div>
+   *
+   *
+   * The second parameter of the Dragdealer constructor is an object used for
+   * specifying any of the supported options. All of them are optional.
+   *
+   *   - bool disabled=false: Init Dragdealer in a disabled state. Implicitly,
+   *                          the handle will receive a .disabled class.
+   *
+   *   - bool horizontal=true: Enable horizontal dragging.
+   *
+   *   - bool vertical=false: Enable vertical dragging.
+   *
+   *   - number x=0: Initial horizontal (left) position. Accepts a float number
+   *                 value between 0 and 1. Read below about positioning in
+   *                 Dragdealer.
+   *
+   *   - number y=0: Initial vertical (top) position. Accepts a float number
+   *                 value between 0 and 1. Read below about positoning in
+   *                 Dragdealer.
+   *
+   *   - number steps=0: Limit the positioning of the handle within the bounds
+   *                     of the wrapper, by defining a virtual grid made out of
+   *                     a number of equally-spaced steps. This restricts
+   *                     placing the handle anywhere in-between these steps.
+   *                     E.g setting 3 steps to a regular slider will only
+   *                     allow you to move it to the left, to the right or
+   *                     exactly in the middle.
+   *
+   *   - bool snap=false: When a number of steps is set, snap the position of
+   *                      the handle to its closest step instantly, even when
+   *                      dragging.
+   *
+   *   - bool slide=true: Slide handle after releasing it, depending on the
+   *                      movement speed before the mouse/touch release. The
+   *                      formula for calculating how much will the handle
+   *                      slide after releasing it is defined by simply
+   *                      extending the movement of the handle in the current
+   *                      direction, with the last movement unit times four (a
+   *                      movement unit is considered the distance crossed
+   *                      since the last animation loop, which is currently
+   *                      25ms.) So if you were to drag the handle 50px in the
+   *                      blink of an eye, it will slide another 200px in the
+   *                      same direction. Steps interfere with this formula, as
+   *                      the closest step is calculated before the sliding
+   *                      distance.
+   *
+   *   - bool loose=false: Loosen-up wrapper boundaries when dragging. This
+   *                       allows the handle to be *slightly* dragged outside
+   *                       the bounds of the wrapper, but slides it back to the
+   *                       margins of the wrapper upon release. The formula for
+   *                       calculating how much the handle exceeds the wrapper
+   *                       bounds is made out of the actual drag distance
+   *                       divided by 4. E.g. Pulling a slider outside its
+   *                       frame by 100px will only position it 25px outside
+   *                       the frame.
+   *
+   *   - number top=0: Top padding between the wrapper and the handle.
+   *
+   *   - number bottom=0: Bottom padding between the wrapper and the handle.
+   *
+   *   - number left=0: Left padding between the wrapper and the handle.
+   *
+   *   - number right=0: Right padding between the wrapper and the handle.
+   *
+   *   - fn callback(x, y): Called when releasing handle, with the projected
+   *                        x, y position of the handle. Projected value means
+   *                        the value the slider will have after finishing a
+   *                        sliding animation, caused by either a step
+   *                        restriction or drag motion (see steps and slide
+   *                        options.) This implies that the actual position of
+   *                        the handle at the time this callback is called
+   *                        might not yet reflect the x, y values received.
+   *
+   *   - fn animationCallback(x, y): Called every animation loop, as long as
+   *                                 the handle is being dragged or in the
+   *                                 process of a sliding animation. The x, y
+   *                                 positional values received by this
+   *                                 callback reflect the exact position of the
+   *                                 handle DOM element, which includes
+   *                                 exceeding values (possibly even nagative
+   *                                 ones,) when the loose option is set true.
+   *
+   *
+   * Dragdealer also has a few methods to interact with post-initialization.
+   *
+   *   - disable: Disable dragging of a Dragdealer instance. Just as with the
+   *              disabled option, the handle will receive a .disabled class
+   *
+   *   - enable: Enable dragging of a Dragdealer instance. The .disabled class
+   *             of the handle will be removed.
+   *
+   *   - setValue(x, y, snap=false): Set the value of a Dragdealer instance
+   *                                 programatically. The 3rd parameter allows
+   *                                 to snap the handle directly to the desired
+   *                                 position, without any sliding animation.
+   *
+   *   - setStep(x, y, snap=false): Same as setValue, but instead of receiving
+   *                                the x, y position as a [0, 1] ratio, it
+   *                                accepts a step number. The position will be
+   *                                calculated based on the number of steps the
+   *                                instance is set to.
+   *
+   *
+   * Besides the top, bottom, left and right paddings, which represent a number
+   * of pixels, Dragdealer uses a [0, 1]-based positioning. Both horizontal and
+   * vertical positions are represented by ratios between 0 and 1. This allows
+   * the Dragdealer wrapper to have a responsive size and not revolve around a
+   * specific number of pixels. This is how the x, y options are set, what the
+   * callback args contain and what values the setValue method expects. Once
+   * picked up, the ratios can be scaled and mapped to match any real-life
+   * system of coordinates or dimensions.
+   */
   if (typeof(wrapper) == 'string') {
     wrapper = document.getElementById(wrapper);
   }
