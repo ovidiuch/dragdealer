@@ -145,14 +145,16 @@ var Dragdealer = function(wrapper, options) {
    *                                instance is set to.
    *
    *
-   * Besides the top, bottom, left and right paddings, which represent a number
-   * of pixels, Dragdealer uses a [0, 1]-based positioning. Both horizontal and
-   * vertical positions are represented by ratios between 0 and 1. This allows
-   * the Dragdealer wrapper to have a responsive size and not revolve around a
-   * specific number of pixels. This is how the x, y options are set, what the
-   * callback args contain and what values the setValue method expects. Once
-   * picked up, the ratios can be scaled and mapped to match any real-life
-   * system of coordinates or dimensions.
+   * Positioning in Dragdealer:
+   *
+   *   Besides the top, bottom, left and right paddings, which represent a
+   *   number of pixels, Dragdealer uses a [0, 1]-based positioning. Both
+   *   horizontal and vertical positions are represented by ratios between 0
+   *   and 1. This allows the Dragdealer wrapper to have a responsive size and
+   *   not revolve around a specific number of pixels. This is how the x, y
+   *   options are set, what the callback args contain and what values the
+   *   setValue method expects. Once picked up, the ratios can be scaled and
+   *   mapped to match any real-life system of coordinates or dimensions.
    */
   if (typeof(wrapper) == 'string') {
     wrapper = document.getElementById(wrapper);
