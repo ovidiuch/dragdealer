@@ -21,7 +21,7 @@ var Cursor = {
     document['on' + type + 'move'] = function(e) {
       moveHandler(e);
       Cursor.refresh(e);
-    }
+    };
   },
   refresh: function(e) {
     if (!e) {
@@ -49,7 +49,8 @@ Cursor.init();
 
 var Position = {
   get: function(obj) {
-    var curleft = curtop = 0;
+    var curleft = 0,
+        curtop = 0;
     if (obj.offsetParent) {
       do {
         curleft += obj.offsetLeft;
@@ -176,7 +177,7 @@ Dragdealer.prototype = {
 
     this.wrapper.onselectstart = function() {
       return false;
-    }
+    };
     this.handle.onmousedown = this.handle.ontouchstart = function(e) {
       self.handleDownHandler(e);
     };
@@ -200,13 +201,13 @@ Dragdealer.prototype = {
     };
     this.wrapper.onmousemove = function(e) {
       self.activity = true;
-    }
+    };
     this.wrapper.onclick = function(e) {
       return !self.activity;
-    }
+    };
 
     this.interval = setInterval(function() {
-      self.animate()
+      self.animate();
     }, 25);
     self.animate(false, true);
   },
