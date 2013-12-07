@@ -1,8 +1,7 @@
 module.exports = function(grunt) {
   var browsers = [{
-    browserName: "firefox",
-    version: "19",
-    platform: "XP"
+    browserName: "chrome",
+    platform: "OS X 10.8"
   }, {
     browserName: "chrome",
     platform: "XP"
@@ -10,17 +9,37 @@ module.exports = function(grunt) {
     browserName: "chrome",
     platform: "linux"
   }, {
+    browserName: "firefox",
+    version: "19",
+    platform: "XP"
+  }, {
+    browserName: "safari",
+    version: "6",
+    platform: "OS X 10.8"
+  }, {
+    browserName: "opera",
+    platform: "Windows 2008",
+    version: "12"
+  }, {
     browserName: "internet explorer",
-    platform: "WIN8",
-    version: "10"
+    platform: "XP",
+    version: "6"
+  }, {
+    browserName: "internet explorer",
+    platform: "XP",
+    version: "7"
+  }, {
+    browserName: "internet explorer",
+    platform: "XP",
+    version: "8"
   }, {
     browserName: "internet explorer",
     platform: "VISTA",
     version: "9"
   }, {
-    browserName: "opera",
-    platform: "Windows 2008",
-    version: "12"
+    browserName: "internet explorer",
+    platform: "WIN8",
+    version: "10"
   }];
 
   grunt.initConfig({
