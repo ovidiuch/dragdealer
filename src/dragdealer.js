@@ -581,9 +581,24 @@ Dragdealer.prototype = {
   }
 };
 
-/* Cursor */
-
 var Cursor = {
+  /**
+   * Abstraction for making the combined mouse or touch position available at
+   * any time.
+   *
+   * It picks up the "move" events as an independent component and simply makes
+   * the latest x and y mouse/touch position of the user available at any time,
+   * which is requested with Cursor.x and Cursor.y respectively.
+   *
+   * Event listeners are set for both mouse and touch event at initialization,
+   * and can receive both type of events consecutively, extracting the relevant
+   * meta data from each type of event.
+   *
+   * This component is initialized with Cursor.init(), when the event listeners
+   * are set. Cursor.refresh(e) can also be called synchronously to update the
+   * global x and y values, with a genuine MouseEvent or a TouchEvent from a
+   * different event listener, e.g. mousedown/up or touchstart/end
+   */
   x: 0,
   y: 0,
   init: function() {
