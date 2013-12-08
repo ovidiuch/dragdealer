@@ -1,5 +1,5 @@
 /**
- * Dragdealer.js 0.9.5
+ * Dragdealer.js 0.9.6
  * http://github.com/skidding/dragdealer
  *
  * (c) 2010+ Ovidiu Cherecheș
@@ -170,24 +170,22 @@ var Dragdealer = function(wrapper, options) {
   this.setup();
 };
 Dragdealer.prototype = {
+  defaults: {
+    disabled: false,
+    horizontal: true,
+    vertical: false,
+    slide: true,
+    steps: 0,
+    snap: false,
+    loose: false,
+    speed: 0.1,
+    xPrecision: 0,
+    yPrecision: 0
+  },
   init: function(wrapper, handle, options) {
     this.wrapper = wrapper;
     this.handle = handle;
-    this.options = options;
-
-    this.disabled = this.getOption('disabled', false);
-    this.horizontal = this.getOption('horizontal', true);
-    this.vertical = this.getOption('vertical', false);
-    this.slide = this.getOption('slide', true);
-    this.steps = this.getOption('steps', 0);
-    this.snap = this.getOption('snap', false);
-    this.loose = this.getOption('loose', false);
-    this.speed = this.getOption('speed', 10) / 100;
-    this.xPrecision = this.getOption('xPrecision', 0);
-    this.yPrecision = this.getOption('yPrecision', 0);
-
-    this.callback = options.callback || null;
-    this.animationCallback = options.animationCallback || null;
+    this.options = this.applyDefaults(options);
 
     this.bounds = {
       left: options.left || 0,
@@ -218,9 +216,18 @@ Dragdealer.prototype = {
     this.activity = false;
     this.dragging = false;
     this.tapping = false;
+
+    if (this.options.disabled) {
+      this.disable();
+    }
   },
-  getOption: function(name, defaultValue) {
-    return this.options[name] !== undefined ? this.options[name] : defaultValue;
+  applyDefaults: function(options) {
+    for (var k in this.defaults) {
+      if (!options.hasOwnProperty(k)) {
+        options[k] = this.defaults[k];
+      }
+    }
+    return options;
   },
   setup: function() {
     this.setWrapperOffset();
@@ -252,14 +259,14 @@ Dragdealer.prototype = {
     this.bounds.y1 = this.wrapper.offsetHeight + this.bounds.bottom;
     this.bounds.yRange = (this.bounds.y1 - this.bounds.y0) - this.handle.offsetHeight;
 
-    this.bounds.xStep = 1 / (this.xPrecision || Math.max(this.wrapper.offsetWidth, this.handle.offsetWidth));
-    this.bounds.yStep = 1 / (this.yPrecision || Math.max(this.wrapper.offsetHeight, this.handle.offsetHeight));
+    this.bounds.xStep = 1 / (this.options.xPrecision || Math.max(this.wrapper.offsetWidth, this.handle.offsetWidth));
+    this.bounds.yStep = 1 / (this.options.yPrecision || Math.max(this.wrapper.offsetHeight, this.handle.offsetHeight));
   },
   setSteps: function() {
-    if (this.steps > 1) {
+    if (this.options.steps > 1) {
       this.stepRatios = [];
-      for (var i = 0; i <= this.steps - 1; i++) {
-        this.stepRatios[i] = i / (this.steps - 1);
+      for (var i = 0; i <= this.options.steps - 1; i++) {
+        this.stepRatios[i] = i / (this.options.steps - 1);
       }
     }
   },
@@ -337,8 +344,8 @@ Dragdealer.prototype = {
   },
   setStep: function(x, y, snap) {
     this.setValue(
-      this.steps && x > 1 ? (x - 1) / (this.steps - 1) : 0,
-      this.steps && y > 1 ? (y - 1) / (this.steps - 1) : 0,
+      this.options.steps && x > 1 ? (x - 1) / (this.options.steps - 1) : 0,
+      this.options.steps && y > 1 ? (y - 1) / (this.options.steps - 1) : 0,
       snap
     );
   },
@@ -389,7 +396,7 @@ Dragdealer.prototype = {
     this.dragging = false;
 
     var target = this.groupClone(this.value.current);
-    if (this.slide) {
+    if (this.options.slide) {
       var ratioChange = this.change;
       target[0] += ratioChange[0] * 4;
       target[1] += ratioChange[1] * 4;
@@ -399,19 +406,19 @@ Dragdealer.prototype = {
   },
   feedback: function() {
     var value = this.value.current;
-    if (this.snap && this.steps > 1) {
+    if (this.options.snap && this.options.steps > 1) {
       value = this.getClosestSteps(value);
     }
     if (!this.groupCompare(value, this.value.prev)) {
-      if (typeof(this.animationCallback) == 'function') {
-        this.animationCallback(value[0], value[1]);
+      if (typeof(this.options.animationCallback) == 'function') {
+        this.options.animationCallback(value[0], value[1]);
       }
       this.groupCopy(this.value.prev, value);
     }
   },
   result: function() {
-    if (typeof(this.callback) == 'function') {
-      this.callback(this.value.target[0], this.value.target[1]);
+    if (typeof(this.options.callback) == 'function') {
+      this.options.callback(this.value.target[0], this.value.target[1]);
     }
   },
   animate: function(direct, first) {
@@ -425,7 +432,7 @@ Dragdealer.prototype = {
         Cursor.x - this.offset.wrapper[0] - this.offset.mouse[0],
         Cursor.y - this.offset.wrapper[1] - this.offset.mouse[1]
       ];
-      this.setTargetOffset(offset, this.loose);
+      this.setTargetOffset(offset, this.options.loose);
 
       this.change = [
         this.value.target[0] - prevTarget[0],
@@ -449,15 +456,15 @@ Dragdealer.prototype = {
       return false;
     }
     if (Math.abs(diff[0]) > this.bounds.xStep || Math.abs(diff[1]) > this.bounds.yStep) {
-      this.value.current[0] += diff[0] * this.speed;
-      this.value.current[1] += diff[1] * this.speed;
+      this.value.current[0] += diff[0] * this.options.speed;
+      this.value.current[1] += diff[1] * this.options.speed;
     } else {
       this.groupCopy(this.value.current, this.value.target);
     }
     return true;
   },
   update: function() {
-    if (!this.snap) {
+    if (!this.options.snap) {
       this.offset.current = this.getOffsetsByRatios(this.value.current);
     } else {
       this.offset.current = this.getOffsetsByRatios(
@@ -468,10 +475,10 @@ Dragdealer.prototype = {
   },
   show: function() {
     if (!this.groupCompare(this.offset.current, this.offset.prev)) {
-      if (this.horizontal) {
+      if (this.options.horizontal) {
         this.handle.style.left = String(this.offset.current[0]) + 'px';
       }
-      if (this.vertical) {
+      if (this.options.vertical) {
         this.handle.style.top = String(this.offset.current[1]) + 'px';
       }
       this.groupCopy(this.offset.prev, this.offset.current);
@@ -505,8 +512,8 @@ Dragdealer.prototype = {
     proper[0] = Math.min(proper[0], 1);
     proper[1] = Math.min(proper[1], 1);
 
-    if ((!this.dragging && !this.tapping) || this.snap) {
-      if (this.steps > 1) {
+    if ((!this.dragging && !this.tapping) || this.options.snap) {
+      if (this.options.steps > 1) {
         proper = this.getClosestSteps(proper);
       }
     }
@@ -539,7 +546,7 @@ Dragdealer.prototype = {
   getClosestStep: function(value) {
     var k = 0;
     var min = 1;
-    for (var i = 0; i <= this.steps - 1; i++) {
+    for (var i = 0; i <= this.options.steps - 1; i++) {
       if (Math.abs(this.stepRatios[i] - value) < min) {
         min = Math.abs(this.stepRatios[i] - value);
         k = i;
