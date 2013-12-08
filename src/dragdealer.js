@@ -581,6 +581,7 @@ Dragdealer.prototype = {
   }
 };
 
+
 var Cursor = {
   /**
    * Abstraction for making the combined mouse or touch position available at
@@ -634,9 +635,17 @@ var Cursor = {
 };
 Cursor.init();
 
-/* Position */
 
 var Position = {
+  /**
+   * Helper for extracting the absolute position of a DOM element, relative to
+   * the root-level document body.
+   *
+   * The get(obj) method accepts a DOM element as the only parameter, and
+   * returns the position under a (x, y) tuple, as an array with two elements.
+   *
+   * Inspired from http://www.quirksmode.org/js/findpos.html
+   */
   get: function(obj) {
     var curleft = 0,
         curtop = 0;
