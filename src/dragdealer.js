@@ -231,7 +231,6 @@ Dragdealer.prototype = {
   },
   setup: function() {
     this.setWrapperOffset();
-    this.setBoundsPadding();
     this.setBounds();
     this.setSteps();
 
@@ -239,16 +238,6 @@ Dragdealer.prototype = {
   },
   setWrapperOffset: function() {
     this.offset.wrapper = Position.get(this.wrapper);
-  },
-  setBoundsPadding: function() {
-    if (!this.bounds.left && !this.bounds.right) {
-      this.bounds.left = Position.get(this.handle)[0] - this.offset.wrapper[0];
-      this.bounds.right = -this.bounds.left;
-    }
-    if (!this.bounds.top && !this.bounds.bottom) {
-      this.bounds.top = Position.get(this.handle)[1] - this.offset.wrapper[1];
-      this.bounds.bottom = -this.bounds.top;
-    }
   },
   setBounds: function() {
     this.bounds.x0 = this.bounds.left;
