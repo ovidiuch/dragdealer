@@ -187,18 +187,6 @@ Dragdealer.prototype = {
     this.handle = handle;
     this.options = this.applyDefaults(options);
 
-    this.bounds = {
-      left: options.left || 0,
-      right: -(options.right || 0),
-      top: options.top || 0,
-      bottom: -(options.bottom || 0),
-      x0: 0,
-      x1: 0,
-      xRange: 0,
-      y0: 0,
-      y1: 0,
-      yRange: 0
-    };
     this.value = {
       prev: [-1, -1],
       current: [options.x || 0, options.y || 0],
@@ -231,7 +219,8 @@ Dragdealer.prototype = {
   },
   setup: function() {
     this.setWrapperOffset();
-    this.setBounds();
+    this.bounds = this.calculateBounds();
+    this.valuePrecision = this.calculateValuePrecision();
     this.setSteps();
 
     this.addListeners();
@@ -239,17 +228,33 @@ Dragdealer.prototype = {
   setWrapperOffset: function() {
     this.offset.wrapper = Position.get(this.wrapper);
   },
-  setBounds: function() {
-    this.bounds.x0 = this.bounds.left;
-    this.bounds.x1 = this.wrapper.offsetWidth + this.bounds.right;
-    this.bounds.xRange = (this.bounds.x1 - this.bounds.x0) - this.handle.offsetWidth;
-
-    this.bounds.y0 = this.bounds.top;
-    this.bounds.y1 = this.wrapper.offsetHeight + this.bounds.bottom;
-    this.bounds.yRange = (this.bounds.y1 - this.bounds.y0) - this.handle.offsetHeight;
-
-    this.bounds.xStep = 1 / (this.options.xPrecision || Math.max(this.wrapper.offsetWidth, this.handle.offsetWidth));
-    this.bounds.yStep = 1 / (this.options.yPrecision || Math.max(this.wrapper.offsetHeight, this.handle.offsetHeight));
+  calculateBounds: function() {
+    // Apply top/bottom/left and right padding options to wrapper extremities
+    // when calculating its bounds
+    var bounds = {
+      top: this.options.top || 0,
+      bottom: -(this.options.bottom || 0) + this.wrapper.offsetHeight,
+      left: this.options.left || 0,
+      right: -(this.options.right || 0) + this.wrapper.offsetWidth
+    };
+    // The available width and height represents the horizontal and vertical
+    // space the handle has for moving. It is determined by the width and
+    // height of the wrapper, minus the width and height of the handle
+    bounds.availWidth = (bounds.right - bounds.left) - this.handle.offsetWidth;
+    bounds.availHeight = (bounds.bottom - bounds.top) - this.handle.offsetHeight;
+    return bounds;
+  },
+  calculateValuePrecision: function() {
+    // The sliding transition works by dividing itself until it reaches a min
+    // value step; because Dragdealer works with [0-1] values, we need this
+    // "min value step" to represent a pixel when applied to the real handle
+    // position within the DOM. The xPrecision/yPrecision options can be
+    // specified to increase the granularity when we're controlling larger
+    // objects from one of the callbacks
+    return [
+      1 / (this.options.xPrecision || this.bounds.availWidth),
+      1 / (this.options.yPrecision || this.bounds.availHeight)
+    ];
   },
   setSteps: function() {
     if (this.options.steps > 1) {
@@ -319,7 +324,8 @@ Dragdealer.prototype = {
   },
   documentResizeHandler: function(e) {
     this.setWrapperOffset();
-    this.setBounds();
+    this.bounds = this.calculateBounds();
+    this.valuePrecision = this.calculateValuePrecision();
 
     this.update();
   },
@@ -444,7 +450,8 @@ Dragdealer.prototype = {
     if (!diff[0] && !diff[1]) {
       return false;
     }
-    if (Math.abs(diff[0]) > this.bounds.xStep || Math.abs(diff[1]) > this.bounds.yStep) {
+    if (Math.abs(diff[0]) > this.valuePrecision[0] ||
+        Math.abs(diff[1]) > this.valuePrecision[1]) {
       this.value.current[0] += diff[0] * this.options.speed;
       this.value.current[1] += diff[1] * this.options.speed;
     } else {
@@ -510,8 +517,8 @@ Dragdealer.prototype = {
   },
   getRatiosByOffsets: function(group) {
     return [
-      this.getRatioByOffset(group[0], this.bounds.xRange, this.bounds.x0),
-      this.getRatioByOffset(group[1], this.bounds.yRange, this.bounds.y0)
+      this.getRatioByOffset(group[0], this.bounds.availWidth, this.bounds.left),
+      this.getRatioByOffset(group[1], this.bounds.availHeight, this.bounds.top)
     ];
   },
   getRatioByOffset: function(offset, range, padding) {
@@ -519,8 +526,8 @@ Dragdealer.prototype = {
   },
   getOffsetsByRatios: function(group) {
     return [
-      this.getOffsetByRatio(group[0], this.bounds.xRange, this.bounds.x0),
-      this.getOffsetByRatio(group[1], this.bounds.yRange, this.bounds.y0)
+      this.getOffsetByRatio(group[0], this.bounds.availWidth, this.bounds.left),
+      this.getOffsetByRatio(group[1], this.bounds.availHeight, this.bounds.top)
     ];
   },
   getOffsetByRatio: function(ratio, range, padding) {
