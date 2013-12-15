@@ -348,6 +348,11 @@ Dragdealer.prototype = {
     this.setTargetValue([x, y || 0]);
     if (snap) {
       this.groupCopy(this.value.current, this.value.target);
+      // Since the current value will be equal to the target one instantly, the
+      // animate function won't get to run so we need to update the positions
+      // and call the callbacks manually
+      this.update();
+      this.feedback();
     }
   },
   startTap: function(target) {
