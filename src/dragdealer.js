@@ -327,7 +327,7 @@ Dragdealer.prototype = {
     this.bounds = this.calculateBounds();
     this.valuePrecision = this.calculateValuePrecision();
 
-    this.update();
+    this.updateOffsetFromValue();
   },
   enable: function() {
     this.disabled = false;
@@ -348,6 +348,11 @@ Dragdealer.prototype = {
     this.setTargetValue([x, y || 0]);
     if (snap) {
       this.groupCopy(this.value.current, this.value.target);
+      // Since the current value will be equal to the target one instantly, the
+      // animate function won't get to run so we need to update the positions
+      // and call the callbacks manually
+      this.updateOffsetFromValue();
+      this.callAnimationCallback();
     }
   },
   startTap: function(target) {
@@ -362,7 +367,7 @@ Dragdealer.prototype = {
         Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
       ];
     }
-    this.setTargetOffset(target);
+    this.setTargetValueByOffset(target);
   },
   stopTap: function() {
     if (this.disabled || !this.tapping) {
@@ -371,7 +376,6 @@ Dragdealer.prototype = {
     this.tapping = false;
 
     this.setTargetValue(this.value.current);
-    this.result();
   },
   startDrag: function() {
     if (this.disabled) {
@@ -397,9 +401,8 @@ Dragdealer.prototype = {
       target[1] += ratioChange[1] * 4;
     }
     this.setTargetValue(target);
-    this.result();
   },
-  feedback: function() {
+  callAnimationCallback: function() {
     var value = this.value.current;
     if (this.options.snap && this.options.steps > 1) {
       value = this.getClosestSteps(value);
@@ -411,7 +414,7 @@ Dragdealer.prototype = {
       this.groupCopy(this.value.prev, value);
     }
   },
-  result: function() {
+  callTargetCallback: function() {
     if (typeof(this.options.callback) == 'function') {
       this.options.callback(this.value.target[0], this.value.target[1]);
     }
@@ -427,7 +430,7 @@ Dragdealer.prototype = {
         Cursor.x - this.offset.wrapper[0] - this.offset.mouse[0],
         Cursor.y - this.offset.wrapper[1] - this.offset.mouse[1]
       ];
-      this.setTargetOffset(offset, this.options.loose);
+      this.setTargetValueByOffset(offset, this.options.loose);
 
       this.change = [
         this.value.target[0] - prevTarget[0],
@@ -438,8 +441,8 @@ Dragdealer.prototype = {
       this.groupCopy(this.value.current, this.value.target);
     }
     if (this.dragging || this.glide() || first) {
-      this.update();
-      this.feedback();
+      this.updateOffsetFromValue();
+      this.callAnimationCallback();
     }
   },
   glide: function() {
@@ -459,7 +462,7 @@ Dragdealer.prototype = {
     }
     return true;
   },
-  update: function() {
+  updateOffsetFromValue: function() {
     if (!this.options.snap) {
       this.offset.current = this.getOffsetsByRatios(this.value.current);
     } else {
@@ -467,17 +470,17 @@ Dragdealer.prototype = {
         this.getClosestSteps(this.value.current)
       );
     }
-    this.show();
-  },
-  show: function() {
     if (!this.groupCompare(this.offset.current, this.offset.prev)) {
-      if (this.options.horizontal) {
-        this.handle.style.left = String(this.offset.current[0]) + 'px';
-      }
-      if (this.options.vertical) {
-        this.handle.style.top = String(this.offset.current[1]) + 'px';
-      }
+      this.renderHandlePosition();
       this.groupCopy(this.offset.prev, this.offset.current);
+    }
+  },
+  renderHandlePosition: function() {
+    if (this.options.horizontal) {
+      this.handle.style.left = String(this.offset.current[0]) + 'px';
+    }
+    if (this.options.vertical) {
+      this.handle.style.top = String(this.offset.current[1]) + 'px';
     }
   },
   setTargetValue: function(value, loose) {
@@ -485,8 +488,10 @@ Dragdealer.prototype = {
 
     this.groupCopy(this.value.target, target);
     this.offset.target = this.getOffsetsByRatios(target);
+
+    this.callTargetCallback();
   },
-  setTargetOffset: function(offset, loose) {
+  setTargetValueByOffset: function(offset, loose) {
     var value = this.getRatiosByOffsets(offset);
     var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
 
