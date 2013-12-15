@@ -470,17 +470,17 @@ Dragdealer.prototype = {
         this.getClosestSteps(this.value.current)
       );
     }
-    this.renderHandlePosition();
+    if (!this.groupCompare(this.offset.current, this.offset.prev)) {
+      this.renderHandlePosition();
+      this.groupCopy(this.offset.prev, this.offset.current);
+    }
   },
   renderHandlePosition: function() {
-    if (!this.groupCompare(this.offset.current, this.offset.prev)) {
-      if (this.options.horizontal) {
-        this.handle.style.left = String(this.offset.current[0]) + 'px';
-      }
-      if (this.options.vertical) {
-        this.handle.style.top = String(this.offset.current[1]) + 'px';
-      }
-      this.groupCopy(this.offset.prev, this.offset.current);
+    if (this.options.horizontal) {
+      this.handle.style.left = String(this.offset.current[0]) + 'px';
+    }
+    if (this.options.vertical) {
+      this.handle.style.top = String(this.offset.current[1]) + 'px';
     }
   },
   setTargetValue: function(value, loose) {
