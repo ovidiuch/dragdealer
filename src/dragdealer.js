@@ -346,6 +346,7 @@ Dragdealer.prototype = {
   },
   setValue: function(x, y, snap) {
     this.setTargetValue([x, y || 0]);
+    this.result();
     if (snap) {
       this.groupCopy(this.value.current, this.value.target);
       // Since the current value will be equal to the target one instantly, the
