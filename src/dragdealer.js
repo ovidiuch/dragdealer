@@ -367,7 +367,7 @@ Dragdealer.prototype = {
         Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
       ];
     }
-    this.setTargetOffset(target);
+    this.setTargetValueByOffset(target);
   },
   stopTap: function() {
     if (this.disabled || !this.tapping) {
@@ -430,7 +430,7 @@ Dragdealer.prototype = {
         Cursor.x - this.offset.wrapper[0] - this.offset.mouse[0],
         Cursor.y - this.offset.wrapper[1] - this.offset.mouse[1]
       ];
-      this.setTargetOffset(offset, this.options.loose);
+      this.setTargetValueByOffset(offset, this.options.loose);
 
       this.change = [
         this.value.target[0] - prevTarget[0],
@@ -491,7 +491,7 @@ Dragdealer.prototype = {
 
     this.callTargetCallback();
   },
-  setTargetOffset: function(offset, loose) {
+  setTargetValueByOffset: function(offset, loose) {
     var value = this.getRatiosByOffsets(offset);
     var target = loose ? this.getLooseValue(value) : this.getProperValue(value);
 
