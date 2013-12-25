@@ -342,6 +342,9 @@ Dragdealer.prototype = {
     this.disabled = true;
     this.handle.className += ' disabled';
   },
+  getValue: function() {
+    return this.value.target;
+  },
   setStep: function(x, y, snap) {
     this.setValue(
       this.options.steps && x > 1 ? (x - 1) / (this.options.steps - 1) : 0,
