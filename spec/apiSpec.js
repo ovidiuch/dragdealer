@@ -52,6 +52,32 @@ describe("Dragdealer API", function() {
     expect('simple-slider').toHavePosition(200, 0);
   });
 
+  it("should get initial value on getValue()", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      x: 0.5,
+      y: 0.2
+    });
+
+    expect(dragdealer.getValue()).toEqual([0.5, 0.2]);
+  });
+
+  it("should get value after drag and drop on getValue()", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      slide: false
+    });
+
+    helpers.dragTo('square-slider', 200, 100);
+    helpers.drop('square-slider');
+    expect(dragdealer.getValue()).toEqual([0.5, 0.25]);
+  });
+
+  it("should get value set with setValue() on getValue()", function() {
+    var dragdealer = helpers.initDragdealer('square-slider');
+
+    dragdealer.setValue(0.4, 0.6);
+    expect(dragdealer.getValue()).toEqual([0.4, 0.6]);
+  });
+
   it("should slide handle to position on setValue(x, y)", function() {
     var callback = jasmine.createSpy(),
         animationCallback = jasmine.createSpy(),
