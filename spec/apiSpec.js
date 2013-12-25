@@ -78,6 +78,48 @@ describe("Dragdealer API", function() {
     expect(dragdealer.getValue()).toEqual([0.4, 0.6]);
   });
 
+  it("should get closest step to initial value on getStep()", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      // step value will be [0, 0.333, 0.666, 1]
+      steps: 4,
+      x: 0,
+      y: 1
+    });
+
+    expect(dragdealer.getStep()).toEqual([1, 4]);
+  });
+
+  it("should get closest step after drag and drop on getStep()", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      slide: false,
+      // step values will be [0, 0.2, 0.4, 0.6, 0.8, 1]
+      // step positions will be [0, 80, 160, 240, 320, 400]
+      steps: 6
+    });
+
+    helpers.dragTo('square-slider', 250, 150);
+    helpers.drop('square-slider');
+    expect(dragdealer.getStep()).toEqual([4, 3]);
+  });
+
+  it("should get closest step to value set with setValue() on getStep()", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      // step value will be [0, 0.333, 0.666, 1]
+      steps: 4
+    });
+    dragdealer.setValue(0.3, 0.6);
+    expect(dragdealer.getStep()).toEqual([2, 3]);
+  });
+
+  it("should get step set with setStep() on getStep()", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      steps: 4
+    });
+
+    dragdealer.setStep(4, 1);
+    expect(dragdealer.getStep()).toEqual([4, 1]);
+  });
+
   it("should slide handle to position on setValue(x, y)", function() {
     var callback = jasmine.createSpy(),
         animationCallback = jasmine.createSpy(),
