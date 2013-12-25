@@ -374,6 +374,7 @@ Dragdealer.prototype = {
       return;
     }
     this.tapping = true;
+    this.setWrapperOffset();
 
     if (target === undefined) {
       target = [
@@ -395,12 +396,13 @@ Dragdealer.prototype = {
     if (this.disabled) {
       return;
     }
+    this.dragging = true;
+    this.setWrapperOffset();
+
     this.offset.mouse = [
       Cursor.x - Position.get(this.handle)[0],
       Cursor.y - Position.get(this.handle)[1]
     ];
-
-    this.dragging = true;
   },
   stopDrag: function() {
     if (this.disabled || !this.dragging) {

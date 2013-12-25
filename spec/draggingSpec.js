@@ -264,4 +264,17 @@ describe("Dragging Dragdealer", function() {
     jasmine.Clock.tick(3000);
     expect('content-slider').toHavePosition(-500, -500);
   });
+
+  it("should not break dragging after repositioning", function() {
+    // Fix for https://github.com/skidding/dragdealer/issues/3
+    var dragdealer = helpers.initDragdealer('content-slider', {
+      horizontal: true,
+      vertical: true
+    });
+
+    $('#content-slider').css('margin-top', 200);
+    helpers.dragTo('content-slider', -250, -250);
+    expect('content-slider').toHavePosition(-250, -250);
+    expect(dragdealer.getValue()).toEqual([0.5, 0.5]);
+  });
 });
