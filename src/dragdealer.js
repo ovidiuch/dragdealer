@@ -125,7 +125,7 @@ var Dragdealer = function(wrapper, options) {
    *                                 ones,) when the loose option is set true.
    *
    *
-   * Dragdealer also has a few methods to interact with post-initialization.
+   * Dragdealer also has a few methods to interact with, post-initialization.
    *
    *   - disable: Disable dragging of a Dragdealer instance. Just as with the
    *              disabled option, the handle will receive a .disabled class
@@ -133,16 +133,21 @@ var Dragdealer = function(wrapper, options) {
    *   - enable: Enable dragging of a Dragdealer instance. The .disabled class
    *             of the handle will be removed.
    *
+   *   - getValue(): Get the value of a Dragdealer instance programatically.
+   *                 The value is returned as an [x, y] tuple and is the
+   *                 equivalent of the (projected) value returned by the
+   *                 regular callback, not animationCallback.
+   *
+   *   - getStep(): Same as getValue, but the value returned is in step
+   *                increments (see steps option)
+   *
    *   - setValue(x, y, snap=false): Set the value of a Dragdealer instance
    *                                 programatically. The 3rd parameter allows
    *                                 to snap the handle directly to the desired
-   *                                 position, without any sliding animation.
+   *                                 value, without any sliding transition.
    *
-   *   - setStep(x, y, snap=false): Same as setValue, but instead of receiving
-   *                                the x, y position as a [0, 1] ratio, it
-   *                                accepts a step number. The position will be
-   *                                calculated based on the number of steps the
-   *                                instance is set to.
+   *   - setStep(x, y, snap=false): Same as setValue, but the value is received
+   *                                in step increments (see steps option)
    *
    *
    * Positioning in Dragdealer:
@@ -336,6 +341,15 @@ Dragdealer.prototype = {
   disable: function() {
     this.disabled = true;
     this.handle.className += ' disabled';
+  },
+  getStep: function() {
+    return [
+      this.getStepNumber(this.value.target[0]),
+      this.getStepNumber(this.value.target[1])
+    ];
+  },
+  getValue: function() {
+    return this.value.target;
   },
   setStep: function(x, y, snap) {
     this.setValue(
@@ -537,6 +551,11 @@ Dragdealer.prototype = {
   },
   getOffsetByRatio: function(ratio, range, padding) {
     return Math.round(ratio * range) + padding;
+  },
+  getStepNumber: function(value) {
+    // Translate a [0-1] value into a number from 1 to N steps (set using the
+    // "steps" option)
+    return this.getClosestStep(value) * (this.options.steps - 1) + 1;
   },
   getClosestSteps: function(group) {
     return [
