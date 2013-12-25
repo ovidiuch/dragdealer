@@ -342,6 +342,12 @@ Dragdealer.prototype = {
     this.disabled = true;
     this.handle.className += ' disabled';
   },
+  getStep: function() {
+    return [
+      this.getStepNumber(this.value.target[0]),
+      this.getStepNumber(this.value.target[1])
+    ];
+  },
   getValue: function() {
     return this.value.target;
   },
@@ -545,6 +551,11 @@ Dragdealer.prototype = {
   },
   getOffsetByRatio: function(ratio, range, padding) {
     return Math.round(ratio * range) + padding;
+  },
+  getStepNumber: function(value) {
+    // Translate a [0-1] value into a number from 1 to N steps (set using the
+    // "steps" option)
+    return this.getClosestStep(value) * (this.options.steps - 1) + 1;
   },
   getClosestSteps: function(group) {
     return [
