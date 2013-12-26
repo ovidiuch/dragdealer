@@ -1,0 +1,9 @@
+#masked-slider {
+  width: 500px;
+  height: 500px;
+  overflow: hidden;
+}
+#masked-slider .handle {
+  width: 1000px;
+  height: 1000px;
+}
