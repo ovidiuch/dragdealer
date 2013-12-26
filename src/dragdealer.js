@@ -328,11 +328,7 @@ Dragdealer.prototype = {
     //this.cancelEvent(e);
   },
   documentResizeHandler: function(e) {
-    this.setWrapperOffset();
-    this.bounds = this.calculateBounds();
-    this.valuePrecision = this.calculateValuePrecision();
-
-    this.updateOffsetFromValue();
+    this.reflow();
   },
   enable: function() {
     this.disabled = false;
@@ -341,6 +337,12 @@ Dragdealer.prototype = {
   disable: function() {
     this.disabled = true;
     this.handle.className += ' disabled';
+  },
+  reflow: function() {
+    this.setWrapperOffset();
+    this.bounds = this.calculateBounds();
+    this.valuePrecision = this.calculateValuePrecision();
+    this.updateOffsetFromValue();
   },
   getStep: function() {
     return [
