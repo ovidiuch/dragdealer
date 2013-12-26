@@ -133,6 +133,11 @@ var Dragdealer = function(wrapper, options) {
    *   - enable: Enable dragging of a Dragdealer instance. The .disabled class
    *             of the handle will be removed.
    *
+   *   - reflow: Recalculate the wrapper bounds of a Dragdealer instance, used
+   *             when the wrapper is responsive and its parent container
+   *             changed its size, or after changing the size of the wrapper
+   *             directly.
+   *
    *   - getValue(): Get the value of a Dragdealer instance programatically.
    *                 The value is returned as an [x, y] tuple and is the
    *                 equivalent of the (projected) value returned by the
@@ -328,11 +333,7 @@ Dragdealer.prototype = {
     //this.cancelEvent(e);
   },
   documentResizeHandler: function(e) {
-    this.setWrapperOffset();
-    this.bounds = this.calculateBounds();
-    this.valuePrecision = this.calculateValuePrecision();
-
-    this.updateOffsetFromValue();
+    this.reflow();
   },
   enable: function() {
     this.disabled = false;
@@ -341,6 +342,12 @@ Dragdealer.prototype = {
   disable: function() {
     this.disabled = true;
     this.handle.className += ' disabled';
+  },
+  reflow: function() {
+    this.setWrapperOffset();
+    this.bounds = this.calculateBounds();
+    this.valuePrecision = this.calculateValuePrecision();
+    this.updateOffsetFromValue();
   },
   getStep: function() {
     return [
