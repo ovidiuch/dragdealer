@@ -89,7 +89,7 @@ describe("Dragging Dragdealer", function() {
     });
 
     it("when handle is bigger than wrapper", function() {
-      helpers.initDragdealer('content-slider', {
+      helpers.initDragdealer('masked-slider', {
         horizontal: true,
         vertical: true,
         top: 10,
@@ -98,17 +98,17 @@ describe("Dragging Dragdealer", function() {
         right: 10
       });
 
-      helpers.dragTo('content-slider', 1000, 1000);
-      expect('content-slider').toHavePosition(10, 10);
+      helpers.dragTo('masked-slider', 1000, 1000);
+      expect('masked-slider').toHavePosition(10, 10);
 
-      helpers.dragTo('content-slider', -1000, 1000);
-      expect('content-slider').toHavePosition(-510, 10);
+      helpers.dragTo('masked-slider', -1000, 1000);
+      expect('masked-slider').toHavePosition(-510, 10);
 
-      helpers.dragTo('content-slider', -1000, -1000);
-      expect('content-slider').toHavePosition(-510, -510);
+      helpers.dragTo('masked-slider', -1000, -1000);
+      expect('masked-slider').toHavePosition(-510, -510);
 
-      helpers.dragTo('content-slider', 1000, -1000);
-      expect('content-slider').toHavePosition(10, -510);
+      helpers.dragTo('masked-slider', 1000, -1000);
+      expect('masked-slider').toHavePosition(10, -510);
     });
   });
 
@@ -246,35 +246,35 @@ describe("Dragging Dragdealer", function() {
 
   it("should drag loose handle inside smaller wrapper", function() {
     // Any positon offset outside the wrapper bounds will be split by 4
-    helpers.initDragdealer('content-slider', {
+    helpers.initDragdealer('masked-slider', {
       horizontal: true,
       vertical: true,
       loose: true
     });
 
-    helpers.dragTo('content-slider', 100, 200);
-    helpers.drop('content-slider');
-    expect('content-slider').toHavePosition(25, 50);
+    helpers.dragTo('masked-slider', 100, 200);
+    helpers.drop('masked-slider');
+    expect('masked-slider').toHavePosition(25, 50);
     jasmine.Clock.tick(3000);
-    expect('content-slider').toHavePosition(0, 0);
+    expect('masked-slider').toHavePosition(0, 0);
 
-    helpers.dragTo('content-slider', -2000, -1000);
-    helpers.drop('content-slider');
-    expect('content-slider').toHavePosition(-875, -625);
+    helpers.dragTo('masked-slider', -2000, -1000);
+    helpers.drop('masked-slider');
+    expect('masked-slider').toHavePosition(-875, -625);
     jasmine.Clock.tick(3000);
-    expect('content-slider').toHavePosition(-500, -500);
+    expect('masked-slider').toHavePosition(-500, -500);
   });
 
   it("should not break dragging after repositioning", function() {
     // Fix for https://github.com/skidding/dragdealer/issues/3
-    var dragdealer = helpers.initDragdealer('content-slider', {
+    var dragdealer = helpers.initDragdealer('masked-slider', {
       horizontal: true,
       vertical: true
     });
 
-    $('#content-slider').css('margin-top', 200);
-    helpers.dragTo('content-slider', -250, -250);
-    expect('content-slider').toHavePosition(-250, -250);
+    $('#masked-slider').css('margin-top', 200);
+    helpers.dragTo('masked-slider', -250, -250);
+    expect('masked-slider').toHavePosition(-250, -250);
     expect(dragdealer.getValue()).toEqual([0.5, 0.5]);
   });
 });

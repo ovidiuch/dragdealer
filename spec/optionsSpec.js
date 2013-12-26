@@ -71,13 +71,13 @@ describe("Initializing Dragdealer", function() {
     });
 
     it("when handle is bigger than wrapper", function() {
-      helpers.initDragdealer('content-slider', {
+      helpers.initDragdealer('masked-slider', {
         horizontal: true,
         vertical: true,
         top: 10,
         left: 20
       });
-      expect('content-slider').toHavePosition(20, 10);
+      expect('masked-slider').toHavePosition(20, 10);
     });
   });
 });
