@@ -138,13 +138,13 @@ var Dragdealer = function(wrapper, options) {
    *             changed its size, or after changing the size of the wrapper
    *             directly.
    *
-   *   - getValue(): Get the value of a Dragdealer instance programatically.
-   *                 The value is returned as an [x, y] tuple and is the
-   *                 equivalent of the (projected) value returned by the
-   *                 regular callback, not animationCallback.
+   *   - getValue: Get the value of a Dragdealer instance programatically. The
+   *               value is returned as an [x, y] tuple and is the equivalent
+   *               of the (projected) value returned by the regular callback,
+   *               not animationCallback.
    *
-   *   - getStep(): Same as getValue, but the value returned is in step
-   *                increments (see steps option)
+   *   - getStep: Same as getValue, but the value returned is in step
+   *              increments (see steps option)
    *
    *   - setValue(x, y, snap=false): Set the value of a Dragdealer instance
    *                                 programatically. The 3rd parameter allows
