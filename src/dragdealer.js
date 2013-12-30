@@ -317,14 +317,14 @@ Dragdealer.prototype = {
     this.activity = false;
     Cursor.refresh(e);
 
-    this.preventEventDefaults(e, true);
+    this.preventEventDefaults(e);
     this.startDrag();
     this.stopEventPropagation(e);
   },
   wrapperDownHandler: function(e) {
     Cursor.refresh(e);
 
-    this.preventEventDefaults(e, true);
+    this.preventEventDefaults(e);
     this.startTap();
   },
   documentUpHandler: function(e) {
@@ -592,7 +592,7 @@ Dragdealer.prototype = {
   groupClone: function(a) {
     return [a[0], a[1]];
   },
-  preventEventDefaults: function(e, selection) {
+  preventEventDefaults: function(e) {
     if (!e) {
       e = window.event;
     }
@@ -600,10 +600,6 @@ Dragdealer.prototype = {
       e.preventDefault();
     }
     e.returnValue = false;
-
-    if (selection && document.selection) {
-      document.selection.empty();
-    }
   },
   stopEventPropagation: function(e) {
     if (!e) {
