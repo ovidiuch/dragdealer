@@ -317,20 +317,20 @@ Dragdealer.prototype = {
     this.activity = false;
     Cursor.refresh(e);
 
-    this.preventDefaults(e, true);
+    this.preventEventDefaults(e, true);
     this.startDrag();
-    this.cancelEvent(e);
+    this.stopEventPropagation(e);
   },
   wrapperDownHandler: function(e) {
     Cursor.refresh(e);
 
-    this.preventDefaults(e, true);
+    this.preventEventDefaults(e, true);
     this.startTap();
   },
   documentUpHandler: function(e) {
     this.stopDrag();
     this.stopTap();
-    //this.cancelEvent(e);
+    //this.stopEventPropagation(e);
   },
   documentResizeHandler: function(e) {
     this.reflow();
@@ -593,7 +593,7 @@ Dragdealer.prototype = {
   groupClone: function(a) {
     return [a[0], a[1]];
   },
-  preventDefaults: function(e, selection) {
+  preventEventDefaults: function(e, selection) {
     if (!e) {
       e = window.event;
     }
@@ -606,7 +606,7 @@ Dragdealer.prototype = {
       document.selection.empty();
     }
   },
-  cancelEvent: function(e) {
+  stopEventPropagation: function(e) {
     if (!e) {
       e = window.event;
     }
