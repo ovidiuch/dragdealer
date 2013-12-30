@@ -316,17 +316,23 @@ Dragdealer.prototype = {
     self.animate(false, true);
   },
   handleDownHandler: function(e) {
-    this.activity = false;
-    Cursor.refresh(e);
-
     this.preventEventDefaults(e);
-    this.startDrag();
     this.stopEventPropagation(e);
+    // We make sure the Cursor has the up to date with the latest mouse/touch
+    // coordinates by applying the contents of the genuine MouseEvent at hand
+    Cursor.refresh(e);
+    // We keep track if any dragging activity has been made between the
+    // mouse/touch down and up events; based on this we allow or cancel a click
+    // event from inside the handle. i.e. Click events shouldn't be triggered
+    // when dragging, but should be allowed when clicking still
+    this.activity = false;
+    this.startDrag();
   },
   wrapperDownHandler: function(e) {
-    Cursor.refresh(e);
-
     this.preventEventDefaults(e);
+    // We make sure the Cursor has the up to date with the latest mouse/touch
+    // coordinates by applying the contents of the genuine MouseEvent at hand
+    Cursor.refresh(e);
     this.startTap();
   },
   documentUpHandler: function(e) {
