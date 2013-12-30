@@ -330,7 +330,6 @@ Dragdealer.prototype = {
   documentUpHandler: function(e) {
     this.stopDrag();
     this.stopTap();
-    //this.stopEventPropagation(e);
   },
   documentResizeHandler: function(e) {
     this.reflow();
