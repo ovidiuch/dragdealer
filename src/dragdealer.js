@@ -305,7 +305,9 @@ Dragdealer.prototype = {
       self.activity = true;
     };
     this.wrapper.onclick = function(e) {
-      return !self.activity;
+      if (self.activity) {
+        self.preventEventDefaults(e);
+      }
     };
 
     this.interval = setInterval(function() {
