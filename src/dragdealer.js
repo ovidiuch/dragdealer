@@ -277,9 +277,6 @@ Dragdealer.prototype = {
   addListeners: function() {
     var self = this;
 
-    this.wrapper.onselectstart = function() {
-      return false;
-    };
     this.handle.onmousedown = this.handle.ontouchstart = function(e) {
       self.handleDownHandler(e);
     };
