@@ -177,7 +177,7 @@ var Dragdealer = function(wrapper, options) {
     return;
   }
   this.init(wrapper, handle, options || {});
-  this.setup();
+  this.bindEventListeners();
 };
 Dragdealer.prototype = {
   defaults: {
@@ -210,11 +210,13 @@ Dragdealer.prototype = {
       target: [0, 0]
     };
     this.change = [0, 0];
+    this.stepRatios = this.calculateStepRatios();
 
     this.activity = false;
     this.dragging = false;
     this.tapping = false;
 
+    this.reflow();
     if (this.options.disabled) {
       this.disable();
     }
@@ -227,13 +229,14 @@ Dragdealer.prototype = {
     }
     return options;
   },
-  setup: function() {
-    this.setWrapperOffset();
-    this.bounds = this.calculateBounds();
-    this.valuePrecision = this.calculateValuePrecision();
-    this.setSteps();
-
-    this.bindEventListeners();
+  calculateStepRatios: function() {
+    var stepRatios = [];
+    if (this.options.steps > 1) {
+      for (var i = 0; i <= this.options.steps - 1; i++) {
+        stepRatios[i] = i / (this.options.steps - 1);
+      }
+    }
+    return stepRatios;
   },
   setWrapperOffset: function() {
     this.offset.wrapper = Position.get(this.wrapper);
@@ -265,14 +268,6 @@ Dragdealer.prototype = {
       1 / (this.options.xPrecision || this.bounds.availWidth),
       1 / (this.options.yPrecision || this.bounds.availHeight)
     ];
-  },
-  setSteps: function() {
-    if (this.options.steps > 1) {
-      this.stepRatios = [];
-      for (var i = 0; i <= this.options.steps - 1; i++) {
-        this.stepRatios[i] = i / (this.options.steps - 1);
-      }
-    }
   },
   bindEventListeners: function() {
     // Start dragging
