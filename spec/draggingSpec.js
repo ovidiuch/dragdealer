@@ -277,4 +277,13 @@ describe("Dragging Dragdealer", function() {
     expect('masked-slider').toHavePosition(-250, -250);
     expect(dragdealer.getValue()).toEqual([0.5, 0.5]);
   });
+
+  it("should not work after unbinding events", function() {
+    // Spec for https://github.com/skidding/dragdealer/issues/8
+    var dragdealer = helpers.initDragdealer('simple-slider');
+
+    dragdealer.unbindEventListeners();
+    helpers.dragTo('simple-slider', 200, 0);
+    expect('simple-slider').toHavePosition(0, 0);
+  });
 });
