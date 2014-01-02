@@ -286,11 +286,25 @@ Dragdealer.prototype = {
     this.bindEventHandler('click', this.wrapper, 'onWrapperClick');
     this.bindEventHandler('resize', window, 'onWindowResize');
 
-    var self = this;
+    var _this = this;
     this.interval = setInterval(function() {
-      self.animate();
+      _this.animate();
     }, 25);
-    self.animate(false, true);
+    this.animate(false, true);
+  },
+  unbindEventListeners: function() {
+    this.unbindEventHandler('mousedown', this.handle);
+    this.unbindEventHandler('touchstart', this.handle);
+    this.unbindEventHandler('mousemove', this.wrapper);
+    this.unbindEventHandler('touchmove', this.wrapper);
+    this.unbindEventHandler('mousedown', this.wrapper);
+    this.unbindEventHandler('touchstart', this.wrapper);
+    this.unbindEventHandler('mouseup', document);
+    this.unbindEventHandler('touchend', document);
+    this.unbindEventHandler('click', this.wrapper);
+    this.unbindEventHandler('resize', window);
+
+    clearInterval(this.interval);
   },
   onHandleMouseDown: function(e) {
     this.preventEventDefaults(e);
@@ -644,6 +658,12 @@ Dragdealer.prototype = {
       }
       _this[handler].apply(_this, arguments);
     };
+    // Store previous handler to revert to it when unbinding events
+    object[eventMethod]._previousHandler = previousHandler;
+  },
+  unbindEventHandler: function(eventName, object) {
+    var eventMethod = 'on' + eventName;
+    object[eventMethod] = object[eventMethod]._previousHandler;
   }
 };
 
