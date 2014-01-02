@@ -292,6 +292,18 @@ Dragdealer.prototype = {
     }, 25);
     self.animate(false, true);
   },
+  unbindEventListeners: function() {
+    this.unbindEventHandler('mousedown', this.handle);
+    this.unbindEventHandler('touchstart', this.handle);
+    this.unbindEventHandler('mousemove', this.wrapper);
+    this.unbindEventHandler('touchmove', this.wrapper);
+    this.unbindEventHandler('mousedown', this.wrapper);
+    this.unbindEventHandler('touchstart', this.wrapper);
+    this.unbindEventHandler('mouseup', document);
+    this.unbindEventHandler('touchend', document);
+    this.unbindEventHandler('click', this.wrapper);
+    this.unbindEventHandler('resize', window);
+  },
   onHandleMouseDown: function(e) {
     this.preventEventDefaults(e);
     this.stopEventPropagation(e);
@@ -644,6 +656,12 @@ Dragdealer.prototype = {
       }
       _this[handler].apply(_this, arguments);
     };
+    // Store previous handler to revert to it when unbinding events
+    object[eventMethod]._previousHandler = previousHandler;
+  },
+  unbindEventHandler: function(eventName, object) {
+    var eventMethod = 'on' + eventName;
+    object[eventMethod] = object[eventMethod]._previousHandler;
   }
 };
 
