@@ -40,3 +40,41 @@ describe("Click events inside handle", function() {
     expect(clickHandler.calls[0].args[0].isDefaultPrevented()).toBe(false);
   });
 });
+
+describe("Previous DOM events", function() {
+
+  beforeEach(function() {
+    this.addMatchers(matchers);
+    jasmine.Clock.useMock();
+  });
+
+  it("should be preserved after instantiating Dragdealer", function() {
+    // Spec for https://github.com/skidding/dragdealer/pull/8
+    loadFixtures('simple-slider.html');
+    loadStyleFixtures('simple-slider.css');
+
+    var mouseDownHandler = jasmine.createSpy(),
+        $handle = $('#simple-slider .handle');
+
+    $handle.get(0).onmousedown = mouseDownHandler;
+    helpers.initDragdealer('simple-slider');
+
+    $handle.simulate('mousedown');
+    expect(mouseDownHandler.calls.length).toEqual(1);
+  });
+
+  it("should be preserved after unbinding a Dragdealer instance", function() {
+    // Spec for https://github.com/skidding/dragdealer/pull/8
+    loadFixtures('simple-slider.html');
+    loadStyleFixtures('simple-slider.css');
+
+    var mouseDownHandler = jasmine.createSpy(),
+        $handle = $('#simple-slider .handle');
+
+    $handle.get(0).onmousedown = mouseDownHandler;
+    var dragdealer = helpers.initDragdealer('simple-slider');
+    dragdealer.unbindEventListeners();
+
+    expect($handle.get(0).onmousedown).toEqual(mouseDownHandler);
+  });
+});
