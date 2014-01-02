@@ -233,7 +233,7 @@ Dragdealer.prototype = {
     this.valuePrecision = this.calculateValuePrecision();
     this.setSteps();
 
-    this.addListeners();
+    this.bindEventListeners();
   },
   setWrapperOffset: function() {
     this.offset.wrapper = Position.get(this.wrapper);
@@ -274,69 +274,91 @@ Dragdealer.prototype = {
       }
     }
   },
-  addListeners: function() {
+  bindEventListeners: function() {
+    // Start dragging
+    this.bindEventHandler('mousedown', this.handle, 'onHandleMouseDown');
+    this.bindEventHandler('touchstart', this.handle, 'onHandleTouchStart');
+    // While dragging
+    this.bindEventHandler('mousemove', this.wrapper, 'onWrapperMouseMove');
+    this.bindEventHandler('touchmove', this.wrapper, 'onWrapperTouchMove');
+    // Start tapping
+    this.bindEventHandler('mousedown', this.wrapper, 'onWrapperMouseDown');
+    this.bindEventHandler('touchstart', this.wrapper, 'onWrapperTouchStart');
+    // Stop dragging/tapping
+    this.bindEventHandler('mouseup', document, 'onDocumentMouseUp');
+    this.bindEventHandler('touchend', document, 'onDocumentTouchEnd');
+
+    this.bindEventHandler('click', this.wrapper, 'onWrapperClick');
+    this.bindEventHandler('resize', window, 'onWindowResize');
+
     var self = this;
-
-    this.handle.onmousedown = this.handle.ontouchstart = function(e) {
-      self.handleDownHandler(e);
-    };
-    this.wrapper.onmousedown = this.wrapper.ontouchstart = function(e) {
-      self.wrapperDownHandler(e);
-    };
-    var mouseUpHandler = document.onmouseup || function() {};
-    document.onmouseup = function(e) {
-      mouseUpHandler(e);
-      self.documentUpHandler(e);
-    };
-    var touchEndHandler = document.ontouchend || function() {};
-    document.ontouchend = function(e) {
-      touchEndHandler(e);
-      self.documentUpHandler(e);
-    };
-    var resizeHandler = window.onresize || function() {};
-    window.onresize = function(e) {
-      resizeHandler(e);
-      self.documentResizeHandler(e);
-    };
-    this.wrapper.onmousemove = function(e) {
-      self.activity = true;
-    };
-    this.wrapper.onclick = function(e) {
-      if (self.activity) {
-        self.preventEventDefaults(e);
-      }
-    };
-
     this.interval = setInterval(function() {
       self.animate();
     }, 25);
     self.animate(false, true);
   },
-  handleDownHandler: function(e) {
+  onHandleMouseDown: function(e) {
     this.preventEventDefaults(e);
     this.stopEventPropagation(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
-    // We keep track if any dragging activity has been made between the
-    // mouse/touch down and up events; based on this we allow or cancel a click
-    // event from inside the handle. i.e. Click events shouldn't be triggered
-    // when dragging, but should be allowed when clicking still
     this.activity = false;
     this.startDrag();
   },
-  wrapperDownHandler: function(e) {
+  onHandleTouchStart: function(e) {
+    // Unlike in the `mousedown` event handler, we don't prevent defaults here,
+    // because this would disable the dragging altogether. Instead, we prevent
+    // it in the `touchmove` handler. Read more about touch events
+    // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Touch_events#Handling_clicks
+    this.stopEventPropagation(e);
+    // We make sure the Cursor has the up to date with the latest mouse/touch
+    // coordinates by applying the contents of the genuine MouseEvent at hand
+    Cursor.refresh(e);
+    this.activity = false;
+    this.startDrag();
+  },
+  onWrapperMouseMove: function(e) {
+    this.activity = true;
+  },
+  onWrapperTouchMove: function(e) {
+    // Read comment in `onHandleTouchStart` above, to understand why we're
+    // preventing defaults here and not there
+    this.preventEventDefaults(e);
+    this.activity = true;
+  },
+  onWrapperMouseDown: function(e) {
     this.preventEventDefaults(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
     this.startTap();
   },
-  documentUpHandler: function(e) {
+  onWrapperTouchStart: function(e) {
+    this.preventEventDefaults(e);
+    // We make sure the Cursor has the up to date with the latest mouse/touch
+    // coordinates by applying the contents of the genuine MouseEvent at hand
+    Cursor.refresh(e);
+    this.startTap();
+  },
+  onDocumentMouseUp: function(e) {
     this.stopDrag();
     this.stopTap();
   },
-  documentResizeHandler: function(e) {
+  onDocumentTouchEnd: function(e) {
+    this.stopDrag();
+    this.stopTap();
+  },
+  onWrapperClick: function(e) {
+    // We keep track if any dragging activity has been made between the
+    // mouse/touch down and up events; based on this we allow or cancel a click
+    // event from inside the handle. i.e. Click events shouldn't be triggered
+    // when dragging, but should be allowed when clicking still
+    if (this.activity) {
+      this.preventEventDefaults(e);
+    }
+  },
+  onWindowResize: function(e) {
     this.reflow();
   },
   enable: function() {
@@ -614,6 +636,19 @@ Dragdealer.prototype = {
       e.stopPropagation();
     }
     e.cancelBubble = true;
+  },
+  bindEventHandler: function(eventName, object, handler) {
+    var _this = this,
+        eventMethod = 'on' + eventName,
+        // Keep a reference to the previous handler to keep calling it as well
+        previousHandler = object[eventMethod];
+
+    object[eventMethod] = function() {
+      if (typeof(previousHandler) == 'function') {
+        previousHandler.apply(arguments);
+      }
+      _this[handler].apply(_this, arguments);
+    };
   }
 };
 
