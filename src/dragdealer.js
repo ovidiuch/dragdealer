@@ -286,11 +286,11 @@ Dragdealer.prototype = {
     this.bindEventHandler('click', this.wrapper, 'onWrapperClick');
     this.bindEventHandler('resize', window, 'onWindowResize');
 
-    var self = this;
+    var _this = this;
     this.interval = setInterval(function() {
-      self.animate();
+      _this.animate();
     }, 25);
-    self.animate(false, true);
+    this.animate(false, true);
   },
   unbindEventListeners: function() {
     this.unbindEventHandler('mousedown', this.handle);
@@ -303,6 +303,8 @@ Dragdealer.prototype = {
     this.unbindEventHandler('touchend', document);
     this.unbindEventHandler('click', this.wrapper);
     this.unbindEventHandler('resize', window);
+
+    clearInterval(this.interval);
   },
   onHandleMouseDown: function(e) {
     this.preventEventDefaults(e);
