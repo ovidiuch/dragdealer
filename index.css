@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   background: #fcfcfc;
+  color: #333;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
 }
@@ -40,7 +41,6 @@ body {
     #main-slider .specs-tab .specs-summary {
       margin: 0;
       padding: 0 30px;
-      color: #333;
       font-size: 40px;
       font-weight: bold;
       line-height: 80px;
@@ -83,3 +83,60 @@ body {
   .content-slides .slide.specs {
     right: 0;
   }
+
+#HTMLReporter {
+  margin: 0;
+  padding: 0;
+  font-family: Monaco, "Lucida Console", monospace;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+#HTMLReporter .banner {
+  float: right;
+  margin: 0;
+  padding: 30px;
+  font-size: 20px;
+  line-height: 20px;
+  opacity: 0.5;
+}
+#HTMLReporter .duration {
+  float: none;
+  color: #aaa;
+}
+#HTMLReporter .results {
+  margin: 0;
+  padding: 30px;
+  background: #111;
+}
+#HTMLReporter .results .summary {
+  margin: 0;
+  padding: 0;
+}
+#HTMLReporter .results .suite {
+  margin: 0 0 10px 0;
+}
+#HTMLReporter .results .suite:last-child {
+  margin: 0;
+}
+#HTMLReporter .results .specTitle {
+  margin: 0 0 10px 0;
+}
+#HTMLReporter .suite a {
+  color: #aaa;
+}
+#HTMLReporter .summary .specSummary.passed a {
+  color: #5bb75b;
+}
+#HTMLReporter .summary .specSummary.failed a {
+  color: #da4f49;
+}
+#HTMLReporter .stackTrace {
+  margin: 0 0 10px 0;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: #333;
+  color: #ccc;
+  font-size: 12px;
+}
