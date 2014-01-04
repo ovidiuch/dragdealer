@@ -68,19 +68,16 @@ body {
   overflow: hidden;
 }
 .content-slides {
-  position: relative;
   width: 200%;
 }
   .content-slides .slide {
-    position: absolute;
-    top: 0;
     width: 50%;
   }
   .content-slides .slide.demo {
-    left: 0;
+    float: left;
   }
   .content-slides .slide.specs {
-    right: 0;
+    float: right;
   }
 
 #HTMLReporter {

@@ -27,22 +27,14 @@
   <script>
 $(function() {
 
-  var previousSlideHeight;
-  var applySlideHeightToContent = function(slideHeight) {
-    if (slideHeight != previousSlideHeight) {
-      previousSlideHeight = slideHeight;
-      $('#content').height(slideHeight);
-    }
-  };
-
   new Dragdealer('main-slider', {
     steps: 2,
     animationCallback: function(x) {
       $('.content-slides').css('margin-left', (-x * 100) + '%');
-      if (x > 0) {
-        applySlideHeightToContent($('#content .slide.specs').height());
+      if (x > 0.5) {
+        $('#content .slide.demo').height($('#content .slide.specs').height())
       } else {
-        applySlideHeightToContent($('#content .slide.demo').height());
+        $('#content .slide.demo').height('auto');
       }
     }
   });
