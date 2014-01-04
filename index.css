@@ -1,0 +1,85 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #fcfcfc;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+#main-slider {
+  border-radius: 0;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.1);
+}
+  #main-slider .specs-tab {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+  }
+    #main-slider .specs-tab .specs-bullets {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 80px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+      #main-slider .specs-tab .specs-bullets li {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+      }
+      #main-slider .specs-tab .specs-bullets li.passed {
+        background: green;
+      }
+      #main-slider .specs-tab .specs-bullets li.failed {
+        background: red;
+      }
+    #main-slider .specs-tab .specs-summary {
+      margin: 0;
+      padding: 0 30px;
+      color: #333;
+      font-size: 40px;
+      font-weight: bold;
+      line-height: 80px;
+      white-space: nowrap;
+    }
+      #main-slider .specs-tab .specs-summary i {
+        margin: 0 0 0 10px;
+      }
+  #main-slider .handle {
+    border-radius: 0;
+    width: auto;
+    height: 80px;
+    padding: 0 30px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 40px;
+    font-weight: bold;
+    line-height: 80px;
+  }
+    #main-slider .handle strong {
+      color: #fff;
+    }
+
+#content {
+  width: 100%;
+  overflow: hidden;
+}
+.content-slides {
+  position: relative;
+  width: 200%;
+  overflow: hidden;
+}
+  .content-slides .slide {
+    position: absolute;
+    top: 0;
+    width: 50%;
+  }
+  .content-slides .slide.demo {
+    left: 0;
+  }
+  .content-slides .slide.specs {
+    right: 0;
+  }

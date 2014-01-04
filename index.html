@@ -23,28 +23,42 @@
   <script src="spec/eventsSpec.js"></script>
   <script src="spec/browser-runner.js"></script>
 
-  <style>
-body {
-  font-family: sans-serif;
-  font-size: 14px;
-}
-#demo-slider {
-  border-radius: 3px;
-}
-#demo-slider .handle {
-  border-radius: 3px;
-}
-  </style>
+  <link href="index.css" type="text/css" rel="stylesheet">
   <script>
 $(function() {
-  new Dragdealer('demo-slider');
+  new Dragdealer('main-slider', {
+    steps: 2,
+    animationCallback: function(x) {
+      var slideHeight;
+      if (x > 0) {
+        slideHeight = $('.content-slides .slide.specs').height();
+      } else {
+        slideHeight = $('.content-slides .slide.demo').height();
+      }
+      $('.content-slides').css({
+        height: slideHeight,
+        marginLeft: (-x * 100) + '%'
+      });
+    }
+  });
 });
   </script>
 </head>
 <body>
-  <div id="container">
-    <div id="demo-slider" class="dragdealer">
-      <div class="handle red-bar">drag me</div>
+  <div id="main-slider" class="dragdealer">
+    <div class="specs-tab">
+      <ul class="specs-bullets"></ul>
+      <p class="specs-summary"></p>
+    </div>
+    <div class="handle red-bar"><strong>Dragdealer</strong>.js</div>
+  </div>
+  <div id="content">
+    <div class="content-slides">
+      <div class="slide demo">
+        <p>Demo here...</p>
+      </div>
+      <div class="slide specs">
+      </div>
     </div>
   </div>
 </body>
