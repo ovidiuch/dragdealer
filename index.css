@@ -97,11 +97,14 @@ body {
   padding: 30px;
   font-size: 20px;
   line-height: 20px;
+}
+#HTMLReporter .banner a {
+  color: #aaa;
   opacity: 0.5;
 }
-#HTMLReporter .duration {
-  float: none;
-  color: #aaa;
+#HTMLReporter .banner a:hover {
+  text-decoration: none;
+  opacity: 1;
 }
 #HTMLReporter .results {
   margin: 0;
