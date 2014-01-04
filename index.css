@@ -70,7 +70,6 @@ body {
 .content-slides {
   position: relative;
   width: 200%;
-  overflow: hidden;
 }
   .content-slides .slide {
     position: absolute;

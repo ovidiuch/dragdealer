@@ -26,19 +26,24 @@
   <link href="index.css" type="text/css" rel="stylesheet">
   <script>
 $(function() {
+
+  var previousSlideHeight;
+  var applySlideHeightToContent = function(slideHeight) {
+    if (slideHeight != previousSlideHeight) {
+      previousSlideHeight = slideHeight;
+      $('#content').height(slideHeight);
+    }
+  };
+
   new Dragdealer('main-slider', {
     steps: 2,
     animationCallback: function(x) {
-      var slideHeight;
+      $('.content-slides').css('margin-left', (-x * 100) + '%');
       if (x > 0) {
-        slideHeight = $('.content-slides .slide.specs').height();
+        applySlideHeightToContent($('#content .slide.specs').height());
       } else {
-        slideHeight = $('.content-slides .slide.demo').height();
+        applySlideHeightToContent($('#content .slide.demo').height());
       }
-      $('.content-slides').css({
-        height: slideHeight,
-        marginLeft: (-x * 100) + '%'
-      });
     }
   });
 });
