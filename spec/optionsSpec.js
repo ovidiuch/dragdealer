@@ -80,4 +80,12 @@ describe("Initializing Dragdealer", function() {
       expect('masked-slider').toHavePosition(20, 10);
     });
   });
+
+  it("should work with handle DOM siblings", function() {
+    // Fix for https://github.com/skidding/dragdealer/issues/11
+    helpers.initDragdealer('handle-dom-siblings', {
+      x: 0.5
+    });
+    expect('handle-dom-siblings').toHavePosition(200, 0);
+  });
 });
