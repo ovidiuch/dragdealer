@@ -172,8 +172,16 @@ var Dragdealer = function(wrapper, options) {
   if (!wrapper) {
     return;
   }
-  var handle = wrapper.getElementsByTagName('div')[0];
-  if (!handle || handle.className.search(/(^|\s)handle(\s|$)/) == -1) {
+  var childElements = wrapper.getElementsByTagName('div'),
+      handle,
+      i;
+  for (i = 0; i < childElements.length; i++) {
+    if (childElements[i].className.match(/(^|\s)handle(\s|$)/)) {
+      handle = childElements[i];
+      break;
+    }
+  }
+  if (!handle) {
     return;
   }
   this.init(wrapper, handle, options || {});

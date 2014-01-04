@@ -13,6 +13,8 @@
 }
 .dragdealer .handle {
   position: absolute;
+  top: 0;
+  left: 0;
   cursor: pointer;
 }
 .dragdealer .red-bar {
