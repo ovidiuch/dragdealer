@@ -90,12 +90,12 @@ body {
   line-height: 20px;
 }
 #HTMLReporter .alert {
-  height: 20px;
+  height: 30px;
   margin: 0 0 20px 0;
   padding: 0;
   color: #666;
   font-size: 20px;
-  line-height: 20px;
+  line-height: 30px;
 }
 #HTMLReporter .banner {
   position: absolute;
@@ -105,7 +105,7 @@ body {
   margin: 0;
   padding: 0;
   font-size: 20px;
-  line-height: 20px;
+  line-height: 30px;
 }
 #HTMLReporter .banner .title,
 #HTMLReporter .banner .version {
