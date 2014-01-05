@@ -107,15 +107,12 @@ body {
   font-size: 20px;
   line-height: 20px;
 }
-#HTMLReporter .banner span {
-  margin: 0 0 0 10px;
-}
 #HTMLReporter .banner .title,
 #HTMLReporter .banner .version {
-  display: none;
+  color: #333;
 }
 #HTMLReporter .banner .duration {
-  float: none;
+  padding: 0 0 0 30px;
   color: #666;
 }
 #HTMLReporter .results {
@@ -130,7 +127,7 @@ body {
   margin: 10px 0;
 }
 #HTMLReporter .results .suite:last-child {
-  margin: 0;
+  margin-bottom: 0;
 }
 #HTMLReporter .suite a {
   color: #aaa;
