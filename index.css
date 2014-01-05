@@ -81,45 +81,56 @@ body {
   }
 
 #HTMLReporter {
+  position: relative;
   margin: 0;
-  padding: 0;
+  padding: 30px;
+  background: #111;
   font-family: Monaco, "Lucida Console", monospace;
   font-size: 14px;
   line-height: 20px;
 }
-
-#HTMLReporter .banner {
-  float: right;
-  margin: 0;
-  padding: 30px;
+#HTMLReporter .alert {
+  height: 20px;
+  margin: 0 0 20px 0;
+  padding: 0;
+  color: #666;
   font-size: 20px;
   line-height: 20px;
 }
-#HTMLReporter .banner a {
-  color: #aaa;
-  opacity: 0.5;
+#HTMLReporter .banner {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  float: none;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  line-height: 20px;
 }
-#HTMLReporter .banner a:hover {
-  text-decoration: none;
-  opacity: 1;
+#HTMLReporter .banner span {
+  margin: 0 0 0 10px;
+}
+#HTMLReporter .banner .title,
+#HTMLReporter .banner .version {
+  display: none;
+}
+#HTMLReporter .banner .duration {
+  float: none;
+  color: #666;
 }
 #HTMLReporter .results {
   margin: 0;
-  padding: 30px;
-  background: #111;
+  padding: 0;
 }
 #HTMLReporter .results .summary {
   margin: 0;
   padding: 0;
 }
 #HTMLReporter .results .suite {
-  margin: 0 0 10px 0;
+  margin: 10px 0;
 }
 #HTMLReporter .results .suite:last-child {
   margin: 0;
-}
-#HTMLReporter .results .specTitle {
-  margin: 0 0 10px 0;
 }
 #HTMLReporter .suite a {
   color: #aaa;
