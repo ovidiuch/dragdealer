@@ -2,15 +2,100 @@ body {
   margin: 0;
   padding: 0;
   background: #fcfcfc;
-  color: #333;
+  color: #222;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  /* Fix for preserving font sizes on iPhones (at least) */
+   -webkit-text-size-adjust: 100%;
+}
+
+a {
+  color: #cc0000;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+p {
+  margin: 15px 0;
+}
+
+h1 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 80px;
+}
+h2 {
+  margin: 20px 0;
+  color: #333;
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 30px;
+}
+h3 {
+  margin: 20px 0;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.code {
+  margin: 20px 0;
+  padding: 15px;
+  border-left: 15px solid #e1e1e1;
+  background: #f1f1f1;
+  font-family: Monaco, "Lucida Console", monospace;
   font-size: 14px;
+  line-height: 20px;
+  overflow: auto;
+}
+  .code strong {
+    font-weight: normal;
+    color: #0000aa;
+  }
+
+.important {
+  padding: 15px;
+  border-radius: 8px;
+  background: #ffff88;
+}
+  .important :first-child {
+    margin-top: 0;
+  }
+  .important :last-child {
+    margin-bottom: 0;
+  }
+
+.project-buttons {
+  height: 40px;
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+  .project-buttons li {
+    float: left;
+    margin: 0 20px 0 0;
+    height: 40px;
+    line-height: 40px;
+  }
+    .project-buttons li i {
+      float: left;
+      padding: 0 10px 0 0;
+      font-size: 40px;
+    }
+
+.inner-wrapper {
+  min-width: 580px; /* 640 */
+  max-width: 740px; /* 800 */
+  margin: 30px;
 }
 
 #main-slider {
   border-radius: 0;
   height: 80px;
-  background: rgba(0, 0, 0, 0.1);
+  background: #e1e1e1;
 }
   #main-slider .specs-tab {
     position: absolute;
@@ -33,10 +118,10 @@ body {
         height: 20px;
       }
       #main-slider .specs-tab .specs-bullets li.passed {
-        background: green;
+        background: #00bb00;
       }
       #main-slider .specs-tab .specs-bullets li.failed {
-        background: red;
+        background: #cc0000;
       }
     #main-slider .specs-tab .specs-summary {
       margin: 0;
@@ -55,9 +140,7 @@ body {
     height: 80px;
     padding: 0 30px;
     color: rgba(255, 255, 255, 0.8);
-    font-size: 40px;
-    font-weight: bold;
-    line-height: 80px;
+    cursor: ew-resize;
   }
     #main-slider .handle strong {
       color: #fff;
