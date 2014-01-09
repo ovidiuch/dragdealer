@@ -40,6 +40,13 @@ h3 {
   font-size: 20px;
   line-height: 24px;
 }
+h4 {
+  margin: 20px 0;
+  color: #666;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 22px;
+}
 
 .code {
   margin: 20px 0;
@@ -84,6 +91,26 @@ h3 {
       float: left;
       padding: 0 10px 0 0;
       font-size: 40px;
+    }
+
+.property-list {
+  margin: 15px 0;
+  padding: 0 0 0 40px;
+}
+  .property-list li {
+    margin: 15px 0;
+  }
+    .property-list .type {
+      color: #666;
+      font-style: italic;
+    }
+    .property-list .default {
+      color: #666;
+    }
+    .property-list .description {
+    }
+    .property-list .description:before {
+      content: '– ';
     }
 
 .inner-wrapper {
