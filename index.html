@@ -23,28 +23,11 @@
   <script src="spec/eventsSpec.js"></script>
   <script src="spec/browser-runner.js"></script>
 
-  <link href="index.css" type="text/css" rel="stylesheet">
-  <link href="jasmine-reporter.css" type="text/css" rel="stylesheet">
-  <script>
-$(function() {
-
-  new Dragdealer('main-slider', {
-    // Allow page to be opened with the test results directly
-    x: window.location.hash == '#runner' ? 1 : 0,
-    steps: 2,
-    animationCallback: function(x) {
-      $('.content-slides').css('margin-left', (-x * 100) + '%');
-      if (x > 0.5) {
-        $('#content .slide.demo').height($('#content .slide.specs').height())
-      } else {
-        $('#content .slide.demo').height('auto');
-      }
-    }
-  });
-
-  new Dragdealer('demo-simple-slider');
-});
-  </script>
+  <link href="demo/style/index.css" type="text/css" rel="stylesheet">
+  <link href="demo/style/jasmine-reporter.css" type="text/css" rel="stylesheet">
+  <link href="demo/style/demos.css" type="text/css" rel="stylesheet">
+  <script src="demo/script/index.js"></script>
+  <script src="demo/script/demos.js"></script>
 </head>
 <body>
   <div id="main-slider" class="dragdealer">
