@@ -144,10 +144,10 @@ h4 {
         width: 20px;
         height: 20px;
       }
-      #main-slider .specs-tab .specs-bullets li.passed {
+      #main-slider .specs-tab .specs-bullets .passed {
         background: #00bb00;
       }
-      #main-slider .specs-tab .specs-bullets li.failed {
+      #main-slider .specs-tab .specs-bullets .failed {
         background: #cc0000;
       }
     #main-slider .specs-tab .specs-summary {
@@ -166,7 +166,7 @@ h4 {
     width: auto;
     height: 80px;
     padding: 0 30px;
-    color: rgba(255, 255, 255, 0.8);
+    color: #ffbbbb;
     cursor: ew-resize;
   }
     #main-slider .handle strong {
@@ -183,9 +183,9 @@ h4 {
   .content-slides .slide {
     width: 50%;
   }
-  .content-slides .slide.demo {
+  .content-slides .demo {
     float: left;
   }
-  .content-slides .slide.specs {
+  .content-slides .specs {
     float: right;
   }
