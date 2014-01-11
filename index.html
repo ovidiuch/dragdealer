@@ -47,6 +47,7 @@
           <div class="important">
             <p><strong>Jan 2014:</strong> Almost 4 years from the initial Dragdealer.js launch, a new version is released. For more details read the <a href="#">blog post</a> or check out the freshly baked <a href="https://github.com/skidding/dragdealer">GitHub repo.</a></p>
           </div>
+
           <h2>Drag-based JavaScript component, embracing endless UI solutions</h2>
           <p>2d dragging and tapping, mouse and touch, ~10KB. No dependency. <a href="https://github.com/skidding/dragdealer/blob/master/Gruntfile.js#L2-L44">Any browser.</a></p>
           <ul class="project-buttons">
@@ -60,7 +61,13 @@
                 <i class="fa fa-cloud-download"></i> download
               </a>
             </li>
+            <li>
+              <a href="#demos" class="internal-link">
+                <i class="fa fa-magic"></i> jump to demos
+              </a>
+            </li>
           </ul>
+
 <pre class="code">
 &lt;div id="demo-simple-slider" class="<strong>dragdealer</strong>"&gt;
   &lt;div class="<strong>handle</strong> red-bar"&gt;drag me&lt;/div&gt;
@@ -72,10 +79,10 @@
           <div id="demo-simple-slider" class="dragdealer">
             <div class="handle red-bar">drag me</div>
           </div>
-        </div>
-        <div class="inner-wrapper">
+
           <h3>JS API</h3>
           <p>Here are the options, callbacks and methods Dragdealer.js supports, but you can read the <a href="https://github.com/skidding/dragdealer/blob/master/src/dragdealer.js">source code</a> for more information.</p>
+
           <h4>Constructor</h4>
           <ul class="property-list">
             <li>
@@ -83,6 +90,7 @@
               <span class="description">Accepts an id or a DOM reference for the wrapper element. See possible options below.</span>
             </li>
           </ul>
+
           <h4>Options</h4>
           <ul class="property-list">
             <li>
@@ -161,6 +169,7 @@
               <span class="description">Called every animation loop, as long as the handle is being dragged or in the process of a sliding animation. The x, y positional values received by this callback reflect the exact position of the handle DOM element, which includes exceeding values (even negative values) when the <em>loose</em> option is set true.</span>
             </li>
           </ul>
+
           <h4>Methods</h4>
           <ul class="property-list">
             <li>
@@ -192,6 +201,39 @@
               <span class="description">Same as setValue, but the value is received in step increments (see <em>steps</em> option)</span>
             </li>
           </ul>
+
+          <h3 id="demos">Demos</h3>
+
+          <h4>Just a slider</h4>
+          <p>A slider is just a user control, the power lies in the value it represents. For this reason the <strong>animationCallback</strong> is your biggest ally, with it you tie the user input to any visualization you can think of. This is the most boring example.</p>
+
+<pre class="code">
+&lt;div id="just-a-slider" class="dragdealer"&gt;
+  &lt;div class="handle red-bar"&gt;
+    &lt;div class="tooltip"&gt;<strong>&lt;span class="value"&gt;&lt;/span&gt;</strong>%&lt;/div&gt;
+    drag me
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+<pre class="code">
+new Dragdealer('just-a-slider', {
+  <strong>animationCallback</strong>: function(x, y) {
+    tooltipValue.innerHTML = Math.round(<strong>x</strong> * 100);
+  }
+});
+</pre>
+          <div id="just-a-slider" class="dragdealer">
+            <div class="handle red-bar">
+              <div class="tooltip"><span class="value"></span>%</div>
+              drag me
+            </div>
+          </div>
+
+          <h4>Content scroller</h4>
+          <h4><em>slide to unlock</em></h4>
+          <h4>Slideshow with buttons</h4>
+          <h4>Interactive canvas mask</h4>
+          <p>Dragdealer is just a drag component, the rest is up to you.</p>
         </div>
       </div>
       <div class="slide specs">
