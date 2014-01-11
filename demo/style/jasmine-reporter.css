@@ -50,18 +50,36 @@
 #HTMLReporter .suite a {
   color: #aaa;
 }
+#HTMLReporter .summary .specSummary {
+  margin: 0 0 0 15px;
+}
 #HTMLReporter .summary .specSummary.passed a {
   color: #00bb00;
 }
 #HTMLReporter .summary .specSummary.failed a {
   color: #cc0000;
 }
+#HTMLReporter #details .specDetail {
+  margin: 10px 0;
+}
+#HTMLReporter #details .specDetail:last-child {
+  margin-bottom: 0;
+}
+#HTMLReporter #details .specDetail .description {
+  padding: 0;
+  background: none;
+  color: #cc0000;
+}
 #HTMLReporter .stackTrace {
-  margin: 0 0 10px 0;
-  padding: 10px;
+  margin: 10px 0 10px 15px;
+  padding: 0;
   border: 0;
   border-radius: 10px;
-  background: #333;
-  color: #ccc;
+  background: none;
+  color: #aaa;
   font-size: 12px;
+  line-height: 18px;
+}
+#HTMLReporter .stackTrace:last-child {
+  margin-bottom: 0;
 }
