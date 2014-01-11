@@ -70,13 +70,18 @@
   background: none;
   color: #cc0000;
 }
+#HTMLReporter .resultMessage {
+  margin: 10px 15px;
+  padding: 0;
+  color: #aaa;
+}
 #HTMLReporter .stackTrace {
-  margin: 10px 0 10px 15px;
+  margin: 10px 30px;
   padding: 0;
   border: 0;
   border-radius: 10px;
   background: none;
-  color: #aaa;
+  color: #666;
   font-size: 12px;
   line-height: 18px;
 }
