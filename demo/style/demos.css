@@ -1,10 +1,11 @@
-.dragdealer {
+.demo .dragdealer {
   background: #e1e1e1;
   height: 40px;
   border-radius: 3px;
 }
-  .dragdealer .red-bar {
+  .demo .dragdealer .red-bar {
     height: 40px;
+    font-size: 16px;
     line-height: 40px;
     border-radius: 3px;
   }
