@@ -475,14 +475,14 @@ Dragdealer.prototype = {
     }
     if (!this.groupCompare(value, this.value.prev)) {
       if (typeof(this.options.animationCallback) == 'function') {
-        this.options.animationCallback(value[0], value[1]);
+        this.options.animationCallback.call(this, value[0], value[1]);
       }
       this.groupCopy(this.value.prev, value);
     }
   },
   callTargetCallback: function() {
     if (typeof(this.options.callback) == 'function') {
-      this.options.callback(this.value.target[0], this.value.target[1]);
+      this.options.callback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
   animate: function(direct, first) {
