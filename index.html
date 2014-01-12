@@ -211,22 +211,20 @@
 <pre class="code">
 &lt;div id="just-a-slider" class="dragdealer"&gt;
   &lt;div class="handle red-bar"&gt;
-    &lt;div class="tooltip"&gt;<strong>&lt;span class="value"&gt;&lt;/span&gt;</strong>%&lt;/div&gt;
-    drag me
+    <strong>&lt;span class="value"&gt;&lt;/span&gt;</strong>%
   &lt;/div&gt;
 &lt;/div&gt;
 </pre>
 <pre class="code">
 new Dragdealer('just-a-slider', {
   <strong>animationCallback</strong>: function(x, y) {
-    tooltipValue.innerHTML = Math.round(<strong>x</strong> * 100);
+    $('#just-a-slider .value').text(Math.round(<strong>x</strong> * 100));
   }
 });
 </pre>
           <div id="just-a-slider" class="dragdealer">
             <div class="handle red-bar">
-              <div class="tooltip"><span class="value"></span>%</div>
-              drag me
+              <span class="value"></span>%
             </div>
           </div>
 
