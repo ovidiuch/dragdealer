@@ -114,15 +114,12 @@ h4 {
     .property-list .default {
       color: #666;
     }
-    .property-list .description {
-    }
     .property-list .description:before {
       content: '– ';
     }
 
 .inner-wrapper {
-  min-width: 580px; /* 640 */
-  max-width: 740px; /* 800 */
+  width: 740px; /* 800 */
   margin: 30px;
 }
 
