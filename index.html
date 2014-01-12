@@ -367,7 +367,47 @@ new Dragdealer('slide-to-unlock-new', {
 
           <p class="secondary">The latter example has the handle (the dragging object) bigger than the wrapper, which in turn has <em>overflow: hidden;</em> to mask the bigger handle surface. You should check out the HTML and CSS to understand these examples better.</p>
 
-          <h4>Slideshow with buttons</h4>
+          <h4>Image carousel</h4>
+          <p>Let's kick it up a notch. How about a <strong>touch-ready image carousel</strong>... piece of cake. The entire string of images will be the draggable handle, masked by a wrapper the size of a single image (a slide.)</p>
+
+<pre class="code">
+new Dragdealer('image-carousel', {
+  <strong>steps: 4,
+  speed: 0.3,
+  loose: true</strong>
+});
+</pre>
+          <div id="image-carousel" class="dragdealer">
+            <div class="handle">
+              <div class="slide img1">
+                <div class="info">
+                  <p class="title">Aston Martin DB4</p>
+                  <p class="description"><strong>1959</strong> — 3.7L, 240hp</p>
+                </div>
+              </div>
+              <div class="slide img2">
+                <div class="info">
+                  <p class="title">Mercedes-Benz 300SL</p>
+                  <p class="description"><strong>1956</strong> — 2996cc, 212-222hp</p>
+                </div>
+              </div>
+              <div class="slide img3">
+                <div class="info">
+                  <p class="title">Jaguar E-Type</p>
+                  <p class="description"><strong>1966</strong> — 3.8L, 265bhp</p>
+                </div>
+              </div>
+              <div class="slide img4">
+                <div class="info">
+                  <p class="title">Maserati A6</p>
+                  <p class="description"><strong>1950</strong> — 2L, 120bhp</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p>The <em>speed</em> option makes Dragdealer snappier, by speeding up the sliding animations. It takes up values between 0 and 1 and it defaults to 0.1.</p>
+
           <h4>Interactive canvas mask</h4>
           <p>Dragdealer is just a drag component, the rest is up to you.</p>
           <p>&copy; 2010+ <a href="https://twitter.com/skidding">@skidding</a></p>
