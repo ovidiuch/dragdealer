@@ -209,13 +209,6 @@
           <p>A slider is just a user control, the power lies in the value it represents. For this reason the <strong>animationCallback</strong> is your biggest ally, with it you tie the user input to any visualization you can think of. This is the most boring example.</p>
 
 <pre class="code">
-&lt;div id="just-a-slider" class="dragdealer"&gt;
-  &lt;div class="handle red-bar"&gt;
-    <strong>&lt;span class="value"&gt;&lt;/span&gt;</strong>%
-  &lt;/div&gt;
-&lt;/div&gt;
-</pre>
-<pre class="code">
 new Dragdealer('just-a-slider', {
   <strong>animationCallback</strong>: function(x, y) {
     $('#just-a-slider .value').text(Math.round(<strong>x</strong> * 100));
@@ -231,14 +224,6 @@ new Dragdealer('just-a-slider', {
           <h4><em>slide to unlock</em></h4>
           <p>This is how this project started, somebody wanted in iPhone-like slider. Classic.</p>
 
-<pre class="code">
-&lt;div class="slide-to-unlock old-slider"&gt;
-  &lt;div id="slide-to-unlock-old" class="dragdealer"&gt;
-    <strong>&lt;div class="slide-text"&gt;slide to unlock&lt;/div&gt;</strong>
-    &lt;div class="handle"&gt;&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-</pre>
 <pre class="code">
 new Dragdealer('slide-to-unlock-old', {
   <strong>steps: 2,</strong>
@@ -260,17 +245,6 @@ new Dragdealer('slide-to-unlock-old', {
 
           <p>But the iPhone changed since then, iOS has a different start screen. Let's see how hard would it be to reproduce it.</p>
 
-<pre class="code">
-&lt;div class="slide-to-unlock new-slider"&gt;
-  &lt;div id="slide-to-unlock-new" class="dragdealer"&gt;
-    &lt;div class="handle"&gt;
-      <strong>&lt;div class="slide-text"&gt;
-        &lt;i class="fa fa-angle-right"&gt;&lt;/i&gt; slide to unlock
-      &lt;/div&gt;</strong>
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-</pre>
 <pre class="code">
 new Dragdealer('slide-to-unlock-new', {
   <strong>x: 1,</strong>
@@ -294,7 +268,7 @@ new Dragdealer('slide-to-unlock-new', {
           </div>
           <p>By no means do these demos try to be exact replicas, but merely to show the flexibility of Dragdealer.</p>
 
-          <p class="secondary">The latter example has the handle (the dragging object) bigger than the wrapper, which in turn has <em>overflow: hidden;</em> to mask the bigger handle surface. You should check out the CSS to understand these examples better.</p>
+          <p class="secondary">The latter example has the handle (the dragging object) bigger than the wrapper, which in turn has <em>overflow: hidden;</em> to mask the bigger handle surface. You should check out the HTML and CSS to understand these examples better.</p>
 
           <h4>Content scroller</h4>
           <!--<p>Dragdealer can go both ways. Besides being the control of a visualization, it can also be a representation of a different component, by being controlled programatically, through the API.</p>-->
