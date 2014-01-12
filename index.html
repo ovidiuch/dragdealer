@@ -203,6 +203,7 @@
           </ul>
 
           <h3 id="demos">Demos</h3>
+          <p class="secondary">Some demos will use jQuery to manipulate surrounding elements. This is for keeping the examples as small as possible, Dragdealer doesn't have a jQuery or any other dependency.</p>
 
           <h4>Just a slider</h4>
           <p>A slider is just a user control, the power lies in the value it represents. For this reason the <strong>animationCallback</strong> is your biggest ally, with it you tie the user input to any visualization you can think of. This is the most boring example.</p>
@@ -229,8 +230,76 @@ new Dragdealer('just-a-slider', {
             </div>
           </div>
 
-          <h4>Content scroller</h4>
           <h4><em>slide to unlock</em></h4>
+          <p>This is how this project started, somebody wanted in iPhone-like slider. Classic.</p>
+
+<pre class="code">
+&lt;div class="slide-to-unlock old-slider"&gt;
+  &lt;div id="slide-to-unlock-old" class="dragdealer"&gt;
+    <strong>&lt;div class="slide-text"&gt;slide to unlock&lt;/div&gt;</strong>
+    &lt;div class="handle"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+<pre class="code">
+new Dragdealer('slide-to-unlock-old', {
+  <strong>steps: 2,</strong>
+  callback: function(x, y) {
+    // Only 0 and 1 are the possible values because of "steps: 2"
+    <strong>if (x) {</strong>
+      this.disable();
+      $('#slide-to-unlock-old').fadeOut();
+    }
+  }
+});
+</pre>
+          <div class="slide-to-unlock old-slider">
+            <div id="slide-to-unlock-old" class="dragdealer">
+              <div class="slide-text">slide to unlock</div>
+              <div class="handle"></div>
+            </div>
+          </div>
+
+          <p>But the iPhone changed since then, iOS has a different start screen. Let's see how hard would it be to reproduce it.</p>
+
+<pre class="code">
+&lt;div class="slide-to-unlock new-slider"&gt;
+  &lt;div id="slide-to-unlock-new" class="dragdealer"&gt;
+    &lt;div class="handle"&gt;
+      <strong>&lt;div class="slide-text"&gt;
+        &lt;i class="fa fa-angle-right"&gt;&lt;/i&gt; slide to unlock
+      &lt;/div&gt;</strong>
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+<pre class="code">
+new Dragdealer('slide-to-unlock-new', {
+  <strong>x: 1,</strong>
+  <strong>steps: 2,</strong>
+  <strong>loose: true,</strong>
+  callback: function(x, y) {
+    // Only 0 and 1 are the possible values because of "steps: 2"
+    <strong>if (!x) {</strong>
+      this.disable();
+      $('#slide-to-unlock-new').fadeOut();
+    }
+  }
+});
+</pre>
+          <div class="slide-to-unlock new-slider">
+            <div id="slide-to-unlock-new" class="dragdealer">
+              <div class="handle">
+                <div class="slide-text"><i class="fa fa-angle-right"></i> slide to unlock</div>
+              </div>
+            </div>
+          </div>
+          <p>By no means do these demos try to be exact replicas, but merely to show the flexibility of Dragdealer.</p>
+
+          <p class="secondary">The latter example has the handle (the dragging object) bigger than the wrapper, which in turn has <em>overflow: hidden;</em> to mask the bigger handle surface. You should check out the CSS to understand these examples better.</p>
+
+          <h4>Content scroller</h4>
+          <!--<p>Dragdealer can go both ways. Besides being the control of a visualization, it can also be a representation of a different component, by being controlled programatically, through the API.</p>-->
           <h4>Slideshow with buttons</h4>
           <h4>Interactive canvas mask</h4>
           <p>Dragdealer is just a drag component, the rest is up to you.</p>
