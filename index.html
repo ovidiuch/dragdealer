@@ -409,7 +409,81 @@ new Dragdealer('image-carousel', {
           <p>The <em>speed</em> option makes Dragdealer snappier, by speeding up the sliding animations. It takes up values between 0 and 1 and it defaults to 0.1.</p>
 
           <h4>Interactive canvas mask</h4>
-          <p class="disclaimer">That's it. Dragdealer is just a drag component, the rest is up to you.</p>
+          <p>With Dragdealer you can go from creating a simple slider to an entire website. I'm only saying this because I've seen more than a few examples of full-window implementations.</p>
+
+<pre class="code">
+var canvasMask = new Dragdealer('canvas-mask', {
+  x: 0,
+  // Start in the bottom-left corner
+  y: 1,
+  <strong>vertical: true,
+  speed: 0.2,
+  loose: true</strong>
+});
+
+$('#canvas-mask .menu a').click(function(e) {
+  e.preventDefault();
+  var anchor = $(e.currentTarget);
+  <strong>canvasMask.setValue(anchor.data('x'), anchor.data('y'));</strong>
+});
+</pre>
+          <div id="canvas-mask" class="dragdealer">
+            <div class="handle">
+              <div class="page">
+                <p class="menu">
+                  <a href="#" data-x="0" data-y="1">Two-dimensional</a> |
+                  <a href="#" data-x="1" data-y="1">Elastic</a> |
+                  <a href="#" data-x="1" data-y="0">Interactive</a> |
+                  <strong>Open</strong>
+                </p>
+                <p class="body">
+                  Dragdealer is <strong>open source</strong>, <br >
+                  see you on <a href="https://github.com/skidding/dragdealer">GitHub</a>
+                </p>
+              </div>
+              <div class="page">
+                <p class="menu">
+                  <a href="#" data-x="0" data-y="1">Two-dimensional</a> |
+                  <a href="#" data-x="1" data-y="1">Elastic</a> |
+                  <strong>Interactive</strong> |
+                  <a href="#" data-x="0" data-y="0">Open</a>
+                </p>
+                <p class="body">
+                  The dragged surface can host <strong>rich content</strong>, <br>
+                  including links for scrolling inside itself
+                </p>
+              </div>
+              <div class="page">
+                <p class="menu">
+                  <strong>Two-dimensional</strong> |
+                  <a href="#" data-x="1" data-y="1">Elastic</a> |
+                  <a href="#" data-x="1" data-y="0">Interactive</a> |
+                  <a href="#" data-x="0" data-y="0">Open</a>
+                </p>
+                <p class="body">
+                  The masked content can be discovered through <br>
+                  both <strong>horizontal and vertical dragging</strong>
+                </p>
+              </div>
+              <div class="page">
+                <p class="menu">
+                  <a href="#" data-x="0" data-y="1">Two-dimensional</a> |
+                  <strong>Elastic</strong> |
+                  <a href="#" data-x="1" data-y="0">Interactive</a> |
+                  <a href="#" data-x="0" data-y="0">Open</a>
+                </p>
+                <p class="body">
+                  The surface boundaries have an <strong>elastic ease</strong> and <br>
+                  the corners can be slightly pulled inwards
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p class="secondary">The previous version of Dragdealer had a major drawback for this use-case: buttons and links from inside the handle (which is the entire content) would not clickable on touch devices anymore, once Dragdealer was initialized. That is <a href="https://github.com/skidding/dragdealer/pull/7">fixed</a> now.</p>
+
+          <p class="disclaimer">Dragdealer is just a drag component, the rest is up to you.</p>
+
           <p>&copy; 2010+ <a href="https://twitter.com/skidding">@skidding</a> — Best regards</p>
         </div>
       </div>

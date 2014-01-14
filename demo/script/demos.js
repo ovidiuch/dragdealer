@@ -59,4 +59,18 @@ $(function() {
     speed: 0.3,
     loose: true
   });
+
+  var canvasMask = new Dragdealer('canvas-mask', {
+    x: 0,
+    // Start in the bottom-left corner
+    y: 1,
+    vertical: true,
+    speed: 0.2,
+    loose: true
+  });
+  $('#canvas-mask .menu a').click(function(e) {
+    e.preventDefault();
+    var anchor = $(e.currentTarget);
+    canvasMask.setValue(anchor.data('x'), anchor.data('y'));
+  });
 });

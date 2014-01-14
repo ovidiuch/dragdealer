@@ -25,6 +25,9 @@ p {
 .secondary {
   color: #999;
 }
+  .secondary a {
+    color: #666;
+  }
 
 h1 {
   margin: 0;
