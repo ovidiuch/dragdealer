@@ -10,3 +10,4 @@
 - Create method to unbind events from a Dragdealer instance [#8](https://github.com/skidding/dragdealer/issues/8)
 - [BUG] Allow other DOM elements inside wrapper [#11](https://github.com/skidding/dragdealer/issues/11)
 - Create new demo page [#9](https://github.com/skidding/dragdealer/issues/9)
+- Make README.md useful [#10](https://github.com/skidding/dragdealer/issues/10) (inception)
