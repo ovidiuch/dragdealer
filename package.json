@@ -1,7 +1,7 @@
 {
   "name": "dragdealer",
-  "version": "0.9.5",
-  "description": "Drag-based JavaScript component that embraces endless UI solutions",
+  "version": "0.9.6",
+  "description": "Drag-based JavaScript component, embracing endless UI solutions",
   "repository": {
     "type": "git",
     "url": "git://github.com/skidding/dragdealer.git"

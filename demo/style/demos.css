@@ -1,0 +1,242 @@
+.demo .dragdealer {
+  background: #e1e1e1;
+  height: 40px;
+  border-radius: 3px;
+}
+  .demo .dragdealer .red-bar {
+    height: 40px;
+    font-size: 16px;
+    line-height: 40px;
+    border-radius: 3px;
+  }
+
+/* Just a slider */
+
+#just-a-slider {
+  height: 60px;
+}
+  #just-a-slider .handle {
+    height: 60px;
+    line-height: 60px;
+  }
+    #just-a-slider .value {
+      padding: 0 0 0 5px;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+/* Content slider */
+
+.content-scroller .dragdealer {
+  float: right;
+  width: 40px;
+  height: 300px;
+}
+  .content-scroller .dragdealer .handle {
+    width: 40px;
+    height: 60px;
+    text-align: center;
+  }
+    .content-scroller .dragdealer .handle i {
+      line-height: 60px;
+    }
+.content-scroller .content-mask {
+  height: 298px;
+  margin: 0 55px 0 0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.content-scroller .content-body {
+  /* Incorporate the margins of the paragraphs inside */
+  overflow: hidden;
+  background: #fff;
+}
+  .content-scroller .content-body p {
+    margin: 15px;
+    color: #333;
+    font-family: monospace;
+    line-height: 24px;
+  }
+
+/* Slide to unlock */
+
+.slide-to-unlock {
+  position: relative;
+  width: 400px;
+  height: 80px;
+}
+  .slide-to-unlock .dragdealer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    background: none;
+    height: auto;
+  }
+    .slide-to-unlock .handle {
+      height: 100%;
+      border-radius: 0;
+    }
+    .slide-to-unlock .disabled {
+      background: none;
+    }
+    .slide-to-unlock .slide-text {
+      position: absolute;
+      top: 0;
+      height: 80px;
+      font-size: 30px;
+      line-height: 80px;
+      text-align: center;
+    }
+
+/* Old slide to unlock */
+
+.old-slider {
+  border-radius: 16px;
+  background: #222;
+  background-image: -webkit-linear-gradient(top, #111 0%, #333 100%);
+  background-image: -moz-linear-gradient(top, #111 0%, #333 100%);
+  background-image: -o-linear-gradient(top, #111 0%, #333 100%);
+  background-image: linear-gradient(to bottom, #111 0%, #333 100%);
+}
+  .old-slider .dragdealer {
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+  }
+    .old-slider .slide-text {
+      right: 0;
+      width: 290px;
+      height: 70px;
+      color: #999;
+      line-height: 70px;
+      cursor: default;
+    }
+    .old-slider .handle {
+      width: 100px;
+      border-radius: 12px;
+      background: #ccc;
+      background-image: -webkit-linear-gradient(top, #f1f1f1 0%, #aaa 100%);
+      background-image: -moz-linear-gradient(top, #f1f1f1 0%, #aaa 100%);
+      background-image: -o-linear-gradient(top, #f1f1f1 0%, #aaa 100%);
+      background-image: linear-gradient(to bottom, #f1f1f1 0%, #aaa 100%);
+    }
+
+/* Slide to unlock new */
+
+.new-slider {
+  background: #333344;
+}
+  .new-slider .dragdealer {
+    overflow: hidden;
+  }
+    .new-slider .handle {
+      width: 200%;
+    }
+      .new-slider .slide-text {
+        left: 50%;
+        width: 50%;
+        color: #9999aa;
+      }
+
+/* Image carousel */
+
+#image-carousel {
+  height: 400px;
+  border-radius: 0;
+  overflow: hidden;
+}
+  #image-carousel .handle {
+    width: 400%;
+    height: 100%;
+    border-radius: 0;
+  }
+    #image-carousel .handle .slide {
+      float: left;
+      position: relative;
+      width: 25%;
+      height: 100%;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+    #image-carousel .handle .img1 {
+      background-image: url('../image/carousel/aston-martin-db4.jpg');
+    }
+    #image-carousel .handle .img2 {
+      background-image: url('../image/carousel/mercedes-benz-300sl.jpg');
+    }
+    #image-carousel .handle .img3 {
+      background-image: url('../image/carousel/jaguar-e-type.jpg');
+    }
+    #image-carousel .handle .img4 {
+      background-image: url('../image/carousel/maserati-a6.jpg');
+    }
+      #image-carousel .handle .slide .info {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 10px 15px;
+        background: #fff;
+        background: rgba(255, 255, 255, 0.5);
+      }
+        #image-carousel .handle .slide .info p {
+          margin: 0;
+        }
+        #image-carousel .handle .slide .info .title {
+          font-size: 24px;
+          font-weight: bold;
+          line-height: 30px;
+        }
+        #image-carousel .handle .slide .info .description {
+          color: #333;
+          font-size: 16px;
+          line-height: 20px;
+        }
+
+/* Canvas mask */
+
+#canvas-mask {
+  height: 500px;
+  border-radius: 0;
+  overflow: hidden;
+}
+  #canvas-mask .handle {
+    width: 200%;
+    height: 200%;
+    border-radius: 0;
+    background: url('../image/canvas-mask.jpg') no-repeat center center;
+  }
+    #canvas-mask .handle .page {
+      float: left;
+      position: relative;
+      width: 50%;
+      height: 50%;
+    }
+      #canvas-mask .handle .page .menu {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        margin: 0;
+        padding: 10px 15px;
+        background: #000;
+        background: rgba(0, 0, 0, 0.75);
+        color: #666;
+        cursor: default;
+      }
+      #canvas-mask .handle .page .body {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        margin: 0;
+        padding: 10px 15px;
+        background: #fff;
+        background: rgba(255, 255, 255, 0.5);
+        color: #000;
+        color: rgba(0, 0, 0, 0.75);
+        font-size: 30px;
+        line-height: 40px;
+      }

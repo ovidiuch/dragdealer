@@ -1,0 +1,90 @@
+#HTMLReporter {
+  position: relative;
+  margin: 0;
+  padding: 30px;
+  background: #111;
+  font-family: Monaco, "Lucida Console", monospace;
+  font-size: 14px;
+  line-height: 20px;
+}
+#HTMLReporter .alert {
+  height: 30px;
+  margin: 0 0 20px 0;
+  padding: 0;
+  color: #666;
+  font-size: 20px;
+  line-height: 30px;
+}
+#HTMLReporter .banner {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  float: none;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  line-height: 30px;
+}
+#HTMLReporter .banner .title,
+#HTMLReporter .banner .version {
+  color: #333;
+}
+#HTMLReporter .banner .duration {
+  float: none;
+  color: #666;
+}
+#HTMLReporter .results {
+  margin: 0;
+  padding: 0;
+}
+#HTMLReporter .results .summary {
+  margin: 0;
+  padding: 0;
+}
+#HTMLReporter .results .suite {
+  margin: 10px 0;
+}
+#HTMLReporter .results .suite:last-child {
+  margin-bottom: 0;
+}
+#HTMLReporter .suite a {
+  color: #aaa;
+}
+#HTMLReporter .summary .specSummary {
+  margin: 0 0 0 15px;
+}
+#HTMLReporter .summary .specSummary.passed a {
+  color: #00bb00;
+}
+#HTMLReporter .summary .specSummary.failed a {
+  color: #cc0000;
+}
+#HTMLReporter #details .specDetail {
+  margin: 10px 0;
+}
+#HTMLReporter #details .specDetail:last-child {
+  margin-bottom: 0;
+}
+#HTMLReporter #details .specDetail .description {
+  padding: 0;
+  background: none;
+  color: #cc0000;
+}
+#HTMLReporter .resultMessage {
+  margin: 10px 15px;
+  padding: 0;
+  color: #aaa;
+}
+#HTMLReporter .stackTrace {
+  margin: 10px 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: #666;
+  font-size: 12px;
+  line-height: 18px;
+}
+#HTMLReporter .stackTrace:last-child {
+  margin-bottom: 0;
+}

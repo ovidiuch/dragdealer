@@ -55,7 +55,7 @@ module.exports = function(grunt) {
     'saucelabs-jasmine': {
       all: {
         options: {
-          urls: ["http://127.0.0.1:9999"],
+          urls: ["http://127.0.0.1:9999/#runner"],
           tunnelTimeout: 5,
           build: process.env.TRAVIS_JOB_ID,
           concurrency: 3,

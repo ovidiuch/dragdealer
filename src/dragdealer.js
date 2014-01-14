@@ -47,8 +47,8 @@ var Dragdealer = function(wrapper, options) {
    * The second parameter of the Dragdealer constructor is an object used for
    * specifying any of the supported options. All of them are optional.
    *
-   *   - bool disabled=false: Init Dragdealer in a disabled state. Implicitly,
-   *                          the handle will receive a .disabled class.
+   *   - bool disabled=false: Init Dragdealer in a disabled state. The handle
+   *                          will have a .disabled class.
    *
    *   - bool horizontal=true: Enable horizontal dragging.
    *
@@ -66,7 +66,7 @@ var Dragdealer = function(wrapper, options) {
    *                     of the wrapper, by defining a virtual grid made out of
    *                     a number of equally-spaced steps. This restricts
    *                     placing the handle anywhere in-between these steps.
-   *                     E.g setting 3 steps to a regular slider will only
+   *                     E.g. setting 3 steps to a regular slider will only
    *                     allow you to move it to the left, to the right or
    *                     exactly in the middle.
    *
@@ -121,8 +121,8 @@ var Dragdealer = function(wrapper, options) {
    *                                 positional values received by this
    *                                 callback reflect the exact position of the
    *                                 handle DOM element, which includes
-   *                                 exceeding values (possibly even nagative
-   *                                 ones,) when the loose option is set true.
+   *                                 exceeding values (even negative values)
+   *                                 when the loose option is set true.
    *
    *
    * Dragdealer also has a few methods to interact with, post-initialization.
@@ -475,14 +475,14 @@ Dragdealer.prototype = {
     }
     if (!this.groupCompare(value, this.value.prev)) {
       if (typeof(this.options.animationCallback) == 'function') {
-        this.options.animationCallback(value[0], value[1]);
+        this.options.animationCallback.call(this, value[0], value[1]);
       }
       this.groupCopy(this.value.prev, value);
     }
   },
   callTargetCallback: function() {
     if (typeof(this.options.callback) == 'function') {
-      this.options.callback(this.value.target[0], this.value.target[1]);
+      this.options.callback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
   animate: function(direct, first) {

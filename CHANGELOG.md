@@ -9,3 +9,4 @@
 - [BUG] Clicks/taps should be passed through from inside handle  [#7](https://github.com/skidding/dragdealer/issues/7)
 - Create method to unbind events from a Dragdealer instance [#8](https://github.com/skidding/dragdealer/issues/8)
 - [BUG] Allow other DOM elements inside wrapper [#11](https://github.com/skidding/dragdealer/issues/11)
+- Create new demo page [#9](https://github.com/skidding/dragdealer/issues/9)
