@@ -16,9 +16,9 @@ var Dragdealer = function(wrapper, options) {
    *                  of the wrapper, or the element itself.) The wrapper
    *                  establishes the dragging bounds.
    *
-   *   - The handle: A child of the wrapper element, with a required .handle
-   *                 class. This will be the dragged element, constrained by
-   *                 the wrapper's bounds.
+   *   - The handle: A child of the wrapper element, div with a required
+   *                 .handle class (may be overridden in options). This will be
+   *                 the dragged element, constrained by the wrapper's bounds.
    *
    *
    * The handle can be both smaller or bigger than the wrapper.
@@ -124,6 +124,7 @@ var Dragdealer = function(wrapper, options) {
    *                                 exceeding values (even negative values)
    *                                 when the loose option is set true.
    *
+   *   - string handleClass='handle': Custom class of handle element.
    *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
@@ -166,25 +167,18 @@ var Dragdealer = function(wrapper, options) {
    *   setValue method expects. Once picked up, the ratios can be scaled and
    *   mapped to match any real-life system of coordinates or dimensions.
    */
+  options = this.applyDefaults(options || {});
   if (typeof(wrapper) == 'string') {
     wrapper = document.getElementById(wrapper);
   }
   if (!wrapper) {
     return;
   }
-  var childElements = wrapper.getElementsByTagName('div'),
-      handle,
-      i;
-  for (i = 0; i < childElements.length; i++) {
-    if (childElements[i].className.match(/(^|\s)handle(\s|$)/)) {
-      handle = childElements[i];
-      break;
-    }
-  }
+  var handle = this.getHandleElement(wrapper, options.handleClass);
   if (!handle) {
     return;
   }
-  this.init(wrapper, handle, options || {});
+  this.init(wrapper, handle, options);
   this.bindEventListeners();
 };
 Dragdealer.prototype = {
@@ -198,13 +192,13 @@ Dragdealer.prototype = {
     loose: false,
     speed: 0.1,
     xPrecision: 0,
-    yPrecision: 0
+    yPrecision: 0,
+    handleClass: 'handle'
   },
   init: function(wrapper, handle, options) {
     this.wrapper = wrapper;
     this.handle = handle;
-    this.options = this.applyDefaults(options);
-
+    this.options = options;
     this.value = {
       prev: [-1, -1],
       current: [options.x || 0, options.y || 0],
@@ -236,6 +230,16 @@ Dragdealer.prototype = {
       }
     }
     return options;
+  },
+  getHandleElement: function(wrapper, handleClass) {
+    var childElements = wrapper.getElementsByTagName('div'),
+        handleClassMatcher = new RegExp('(^|\\s)' + handleClass + '(\\s|$)'),
+        i;
+    for (i = 0; i < childElements.length; i++) {
+      if (handleClassMatcher.test(childElements[i].className)) {
+        return childElements[i];
+      }
+    }
   },
   calculateStepRatios: function() {
     var stepRatios = [];
