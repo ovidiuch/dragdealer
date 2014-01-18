@@ -1,7 +1,7 @@
 var matchers = {
 
-  toHavePosition: function(x, y) {
-    var $handle = $('#' + this.actual).find('.handle'),
+  toHavePosition: function(x, y, handleClass) {
+    var $handle = $('#' + this.actual).find('.' + (handleClass || 'handle')),
         position = $handle.position();
     this.message = function() {
       return "Expected " + position.left + ", " + position.top +
