@@ -1,0 +1,10 @@
+#custom-handle {
+  width: 500px;
+}
+
+.custom-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}

@@ -7,9 +7,9 @@ var helpers = {
     return new Dragdealer(dragdealerId, options);
   },
 
-  dragTo: function(dragdealerId, x, y) {
+  dragTo: function(dragdealerId, x, y, handleClass) {
     var $wrapper = $('#' + dragdealerId),
-        $handle = $wrapper.find('.handle'),
+        $handle = $wrapper.find('.' + (handleClass || 'handle')),
         wrapperPosition = $wrapper.offset(),
         handlePosition = $handle.offset();
 
@@ -30,8 +30,8 @@ var helpers = {
     jasmine.Clock.tick(25);
   },
 
-  drop: function(dragdealerId, x, y) {
-    var $handle = $('#' + dragdealerId).find('.handle');
+  drop: function(dragdealerId, x, y, handleClass) {
+    var $handle = $('#' + dragdealerId).find('.' + (handleClass || 'handle'));
     $handle.simulate('mouseup');
   }
 };
