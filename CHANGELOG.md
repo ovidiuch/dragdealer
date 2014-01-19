@@ -1,3 +1,8 @@
+## 0.9.7 (future release)
+
+- Allow to pass handle in options [#14](https://github.com/skidding/dragdealer/issues/14)
+- Avoid unnecessary global variables [#15](https://github.com/skidding/dragdealer/issues/15)
+
 ## 0.9.6
 
 - Create a suite of high-level behavior tests [#1](https://github.com/skidding/dragdealer/issues/1)
@@ -10,4 +15,4 @@
 - Create method to unbind events from a Dragdealer instance [#8](https://github.com/skidding/dragdealer/issues/8)
 - [BUG] Allow other DOM elements inside wrapper [#11](https://github.com/skidding/dragdealer/issues/11)
 - Create new demo page [#9](https://github.com/skidding/dragdealer/issues/9)
-- Make README.md useful [#10](https://github.com/skidding/dragdealer/issues/10) (inception)
+- Make README.md useful [#10](https://github.com/skidding/dragdealer/issues/10)
