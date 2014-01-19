@@ -319,47 +319,45 @@ Dragdealer.prototype = {
     clearInterval(this.interval);
   },
   onHandleMouseDown: function(e) {
+    Cursor.refresh(e);
     this.preventEventDefaults(e);
     this.stopEventPropagation(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
-    Cursor.refresh(e);
     this.activity = false;
     this.startDrag();
   },
   onHandleTouchStart: function(e) {
+    Cursor.refresh(e);
     // Unlike in the `mousedown` event handler, we don't prevent defaults here,
     // because this would disable the dragging altogether. Instead, we prevent
     // it in the `touchmove` handler. Read more about touch events
     // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Touch_events#Handling_clicks
     this.stopEventPropagation(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
-    Cursor.refresh(e);
     this.activity = false;
     this.startDrag();
   },
   onWrapperMouseMove: function(e) {
+    Cursor.refresh(e);
     this.activity = true;
   },
   onWrapperTouchMove: function(e) {
+    Cursor.refresh(e);
+    if (!this.activity && this.shouldIgnoreTouchEvent(e)) {
+      this.stopDrag();
+      return;
+    }
     // Read comment in `onHandleTouchStart` above, to understand why we're
     // preventing defaults here and not there
     this.preventEventDefaults(e);
     this.activity = true;
   },
   onWrapperMouseDown: function(e) {
-    this.preventEventDefaults(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
+    this.preventEventDefaults(e);
     this.startTap();
   },
   onWrapperTouchStart: function(e) {
-    this.preventEventDefaults(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
+    this.preventEventDefaults(e);
     this.startTap();
   },
   onDocumentMouseUp: function(e) {
@@ -676,6 +674,10 @@ Dragdealer.prototype = {
   unbindEventHandler: function(eventName, object) {
     var eventMethod = 'on' + eventName;
     object[eventMethod] = object[eventMethod]._previousHandler;
+  },
+  shouldIgnoreTouchEvent: function(e) {
+    return (!this.options.horizontal && Cursor.xDiff > Cursor.yDiff) ||
+           (!this.options.vertical && Cursor.yDiff > Cursor.xDiff);
   }
 };
 
@@ -700,17 +702,8 @@ var Cursor = {
    */
   x: 0,
   y: 0,
-  init: function() {
-    this.setEvent('mouse');
-    this.setEvent('touch');
-  },
-  setEvent: function(type) {
-    var moveHandler = document['on' + type + 'move'] || function() {};
-    document['on' + type + 'move'] = function(e) {
-      moveHandler(e);
-      Cursor.refresh(e);
-    };
-  },
+  xDiff: 0,
+  yDiff: 0,
   refresh: function(e) {
     if (!e) {
       e = window.event;
@@ -722,6 +715,8 @@ var Cursor = {
     }
   },
   set: function(e) {
+    var lastX = this.x,
+        lastY = this.y;
     if (e.pageX || e.pageY) {
       this.x = e.pageX;
       this.y = e.pageY;
@@ -729,9 +724,10 @@ var Cursor = {
       this.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
       this.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
+    this.xDiff = Math.abs(this.x - lastX);
+    this.yDiff = Math.abs(this.y - lastY);
   }
 };
-Cursor.init();
 
 
 var Position = {
