@@ -6,6 +6,16 @@
  * http://skidding.mit-license.org
  */
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(factory);
+  } else {
+    // Browser globals
+    root.Dragdealer = factory();
+  }
+}(this, function () {
+
 var Dragdealer = function(wrapper, options) {
   /**
    * Drag-based component that works around two basic DOM elements.
@@ -757,3 +767,7 @@ var Position = {
     return [curleft, curtop];
   }
 };
+
+return Dragdealer;
+
+}));
