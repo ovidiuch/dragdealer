@@ -177,6 +177,7 @@ var Dragdealer = function(wrapper, options) {
    *   setValue method expects. Once picked up, the ratios can be scaled and
    *   mapped to match any real-life system of coordinates or dimensions.
    */
+  this.bindMethods();
   options = this.applyDefaults(options || {});
   if (typeof(wrapper) == 'string') {
     wrapper = document.getElementById(wrapper);
@@ -291,22 +292,34 @@ Dragdealer.prototype = {
       1 / (this.options.yPrecision || this.bounds.availHeight)
     ];
   },
+  bindMethods: function() {
+    this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
+    this.onHandleTouchStart = bind(this.onHandleTouchStart, this);
+    this.onWrapperMouseMove = bind(this.onWrapperMouseMove, this);
+    this.onWrapperTouchMove = bind(this.onWrapperTouchMove, this);
+    this.onWrapperMouseDown = bind(this.onWrapperMouseDown, this);
+    this.onWrapperTouchStart = bind(this.onWrapperTouchStart, this);
+    this.onDocumentMouseUp = bind(this.onDocumentMouseUp, this);
+    this.onWrapperTouchStart = bind(this.onWrapperTouchStart, this);
+    this.onHandleClick = bind(this.onHandleClick, this);
+    this.onWindowResize = bind(this.onWindowResize, this);
+  },
   bindEventListeners: function() {
     // Start dragging
-    this.bindEventHandler('mousedown', this.handle, 'onHandleMouseDown');
-    this.bindEventHandler('touchstart', this.handle, 'onHandleTouchStart');
+    addEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
+    addEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
     // While dragging
-    this.bindEventHandler('mousemove', this.wrapper, 'onWrapperMouseMove');
-    this.bindEventHandler('touchmove', this.wrapper, 'onWrapperTouchMove');
+    addEventListener(this.wrapper, 'mousemove', this.onWrapperMouseMove);
+    addEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
     // Start tapping
-    this.bindEventHandler('mousedown', this.wrapper, 'onWrapperMouseDown');
-    this.bindEventHandler('touchstart', this.wrapper, 'onWrapperTouchStart');
+    addEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
+    addEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
     // Stop dragging/tapping
-    this.bindEventHandler('mouseup', document, 'onDocumentMouseUp');
-    this.bindEventHandler('touchend', document, 'onDocumentTouchEnd');
+    addEventListener(document, 'mouseup', this.onDocumentMouseUp);
+    addEventListener(document, 'touchend', this.onDocumentTouchEnd);
 
-    this.bindEventHandler('click', this.handle, 'onHandleClick');
-    this.bindEventHandler('resize', window, 'onWindowResize');
+    addEventListener(this.handle, 'click', this.onHandleClick);
+    addEventListener(window, 'resize', this.onWindowResize);
 
     var _this = this;
     this.interval = setInterval(function() {
@@ -315,16 +328,20 @@ Dragdealer.prototype = {
     this.animate(false, true);
   },
   unbindEventListeners: function() {
-    this.unbindEventHandler('mousedown', this.handle);
-    this.unbindEventHandler('touchstart', this.handle);
-    this.unbindEventHandler('mousemove', this.wrapper);
-    this.unbindEventHandler('touchmove', this.wrapper);
-    this.unbindEventHandler('mousedown', this.wrapper);
-    this.unbindEventHandler('touchstart', this.wrapper);
-    this.unbindEventHandler('mouseup', document);
-    this.unbindEventHandler('touchend', document);
-    this.unbindEventHandler('click', this.handle);
-    this.unbindEventHandler('resize', window);
+    removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
+    removeEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
+
+    removeEventListener(this.wrapper, 'mousemove', this.onWrapperMouseMove);
+    removeEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
+
+    removeEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
+    removeEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
+
+    removeEventListener(document, 'mouseup', this.onDocumentMouseUp);
+    removeEventListener(document, 'touchend', this.onDocumentTouchEnd);
+
+    removeEventListener(this.handle, 'click', this.onHandleClick);
+    removeEventListener(window, 'resize', this.onWindowResize);
 
     clearInterval(this.interval);
   },
@@ -668,25 +685,34 @@ Dragdealer.prototype = {
       e.stopPropagation();
     }
     e.cancelBubble = true;
-  },
-  bindEventHandler: function(eventName, object, handler) {
-    var _this = this,
-        eventMethod = 'on' + eventName,
-        // Keep a reference to the previous handler to keep calling it as well
-        previousHandler = object[eventMethod];
+  }
+};
 
-    object[eventMethod] = function() {
-      if (typeof(previousHandler) == 'function') {
-        previousHandler.apply(arguments);
-      }
-      _this[handler].apply(_this, arguments);
-    };
-    // Store previous handler to revert to it when unbinding events
-    object[eventMethod]._previousHandler = previousHandler;
-  },
-  unbindEventHandler: function(eventName, object) {
-    var eventMethod = 'on' + eventName;
-    object[eventMethod] = object[eventMethod]._previousHandler;
+var bind = function(fn, context) {
+  /**
+   * CoffeeScript-like function to bind the scope of a method to an instance,
+   * the context of that method, regardless from where it is called
+   */
+  return function() {
+    return fn.apply(context, arguments);
+  };
+};
+
+// Cross-browser vanilla JS event handling
+
+var addEventListener = function(element, type, callback) {
+  if (element.addEventListener) {
+    element.addEventListener(type, callback);
+  } else if (element.attachEvent) {
+    element.attachEvent('on' + type, callback);
+  }
+};
+
+var removeEventListener = function(element, type, callback) {
+  if (element.removeEventListener) {
+    element.removeEventListener(type, callback);
+  } else if (element.detachEvent) {
+    element.detachEvent('on' + type, callback);
   }
 };
 
