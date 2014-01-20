@@ -426,7 +426,9 @@ var canvasMask = new Dragdealer('canvas-mask', {
   loose: true</strong>
 });
 
-$('#canvas-mask .menu a').click(function(e) {
+// Bind event on the wrapper element to prevent it when a drag has been made
+// between mousedown and mouseup (by stopping propagation from handle)
+$('#canvas-mask').on('click', '.menu a', function(e) {
   e.preventDefault();
   var anchor = $(e.currentTarget);
   <strong>canvasMask.setValue(anchor.data('x'), anchor.data('y'));</strong>

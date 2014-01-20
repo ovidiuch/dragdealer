@@ -305,7 +305,7 @@ Dragdealer.prototype = {
     this.bindEventHandler('mouseup', document, 'onDocumentMouseUp');
     this.bindEventHandler('touchend', document, 'onDocumentTouchEnd');
 
-    this.bindEventHandler('click', this.wrapper, 'onWrapperClick');
+    this.bindEventHandler('click', this.handle, 'onHandleClick');
     this.bindEventHandler('resize', window, 'onWindowResize');
 
     var _this = this;
@@ -323,7 +323,7 @@ Dragdealer.prototype = {
     this.unbindEventHandler('touchstart', this.wrapper);
     this.unbindEventHandler('mouseup', document);
     this.unbindEventHandler('touchend', document);
-    this.unbindEventHandler('click', this.wrapper);
+    this.unbindEventHandler('click', this.handle);
     this.unbindEventHandler('resize', window);
 
     clearInterval(this.interval);
@@ -380,13 +380,14 @@ Dragdealer.prototype = {
     this.stopDrag();
     this.stopTap();
   },
-  onWrapperClick: function(e) {
+  onHandleClick: function(e) {
     // We keep track if any dragging activity has been made between the
     // mouse/touch down and up events; based on this we allow or cancel a click
     // event from inside the handle. i.e. Click events shouldn't be triggered
     // when dragging, but should be allowed when clicking still
     if (this.activity) {
       this.preventEventDefaults(e);
+      this.stopEventPropagation(e);
     }
   },
   onWindowResize: function(e) {
