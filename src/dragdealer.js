@@ -346,8 +346,8 @@ Dragdealer.prototype = {
     clearInterval(this.interval);
   },
   onHandleMouseDown: function(e) {
-    this.preventEventDefaults(e);
-    this.stopEventPropagation(e);
+    preventEventDefaults(e);
+    stopEventPropagation(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
@@ -359,7 +359,7 @@ Dragdealer.prototype = {
     // because this would disable the dragging altogether. Instead, we prevent
     // it in the `touchmove` handler. Read more about touch events
     // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Touch_events#Handling_clicks
-    this.stopEventPropagation(e);
+    stopEventPropagation(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
@@ -372,18 +372,18 @@ Dragdealer.prototype = {
   onWrapperTouchMove: function(e) {
     // Read comment in `onHandleTouchStart` above, to understand why we're
     // preventing defaults here and not there
-    this.preventEventDefaults(e);
+    preventEventDefaults(e);
     this.activity = true;
   },
   onWrapperMouseDown: function(e) {
-    this.preventEventDefaults(e);
+    preventEventDefaults(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
     this.startTap();
   },
   onWrapperTouchStart: function(e) {
-    this.preventEventDefaults(e);
+    preventEventDefaults(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
@@ -403,8 +403,8 @@ Dragdealer.prototype = {
     // event from inside the handle. i.e. Click events shouldn't be triggered
     // when dragging, but should be allowed when clicking still
     if (this.activity) {
-      this.preventEventDefaults(e);
-      this.stopEventPropagation(e);
+      preventEventDefaults(e);
+      stopEventPropagation(e);
     }
   },
   onWindowResize: function(e) {
@@ -667,26 +667,9 @@ Dragdealer.prototype = {
   },
   groupClone: function(a) {
     return [a[0], a[1]];
-  },
-  preventEventDefaults: function(e) {
-    if (!e) {
-      e = window.event;
-    }
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
-    e.returnValue = false;
-  },
-  stopEventPropagation: function(e) {
-    if (!e) {
-      e = window.event;
-    }
-    if (e.stopPropagation) {
-      e.stopPropagation();
-    }
-    e.cancelBubble = true;
   }
 };
+
 
 var bind = function(fn, context) {
   /**
@@ -714,6 +697,26 @@ var removeEventListener = function(element, type, callback) {
   } else if (element.detachEvent) {
     element.detachEvent('on' + type, callback);
   }
+};
+
+var preventEventDefaults = function(e) {
+  if (!e) {
+    e = window.event;
+  }
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  e.returnValue = false;
+};
+
+var stopEventPropagation = function(e) {
+  if (!e) {
+    e = window.event;
+  }
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  e.cancelBubble = true;
 };
 
 
