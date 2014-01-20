@@ -302,7 +302,7 @@ Dragdealer.prototype = {
     this.onWrapperMouseDown = bind(this.onWrapperMouseDown, this);
     this.onWrapperTouchStart = bind(this.onWrapperTouchStart, this);
     this.onDocumentMouseUp = bind(this.onDocumentMouseUp, this);
-    this.onWrapperTouchStart = bind(this.onWrapperTouchStart, this);
+    this.onDocumentTouchEnd = bind(this.onDocumentTouchEnd, this);
     this.onHandleClick = bind(this.onHandleClick, this);
     this.onWindowResize = bind(this.onWindowResize, this);
   },
