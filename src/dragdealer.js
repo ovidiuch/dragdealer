@@ -738,15 +738,9 @@ var Cursor = {
   x: 0,
   y: 0,
   init: function() {
-    this.setEvent('mouse');
-    this.setEvent('touch');
-  },
-  setEvent: function(type) {
-    var moveHandler = document['on' + type + 'move'] || function() {};
-    document['on' + type + 'move'] = function(e) {
-      moveHandler(e);
-      Cursor.refresh(e);
-    };
+    this.refresh = bind(this.refresh, this);
+    addEventListener(document, 'mousemove', this.refresh);
+    addEventListener(document, 'touchmove', this.refresh);
   },
   refresh: function(e) {
     if (!e) {
