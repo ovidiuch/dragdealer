@@ -178,18 +178,16 @@ var Dragdealer = function(wrapper, options) {
    *   mapped to match any real-life system of coordinates or dimensions.
    */
   this.bindMethods();
-  options = this.applyDefaults(options || {});
-  if (typeof(wrapper) == 'string') {
-    wrapper = document.getElementById(wrapper);
-  }
-  if (!wrapper) {
+  this.options = this.applyDefaults(options || {});
+  this.wrapper = this.getWrapperElement(wrapper);
+  if (!this.wrapper) {
     return;
   }
-  var handle = this.getHandleElement(wrapper, options.handleClass);
-  if (!handle) {
+  this.handle = this.getHandleElement(this.wrapper, this.options.handleClass);
+  if (!this.handle) {
     return;
   }
-  this.init(wrapper, handle, options);
+  this.init();
   this.bindEventListeners();
 };
 Dragdealer.prototype = {
@@ -206,14 +204,11 @@ Dragdealer.prototype = {
     yPrecision: 0,
     handleClass: 'handle'
   },
-  init: function(wrapper, handle, options) {
-    this.wrapper = wrapper;
-    this.handle = handle;
-    this.options = options;
+  init: function() {
     this.value = {
       prev: [-1, -1],
-      current: [options.x || 0, options.y || 0],
-      target: [options.x || 0, options.y || 0]
+      current: [this.options.x || 0, this.options.y || 0],
+      target: [this.options.x || 0, this.options.y || 0]
     };
     this.offset = {
       wrapper: [0, 0],
@@ -241,6 +236,13 @@ Dragdealer.prototype = {
       }
     }
     return options;
+  },
+  getWrapperElement: function(wrapper) {
+    if (typeof(wrapper) == 'string') {
+      return document.getElementById(wrapper);
+    } else {
+      return wrapper;
+    }
   },
   getHandleElement: function(wrapper, handleClass) {
     var childElements = wrapper.getElementsByTagName('div'),
