@@ -21,8 +21,7 @@ describe("Click events inside handle", function() {
       .simulate('mouseup')
       .simulate('click');
 
-    expect(clickHandler.calls.length).toEqual(1);
-    expect(clickHandler.calls[0].args[0].isDefaultPrevented()).toBe(true);
+    expect(clickHandler.calls.length).toEqual(0);
   });
 
   it("should be passed through if not mouse dragging", function() {
