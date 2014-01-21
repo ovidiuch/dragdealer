@@ -2,6 +2,7 @@
 
 - Allow to pass handle in options [#14](https://github.com/skidding/dragdealer/issues/14)
 - Avoid unnecessary global variables [#15](https://github.com/skidding/dragdealer/issues/15)
+- Use proper event delegation [#17](https://github.com/skidding/dragdealer/issues/17)
 
 ## 0.9.6
 
