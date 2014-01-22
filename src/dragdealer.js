@@ -344,30 +344,28 @@ Dragdealer.prototype = {
     clearInterval(this.interval);
   },
   onHandleMouseDown: function(e) {
+    Cursor.refresh(e);
     preventEventDefaults(e);
     stopEventPropagation(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
-    Cursor.refresh(e);
     this.activity = false;
     this.startDrag();
   },
   onHandleTouchStart: function(e) {
+    Cursor.refresh(e);
     // Unlike in the `mousedown` event handler, we don't prevent defaults here,
     // because this would disable the dragging altogether. Instead, we prevent
     // it in the `touchmove` handler. Read more about touch events
     // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Touch_events#Handling_clicks
     stopEventPropagation(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
-    Cursor.refresh(e);
     this.activity = false;
     this.startDrag();
   },
   onWrapperMouseMove: function(e) {
+    Cursor.refresh(e);
     this.activity = true;
   },
   onWrapperTouchMove: function(e) {
+    Cursor.refresh(e);
     if (!this.activity && this.shouldIgnoreTouchEvent(e)) {
       this.stopDrag();
       return;
@@ -378,17 +376,13 @@ Dragdealer.prototype = {
     this.activity = true;
   },
   onWrapperMouseDown: function(e) {
-    preventEventDefaults(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
+    preventEventDefaults(e);
     this.startTap();
   },
   onWrapperTouchStart: function(e) {
-    preventEventDefaults(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
+    preventEventDefaults(e);
     this.startTap();
   },
   onDocumentMouseUp: function(e) {
@@ -739,20 +733,14 @@ var Cursor = {
    * and can receive both type of events consecutively, extracting the relevant
    * meta data from each type of event.
    *
-   * This component is initialized with Cursor.init(), when the event listeners
-   * are set. Cursor.refresh(e) can also be called synchronously to update the
-   * global x and y values, with a genuine MouseEvent or a TouchEvent from a
-   * different event listener, e.g. mousedown/up or touchstart/end
+   * Cursor.refresh(e) is called to update the global x and y values, with a
+   * genuine MouseEvent or a TouchEvent from an event listener, e.g.
+   * mousedown/up or touchstart/end
    */
   x: 0,
   y: 0,
   xDiff: 0,
   yDiff: 0,
-  init: function() {
-    this.refresh = bind(this.refresh, this);
-    addEventListener(document, 'mousemove', this.refresh);
-    addEventListener(document, 'touchmove', this.refresh);
-  },
   refresh: function(e) {
     if (!e) {
       e = window.event;
@@ -777,7 +765,6 @@ var Cursor = {
     this.yDiff = Math.abs(this.y - lastY);
   }
 };
-Cursor.init();
 
 
 var Position = {
