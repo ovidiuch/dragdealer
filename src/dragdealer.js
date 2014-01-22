@@ -6,6 +6,16 @@
  * http://skidding.mit-license.org
  */
 
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(factory);
+  } else {
+    // Browser globals
+    root.Dragdealer = factory();
+  }
+}(this, function () {
+
 var Dragdealer = function(wrapper, options) {
   /**
    * Drag-based component that works around two basic DOM elements.
@@ -16,9 +26,9 @@ var Dragdealer = function(wrapper, options) {
    *                  of the wrapper, or the element itself.) The wrapper
    *                  establishes the dragging bounds.
    *
-   *   - The handle: A child of the wrapper element, with a required .handle
-   *                 class. This will be the dragged element, constrained by
-   *                 the wrapper's bounds.
+   *   - The handle: A child of the wrapper element, div with a required
+   *                 .handle class (may be overridden in options). This will be
+   *                 the dragged element, constrained by the wrapper's bounds.
    *
    *
    * The handle can be both smaller or bigger than the wrapper.
@@ -124,6 +134,7 @@ var Dragdealer = function(wrapper, options) {
    *                                 exceeding values (even negative values)
    *                                 when the loose option is set true.
    *
+   *   - string handleClass='handle': Custom class of handle element.
    *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
@@ -166,25 +177,17 @@ var Dragdealer = function(wrapper, options) {
    *   setValue method expects. Once picked up, the ratios can be scaled and
    *   mapped to match any real-life system of coordinates or dimensions.
    */
-  if (typeof(wrapper) == 'string') {
-    wrapper = document.getElementById(wrapper);
-  }
-  if (!wrapper) {
+  this.bindMethods();
+  this.options = this.applyDefaults(options || {});
+  this.wrapper = this.getWrapperElement(wrapper);
+  if (!this.wrapper) {
     return;
   }
-  var childElements = wrapper.getElementsByTagName('div'),
-      handle,
-      i;
-  for (i = 0; i < childElements.length; i++) {
-    if (childElements[i].className.match(/(^|\s)handle(\s|$)/)) {
-      handle = childElements[i];
-      break;
-    }
-  }
-  if (!handle) {
+  this.handle = this.getHandleElement(this.wrapper, this.options.handleClass);
+  if (!this.handle) {
     return;
   }
-  this.init(wrapper, handle, options || {});
+  this.init();
   this.bindEventListeners();
 };
 Dragdealer.prototype = {
@@ -198,17 +201,14 @@ Dragdealer.prototype = {
     loose: false,
     speed: 0.1,
     xPrecision: 0,
-    yPrecision: 0
+    yPrecision: 0,
+    handleClass: 'handle'
   },
-  init: function(wrapper, handle, options) {
-    this.wrapper = wrapper;
-    this.handle = handle;
-    this.options = this.applyDefaults(options);
-
+  init: function() {
     this.value = {
       prev: [-1, -1],
-      current: [options.x || 0, options.y || 0],
-      target: [options.x || 0, options.y || 0]
+      current: [this.options.x || 0, this.options.y || 0],
+      target: [this.options.x || 0, this.options.y || 0]
     };
     this.offset = {
       wrapper: [0, 0],
@@ -236,6 +236,23 @@ Dragdealer.prototype = {
       }
     }
     return options;
+  },
+  getWrapperElement: function(wrapper) {
+    if (typeof(wrapper) == 'string') {
+      return document.getElementById(wrapper);
+    } else {
+      return wrapper;
+    }
+  },
+  getHandleElement: function(wrapper, handleClass) {
+    var childElements = wrapper.getElementsByTagName('div'),
+        handleClassMatcher = new RegExp('(^|\\s)' + handleClass + '(\\s|$)'),
+        i;
+    for (i = 0; i < childElements.length; i++) {
+      if (handleClassMatcher.test(childElements[i].className)) {
+        return childElements[i];
+      }
+    }
   },
   calculateStepRatios: function() {
     var stepRatios = [];
@@ -277,22 +294,34 @@ Dragdealer.prototype = {
       1 / (this.options.yPrecision || this.bounds.availHeight)
     ];
   },
+  bindMethods: function() {
+    this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
+    this.onHandleTouchStart = bind(this.onHandleTouchStart, this);
+    this.onWrapperMouseMove = bind(this.onWrapperMouseMove, this);
+    this.onWrapperTouchMove = bind(this.onWrapperTouchMove, this);
+    this.onWrapperMouseDown = bind(this.onWrapperMouseDown, this);
+    this.onWrapperTouchStart = bind(this.onWrapperTouchStart, this);
+    this.onDocumentMouseUp = bind(this.onDocumentMouseUp, this);
+    this.onDocumentTouchEnd = bind(this.onDocumentTouchEnd, this);
+    this.onHandleClick = bind(this.onHandleClick, this);
+    this.onWindowResize = bind(this.onWindowResize, this);
+  },
   bindEventListeners: function() {
     // Start dragging
-    this.bindEventHandler('mousedown', this.handle, 'onHandleMouseDown');
-    this.bindEventHandler('touchstart', this.handle, 'onHandleTouchStart');
+    addEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
+    addEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
     // While dragging
-    this.bindEventHandler('mousemove', this.wrapper, 'onWrapperMouseMove');
-    this.bindEventHandler('touchmove', this.wrapper, 'onWrapperTouchMove');
+    addEventListener(this.wrapper, 'mousemove', this.onWrapperMouseMove);
+    addEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
     // Start tapping
-    this.bindEventHandler('mousedown', this.wrapper, 'onWrapperMouseDown');
-    this.bindEventHandler('touchstart', this.wrapper, 'onWrapperTouchStart');
+    addEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
+    addEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
     // Stop dragging/tapping
-    this.bindEventHandler('mouseup', document, 'onDocumentMouseUp');
-    this.bindEventHandler('touchend', document, 'onDocumentTouchEnd');
+    addEventListener(document, 'mouseup', this.onDocumentMouseUp);
+    addEventListener(document, 'touchend', this.onDocumentTouchEnd);
 
-    this.bindEventHandler('click', this.wrapper, 'onWrapperClick');
-    this.bindEventHandler('resize', window, 'onWindowResize');
+    addEventListener(this.handle, 'click', this.onHandleClick);
+    addEventListener(window, 'resize', this.onWindowResize);
 
     var _this = this;
     this.interval = setInterval(function() {
@@ -301,22 +330,22 @@ Dragdealer.prototype = {
     this.animate(false, true);
   },
   unbindEventListeners: function() {
-    this.unbindEventHandler('mousedown', this.handle);
-    this.unbindEventHandler('touchstart', this.handle);
-    this.unbindEventHandler('mousemove', this.wrapper);
-    this.unbindEventHandler('touchmove', this.wrapper);
-    this.unbindEventHandler('mousedown', this.wrapper);
-    this.unbindEventHandler('touchstart', this.wrapper);
-    this.unbindEventHandler('mouseup', document);
-    this.unbindEventHandler('touchend', document);
-    this.unbindEventHandler('click', this.wrapper);
-    this.unbindEventHandler('resize', window);
+    removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
+    removeEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
+    removeEventListener(this.wrapper, 'mousemove', this.onWrapperMouseMove);
+    removeEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
+    removeEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
+    removeEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
+    removeEventListener(document, 'mouseup', this.onDocumentMouseUp);
+    removeEventListener(document, 'touchend', this.onDocumentTouchEnd);
+    removeEventListener(this.handle, 'click', this.onHandleClick);
+    removeEventListener(window, 'resize', this.onWindowResize);
 
     clearInterval(this.interval);
   },
   onHandleMouseDown: function(e) {
-    this.preventEventDefaults(e);
-    this.stopEventPropagation(e);
+    preventEventDefaults(e);
+    stopEventPropagation(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
@@ -328,7 +357,7 @@ Dragdealer.prototype = {
     // because this would disable the dragging altogether. Instead, we prevent
     // it in the `touchmove` handler. Read more about touch events
     // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Touch_events#Handling_clicks
-    this.stopEventPropagation(e);
+    stopEventPropagation(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
@@ -341,18 +370,18 @@ Dragdealer.prototype = {
   onWrapperTouchMove: function(e) {
     // Read comment in `onHandleTouchStart` above, to understand why we're
     // preventing defaults here and not there
-    this.preventEventDefaults(e);
+    preventEventDefaults(e);
     this.activity = true;
   },
   onWrapperMouseDown: function(e) {
-    this.preventEventDefaults(e);
+    preventEventDefaults(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
     this.startTap();
   },
   onWrapperTouchStart: function(e) {
-    this.preventEventDefaults(e);
+    preventEventDefaults(e);
     // We make sure the Cursor has the up to date with the latest mouse/touch
     // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
@@ -366,13 +395,14 @@ Dragdealer.prototype = {
     this.stopDrag();
     this.stopTap();
   },
-  onWrapperClick: function(e) {
+  onHandleClick: function(e) {
     // We keep track if any dragging activity has been made between the
     // mouse/touch down and up events; based on this we allow or cancel a click
     // event from inside the handle. i.e. Click events shouldn't be triggered
     // when dragging, but should be allowed when clicking still
     if (this.activity) {
-      this.preventEventDefaults(e);
+      preventEventDefaults(e);
+      stopEventPropagation(e);
     }
   },
   onWindowResize: function(e) {
@@ -635,44 +665,56 @@ Dragdealer.prototype = {
   },
   groupClone: function(a) {
     return [a[0], a[1]];
-  },
-  preventEventDefaults: function(e) {
-    if (!e) {
-      e = window.event;
-    }
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
-    e.returnValue = false;
-  },
-  stopEventPropagation: function(e) {
-    if (!e) {
-      e = window.event;
-    }
-    if (e.stopPropagation) {
-      e.stopPropagation();
-    }
-    e.cancelBubble = true;
-  },
-  bindEventHandler: function(eventName, object, handler) {
-    var _this = this,
-        eventMethod = 'on' + eventName,
-        // Keep a reference to the previous handler to keep calling it as well
-        previousHandler = object[eventMethod];
-
-    object[eventMethod] = function() {
-      if (typeof(previousHandler) == 'function') {
-        previousHandler.apply(arguments);
-      }
-      _this[handler].apply(_this, arguments);
-    };
-    // Store previous handler to revert to it when unbinding events
-    object[eventMethod]._previousHandler = previousHandler;
-  },
-  unbindEventHandler: function(eventName, object) {
-    var eventMethod = 'on' + eventName;
-    object[eventMethod] = object[eventMethod]._previousHandler;
   }
+};
+
+
+var bind = function(fn, context) {
+  /**
+   * CoffeeScript-like function to bind the scope of a method to an instance,
+   * the context of that method, regardless from where it is called
+   */
+  return function() {
+    return fn.apply(context, arguments);
+  };
+};
+
+// Cross-browser vanilla JS event handling
+
+var addEventListener = function(element, type, callback) {
+  if (element.addEventListener) {
+    element.addEventListener(type, callback);
+  } else if (element.attachEvent) {
+    element.attachEvent('on' + type, callback);
+  }
+};
+
+var removeEventListener = function(element, type, callback) {
+  if (element.removeEventListener) {
+    element.removeEventListener(type, callback);
+  } else if (element.detachEvent) {
+    element.detachEvent('on' + type, callback);
+  }
+};
+
+var preventEventDefaults = function(e) {
+  if (!e) {
+    e = window.event;
+  }
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  e.returnValue = false;
+};
+
+var stopEventPropagation = function(e) {
+  if (!e) {
+    e = window.event;
+  }
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  e.cancelBubble = true;
 };
 
 
@@ -697,15 +739,9 @@ var Cursor = {
   x: 0,
   y: 0,
   init: function() {
-    this.setEvent('mouse');
-    this.setEvent('touch');
-  },
-  setEvent: function(type) {
-    var moveHandler = document['on' + type + 'move'] || function() {};
-    document['on' + type + 'move'] = function(e) {
-      moveHandler(e);
-      Cursor.refresh(e);
-    };
+    this.refresh = bind(this.refresh, this);
+    addEventListener(document, 'mousemove', this.refresh);
+    addEventListener(document, 'touchmove', this.refresh);
   },
   refresh: function(e) {
     if (!e) {
@@ -753,3 +789,7 @@ var Position = {
     return [curleft, curtop];
   }
 };
+
+return Dragdealer;
+
+}));

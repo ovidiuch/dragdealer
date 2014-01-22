@@ -12,6 +12,14 @@ describe("Dragging Dragdealer", function() {
     expect('simple-slider').toHavePosition(100, 0);
   });
 
+  it("should move custom handle along with mouse after pressing", function() {
+    helpers.initDragdealer('custom-handle', {
+      handleClass: 'custom-handle'
+    });
+    helpers.dragTo('custom-handle', 100, 0, 'custom-handle');
+    expect('custom-handle').toHavePosition(100, 0, 'custom-handle');
+  });
+
   it("should not move disabled Dragdealer", function() {
     helpers.initDragdealer('simple-slider', {
       disabled: true

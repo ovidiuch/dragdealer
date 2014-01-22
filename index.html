@@ -6,7 +6,7 @@
 
   <link href="lib/jasmine.css" type="text/css" rel="stylesheet">
   <link href="lib/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-  <script src="lib/jquery-1.10.2.min.js"></script>
+  <script src="lib/jquery-1.10.2.js"></script>
   <script src="lib/jquery.simulate.js"></script>
   <script src="lib/jasmine.js"></script>
   <script src="lib/jasmine-html.js"></script>
@@ -50,7 +50,7 @@
           </div>
 
           <h2>Drag-based JavaScript component, embracing endless UI solutions</h2>
-          <p>2d dragging and tapping, mouse and touch, ~11KB. No dependency. <a href="https://github.com/skidding/dragdealer/blob/master/Gruntfile.js#L2-L44">Any browser.</a></p>
+          <p>2d dragging and tapping, mouse and touch, ~12KB. No dependency. <a href="https://github.com/skidding/dragdealer/blob/master/Gruntfile.js#L2-L44">Any browser.</a></p>
           <ul class="project-buttons">
             <li>
               <a href="https://github.com/skidding/dragdealer">
@@ -168,6 +168,11 @@
               <span class="type">fn</span>
               <strong>animationCallback(x, y)</strong>
               <span class="description">Called every animation loop, as long as the handle is being dragged or in the process of a sliding animation. The x, y positional values received by this callback reflect the exact position of the handle DOM element, which includes exceeding values (even negative values) when the <em>loose</em> option is set true.</span>
+            </li>
+            <li>
+              <span class="type">string</span>
+              <strong>handleClass</strong><span class="default">=handle</span>
+              <span class="description">Custom class of handle element.</span>
             </li>
           </ul>
 
@@ -421,7 +426,9 @@ var canvasMask = new Dragdealer('canvas-mask', {
   loose: true</strong>
 });
 
-$('#canvas-mask .menu a').click(function(e) {
+// Bind event on the wrapper element to prevent it when a drag has been made
+// between mousedown and mouseup (by stopping propagation from handle)
+$('#canvas-mask').on('click', '.menu a', function(e) {
   e.preventDefault();
   var anchor = $(e.currentTarget);
   <strong>canvasMask.setValue(anchor.data('x'), anchor.data('y'));</strong>

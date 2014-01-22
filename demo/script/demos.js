@@ -68,7 +68,9 @@ $(function() {
     speed: 0.2,
     loose: true
   });
-  $('#canvas-mask .menu a').click(function(e) {
+  // Bind event on the wrapper element to prevent it when a drag has been made
+  // between mousedown and mouseup (by stopping propagation from handle)
+  $('#canvas-mask').on('click', '.menu a', function(e) {
     e.preventDefault();
     var anchor = $(e.currentTarget);
     canvasMask.setValue(anchor.data('x'), anchor.data('y'));
