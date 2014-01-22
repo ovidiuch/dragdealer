@@ -368,6 +368,10 @@ Dragdealer.prototype = {
     this.activity = true;
   },
   onWrapperTouchMove: function(e) {
+    if (!this.activity && this.shouldIgnoreTouchEvent(e)) {
+      this.stopDrag();
+      return;
+    }
     // Read comment in `onHandleTouchStart` above, to understand why we're
     // preventing defaults here and not there
     preventEventDefaults(e);
@@ -665,6 +669,10 @@ Dragdealer.prototype = {
   },
   groupClone: function(a) {
     return [a[0], a[1]];
+  },
+  shouldIgnoreTouchEvent: function(e) {
+    return (!this.options.horizontal && Cursor.xDiff > Cursor.yDiff) ||
+           (!this.options.vertical && Cursor.yDiff > Cursor.xDiff);
   }
 };
 
