@@ -738,6 +738,8 @@ var Cursor = {
    */
   x: 0,
   y: 0,
+  xDiff: 0,
+  yDiff: 0,
   init: function() {
     this.refresh = bind(this.refresh, this);
     addEventListener(document, 'mousemove', this.refresh);
@@ -754,6 +756,8 @@ var Cursor = {
     }
   },
   set: function(e) {
+    var lastX = this.x,
+        lastY = this.y;
     if (e.pageX || e.pageY) {
       this.x = e.pageX;
       this.y = e.pageY;
@@ -761,6 +765,8 @@ var Cursor = {
       this.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
       this.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
+    this.xDiff = Math.abs(this.x - lastX);
+    this.yDiff = Math.abs(this.y - lastY);
   }
 };
 Cursor.init();
