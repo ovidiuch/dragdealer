@@ -4,6 +4,7 @@
 - Avoid unnecessary global variables [#15](https://github.com/skidding/dragdealer/issues/15)
 - Use proper event delegation [#17](https://github.com/skidding/dragdealer/issues/17)
 - [BUG] Sliding never ends when handle is bigger than wrapper [#21](https://github.com/skidding/dragdealer/issues/21)
+- [BUG] Horizontal drag control breaks vertical content scrolling on touch devices [#12](https://github.com/skidding/dragdealer/issues/12)
 
 ## 0.9.6
 

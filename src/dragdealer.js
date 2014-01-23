@@ -346,47 +346,51 @@ Dragdealer.prototype = {
     clearInterval(this.interval);
   },
   onHandleMouseDown: function(e) {
+    Cursor.refresh(e);
     preventEventDefaults(e);
     stopEventPropagation(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
-    Cursor.refresh(e);
     this.activity = false;
     this.startDrag();
   },
   onHandleTouchStart: function(e) {
+    Cursor.refresh(e);
     // Unlike in the `mousedown` event handler, we don't prevent defaults here,
     // because this would disable the dragging altogether. Instead, we prevent
     // it in the `touchmove` handler. Read more about touch events
     // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Touch_events#Handling_clicks
     stopEventPropagation(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
-    Cursor.refresh(e);
     this.activity = false;
     this.startDrag();
   },
   onWrapperMouseMove: function(e) {
+    Cursor.refresh(e);
     this.activity = true;
   },
   onWrapperTouchMove: function(e) {
+    Cursor.refresh(e);
+    // Dragging on a disabled axis (horizontal or vertical) shouldn't prevent
+    // defaults on touch devices. !this.activity denotes this is the first move
+    // inside a drag action; you can drag in any direction after this point if
+    // the dragging wasn't stopped
+    if (!this.activity && this.draggingOnDisabledAxis(e)) {
+      if (this.dragging) {
+        this.stopDrag();
+      }
+      return;
+    }
     // Read comment in `onHandleTouchStart` above, to understand why we're
     // preventing defaults here and not there
     preventEventDefaults(e);
     this.activity = true;
   },
   onWrapperMouseDown: function(e) {
-    preventEventDefaults(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
+    preventEventDefaults(e);
     this.startTap();
   },
   onWrapperTouchStart: function(e) {
-    preventEventDefaults(e);
-    // We make sure the Cursor has the up to date with the latest mouse/touch
-    // coordinates by applying the contents of the genuine MouseEvent at hand
     Cursor.refresh(e);
+    preventEventDefaults(e);
     this.startTap();
   },
   onDocumentMouseUp: function(e) {
@@ -667,6 +671,10 @@ Dragdealer.prototype = {
   },
   groupClone: function(a) {
     return [a[0], a[1]];
+  },
+  draggingOnDisabledAxis: function(e) {
+    return (!this.options.horizontal && Cursor.xDiff > Cursor.yDiff) ||
+           (!this.options.vertical && Cursor.yDiff > Cursor.xDiff);
   }
 };
 
@@ -729,22 +737,17 @@ var Cursor = {
    * the latest x and y mouse/touch position of the user available at any time,
    * which is requested with Cursor.x and Cursor.y respectively.
    *
-   * Event listeners are set for both mouse and touch event at initialization,
-   * and can receive both type of events consecutively, extracting the relevant
-   * meta data from each type of event.
+   * It can receive both mouse and touch events consecutively, extracting the
+   * relevant meta data from each type of event.
    *
-   * This component is initialized with Cursor.init(), when the event listeners
-   * are set. Cursor.refresh(e) can also be called synchronously to update the
-   * global x and y values, with a genuine MouseEvent or a TouchEvent from a
-   * different event listener, e.g. mousedown/up or touchstart/end
+   * Cursor.refresh(e) is called to update the global x and y values, with a
+   * genuine MouseEvent or a TouchEvent from an event listener, e.g.
+   * mousedown/up or touchstart/end
    */
   x: 0,
   y: 0,
-  init: function() {
-    this.refresh = bind(this.refresh, this);
-    addEventListener(document, 'mousemove', this.refresh);
-    addEventListener(document, 'touchmove', this.refresh);
-  },
+  xDiff: 0,
+  yDiff: 0,
   refresh: function(e) {
     if (!e) {
       e = window.event;
@@ -756,6 +759,8 @@ var Cursor = {
     }
   },
   set: function(e) {
+    var lastX = this.x,
+        lastY = this.y;
     if (e.pageX || e.pageY) {
       this.x = e.pageX;
       this.y = e.pageY;
@@ -763,9 +768,10 @@ var Cursor = {
       this.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
       this.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
+    this.xDiff = Math.abs(this.x - lastX);
+    this.yDiff = Math.abs(this.y - lastY);
   }
 };
-Cursor.init();
 
 
 var Position = {
