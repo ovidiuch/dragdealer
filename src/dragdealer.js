@@ -372,8 +372,10 @@ Dragdealer.prototype = {
     // defaults on touch devices. !this.activity denotes this is the first move
     // inside a drag action; you can drag in any direction after this point if
     // the dragging wasn't stopped
-    if (this.dragging && !this.activity && this.draggingOnDisabledAxis(e)) {
-      this.stopDrag();
+    if (!this.activity && this.draggingOnDisabledAxis(e)) {
+      if (this.dragging) {
+        this.stopDrag();
+      }
       return;
     }
     // Read comment in `onHandleTouchStart` above, to understand why we're
