@@ -737,9 +737,8 @@ var Cursor = {
    * the latest x and y mouse/touch position of the user available at any time,
    * which is requested with Cursor.x and Cursor.y respectively.
    *
-   * Event listeners are set for both mouse and touch event at initialization,
-   * and can receive both type of events consecutively, extracting the relevant
-   * meta data from each type of event.
+   * It can receive both mouse and touch events consecutively, extracting the
+   * relevant meta data from each type of event.
    *
    * Cursor.refresh(e) is called to update the global x and y values, with a
    * genuine MouseEvent or a TouchEvent from an event listener, e.g.
