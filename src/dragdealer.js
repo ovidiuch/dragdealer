@@ -289,9 +289,11 @@ Dragdealer.prototype = {
     // position within the DOM. The xPrecision/yPrecision options can be
     // specified to increase the granularity when we're controlling larger
     // objects from one of the callbacks
+    var xPrecision = this.options.xPrecision || Math.abs(this.bounds.availWidth),
+        yPrecision = this.options.yPrecision || Math.abs(this.bounds.availHeight);
     return [
-      1 / (this.options.xPrecision || this.bounds.availWidth),
-      1 / (this.options.yPrecision || this.bounds.availHeight)
+      xPrecision ? 1 / xPrecision : 0,
+      yPrecision ? 1 / yPrecision : 0
     ];
   },
   bindMethods: function() {
