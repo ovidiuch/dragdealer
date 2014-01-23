@@ -124,4 +124,23 @@ describe("Dragdealer callbacks", function() {
       expect(callback).toHaveBeenCalledWith(0.5, 0);
     });
   });
+
+  it("should not call animationCallback forever when handle bigger than wrapper", function() {
+    // Fix for https://github.com/skidding/dragdealer/issues/21
+    var callback = jasmine.createSpy(),
+        dragdealer = helpers.initDragdealer('masked-slider', {
+      animationCallback: callback,
+      slide: true
+    });
+    helpers.dragTo('masked-slider', -20, 0);
+    // Add one extra call for the initial one
+    expect(callback.calls.length).toEqual(2);
+    expect(callback).toHaveBeenCalledWith(0.04, 0);
+
+    helpers.drop('masked-slider');
+    jasmine.Clock.tick(3000);
+    // We want to make sure the value has reached 0.2 and is not something like
+    // 0.19999948332063716
+    expect(callback).toHaveBeenCalledWith(0.2, 0);
+  });
 });
