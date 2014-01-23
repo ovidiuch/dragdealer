@@ -368,7 +368,11 @@ Dragdealer.prototype = {
   },
   onWrapperTouchMove: function(e) {
     Cursor.refresh(e);
-    if (!this.activity && this.shouldIgnoreTouchEvent(e)) {
+    // Dragging on a disabled axis (horizontal or vertical) shouldn't prevent
+    // defaults on touch devices. !this.activity denotes this is the first move
+    // inside a drag action; you can drag in any direction after this point if
+    // the dragging wasn't stopped
+    if (this.dragging && !this.activity && this.draggingOnDisabledAxis(e)) {
       this.stopDrag();
       return;
     }
@@ -666,7 +670,7 @@ Dragdealer.prototype = {
   groupClone: function(a) {
     return [a[0], a[1]];
   },
-  shouldIgnoreTouchEvent: function(e) {
+  draggingOnDisabledAxis: function(e) {
     return (!this.options.horizontal && Cursor.xDiff > Cursor.yDiff) ||
            (!this.options.vertical && Cursor.yDiff > Cursor.xDiff);
   }
