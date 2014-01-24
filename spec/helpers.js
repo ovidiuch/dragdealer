@@ -33,5 +33,54 @@ var helpers = {
   drop: function(dragdealerId, x, y, handleClass) {
     var $handle = $('#' + dragdealerId).find('.' + (handleClass || 'handle'));
     $handle.simulate('mouseup');
+  },
+
+  touchDragTo: function (dragdealerId, x, y, handleClass) {
+    var $wrapper = $('#' + dragdealerId),
+        $handle = $wrapper.find('.' + (handleClass || 'handle')),
+        wrapperPosition = $wrapper.offset(),
+        handlePosition = $handle.offset();
+
+    // Move to current handle position and start touch
+    simulateTouchEvent($handle.get(0), 'touchstart', {
+      clientX: handlePosition.left,
+      clientY: handlePosition.top
+    })
+
+    simulateTouchEvent($wrapper.get(0), 'touchmove', {
+      clientX: wrapperPosition.left + x,
+      clientY: wrapperPosition.top + y
+    });
+
+    jasmine.Clock.tick(25);
+  },
+
+  touchDrop: function(dragdealerId, x, y, handleClass) {
+    var $handle = $('#' + dragdealerId).find('.' + (handleClass || 'handle'));
+    simulateTouchEvent($handle.get(0), 'touchend')
   }
+
 };
+
+function simulateTouchEvent (element, type, touchOptions) {
+  var event
+  if (document.createEvent) {
+    event = document.createEvent('UIEvent');
+    event.initUIEvent(type, true, type !== 'touchcancel', window, 0)
+  } else if (document.createEventObject) {
+    event = document.createEventObject();
+    event.type = type;
+    event.cancelable = type !== 'touchcancel';
+    event.view = window;
+    event.detail = 0;
+  }
+  if (touchOptions) {
+    event.touches = [touchOptions]
+  }
+  if (element.dispatchEvent) {
+    element.dispatchEvent(event);
+  } else if (element.fireEvent) {
+    element['on' + type](event);
+  }
+}
+
