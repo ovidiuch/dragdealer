@@ -57,7 +57,8 @@ var helpers = {
 
   touchDrop: function(dragdealerId, x, y, handleClass) {
     var $handle = $('#' + dragdealerId).find('.' + (handleClass || 'handle'));
-    simulateTouchEvent($handle.get(0), 'touchend')
+    // trigger on document because doesn't bubble in old ies
+    simulateTouchEvent(document, 'touchend')
   }
 
 };
@@ -80,6 +81,7 @@ function simulateTouchEvent (element, type, touchOptions) {
   if (element.dispatchEvent) {
     element.dispatchEvent(event);
   } else if (element.fireEvent) {
+    // we can't fire inexistent events
     element['on' + type](event);
   }
 }
