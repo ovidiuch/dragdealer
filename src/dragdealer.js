@@ -695,13 +695,7 @@ var addEventListener = function(element, type, callback) {
   if (element.addEventListener) {
     element.addEventListener(type, callback);
   } else if (element.attachEvent) {
-    if (type.substr(0, 5) === 'touch') {
-      // We should either make it optional
-      // or dont test touch dragging in this case
-      element['on' + type] = callback
-    } else {
-      element.attachEvent('on' + type, callback);
-    }
+    element.attachEvent('on' + type, callback);
   }
 };
 

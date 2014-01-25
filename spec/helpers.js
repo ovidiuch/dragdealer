@@ -57,32 +57,17 @@ var helpers = {
 
   touchDrop: function(dragdealerId, x, y, handleClass) {
     var $handle = $('#' + dragdealerId).find('.' + (handleClass || 'handle'));
-    // trigger on document because doesn't bubble in old ies
-    simulateTouchEvent(document, 'touchend')
+    simulateTouchEvent($handle.get(0), 'touchend')
   }
 
 };
 
 function simulateTouchEvent (element, type, touchOptions) {
-  var event
-  if (document.createEvent) {
-    event = document.createEvent('UIEvent');
-    event.initUIEvent(type, true, type !== 'touchcancel', window, 0)
-  } else if (document.createEventObject) {
-    event = document.createEventObject();
-    event.type = type;
-    event.cancelable = type !== 'touchcancel';
-    event.view = window;
-    event.detail = 0;
-  }
+  var event = document.createEvent('UIEvent');
+  event.initUIEvent(type, true, type !== 'touchcancel', window, 0)
   if (touchOptions) {
     event.touches = [touchOptions]
   }
-  if (element.dispatchEvent) {
-    element.dispatchEvent(event);
-  } else if (element.fireEvent) {
-    // we can't fire inexistent events
-    element['on' + type](event);
-  }
+  element.dispatchEvent(event);
 }
 
