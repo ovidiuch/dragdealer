@@ -5,6 +5,24 @@ describe("Touch Dragging Dragdealer", function() {
     jasmine.Clock.useMock();
   });
 
+
+  it("should not prevent touchmove event when dragging along disabled axis", function() {
+    var isCanceled
+    helpers.initDragdealer('simple-slider', {
+      horizontal: true,
+      vertical: false
+    });
+
+    // Vertical drag should not be prevented
+    isCanceled = !helpers.touchDragTo('simple-slider', 0, 100);
+    expect(isCanceled).toBe(false);
+
+    // Horizontal drag should be prevented
+    isCanceled = !helpers.touchDragTo('simple-slider', 100, 0);
+    expect(isCanceled).toBe(true);
+  });
+
+
   it("should move handle along with touch after pressing", function() {
     helpers.initDragdealer('simple-slider');
 

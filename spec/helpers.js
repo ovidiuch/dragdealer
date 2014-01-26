@@ -39,7 +39,8 @@ var helpers = {
     var $wrapper = $('#' + dragdealerId),
         $handle = $wrapper.find('.' + (handleClass || 'handle')),
         wrapperPosition = $wrapper.offset(),
-        handlePosition = $handle.offset();
+        handlePosition = $handle.offset(),
+        result
 
     // Move to current handle position and start touch
     simulateTouchEvent($handle.get(0), 'touchstart', {
@@ -47,12 +48,16 @@ var helpers = {
       clientY: handlePosition.top
     })
 
-    simulateTouchEvent($wrapper.get(0), 'touchmove', {
+    result = simulateTouchEvent($wrapper.get(0), 'touchmove', {
       clientX: wrapperPosition.left + x,
       clientY: wrapperPosition.top + y
     });
 
     jasmine.Clock.tick(25);
+
+    // Return the result of touchmove event dispatch
+    // to check if it was canceled or not
+    return result
   },
 
   touchDrop: function(dragdealerId, x, y, handleClass) {
@@ -68,6 +73,6 @@ function simulateTouchEvent (element, type, touchOptions) {
   if (touchOptions) {
     event.touches = [touchOptions]
   }
-  element.dispatchEvent(event);
+  return element.dispatchEvent(event);
 }
 
