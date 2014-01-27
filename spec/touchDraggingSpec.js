@@ -7,7 +7,7 @@ describe("Touch Dragging Dragdealer", function() {
 
 
   it("should not prevent touchmove event when dragging along disabled axis", function() {
-    var isCanceled
+    var isCanceled;
     helpers.initDragdealer('simple-slider', {
       horizontal: true,
       vertical: false

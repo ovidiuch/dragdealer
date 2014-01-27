@@ -40,7 +40,7 @@ var helpers = {
         $handle = $wrapper.find('.' + (handleClass || 'handle')),
         wrapperPosition = $wrapper.offset(),
         handlePosition = $handle.offset(),
-        result
+        result;
 
     // Move to current handle position and start touch
     simulateTouchEvent($handle.get(0), 'touchstart', {
@@ -57,21 +57,21 @@ var helpers = {
 
     // Return the result of touchmove event dispatch
     // to check if it was canceled or not
-    return result
+    return result;
   },
 
   touchDrop: function(dragdealerId, x, y, handleClass) {
     var $handle = $('#' + dragdealerId).find('.' + (handleClass || 'handle'));
-    simulateTouchEvent($handle.get(0), 'touchend')
+    simulateTouchEvent($handle.get(0), 'touchend');
   }
 
 };
 
 function simulateTouchEvent (element, type, touchOptions) {
   var event = document.createEvent('UIEvent');
-  event.initUIEvent(type, true, type !== 'touchcancel', window, 0)
+  event.initUIEvent(type, true, type !== 'touchcancel', window, 0);
   if (touchOptions) {
-    event.touches = [touchOptions]
+    event.touches = [touchOptions];
   }
   return element.dispatchEvent(event);
 }
