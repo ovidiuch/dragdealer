@@ -35,7 +35,7 @@ var helpers = {
     $handle.simulate('mouseup');
   },
 
-  touchDragTo: function (dragdealerId, x, y, handleClass) {
+  touchDragTo: function(dragdealerId, x, y, handleClass) {
     var $wrapper = $('#' + dragdealerId),
         $handle = $wrapper.find('.' + (handleClass || 'handle')),
         wrapperPosition = $wrapper.offset(),
@@ -46,7 +46,7 @@ var helpers = {
     simulateTouchEvent($handle.get(0), 'touchstart', {
       clientX: handlePosition.left,
       clientY: handlePosition.top
-    })
+    });
 
     result = simulateTouchEvent($wrapper.get(0), 'touchmove', {
       clientX: wrapperPosition.left + x,
@@ -67,7 +67,7 @@ var helpers = {
 
 };
 
-function simulateTouchEvent (element, type, touchOptions) {
+function simulateTouchEvent(element, type, touchOptions) {
   var event = document.createEvent('UIEvent');
   event.initUIEvent(type, true, type !== 'touchcancel', window, 0);
   if (touchOptions) {
@@ -75,4 +75,3 @@ function simulateTouchEvent (element, type, touchOptions) {
   }
   return element.dispatchEvent(event);
 }
-
