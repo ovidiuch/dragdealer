@@ -299,7 +299,7 @@ Dragdealer.prototype = {
   bindMethods: function() {
     this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
     this.onHandleTouchStart = bind(this.onHandleTouchStart, this);
-    this.onWrapperMouseMove = bind(this.onWrapperMouseMove, this);
+    this.onDocumentMouseMove = bind(this.onDocumentMouseMove, this);
     this.onWrapperTouchMove = bind(this.onWrapperTouchMove, this);
     this.onWrapperMouseDown = bind(this.onWrapperMouseDown, this);
     this.onWrapperTouchStart = bind(this.onWrapperTouchStart, this);
@@ -313,7 +313,7 @@ Dragdealer.prototype = {
     addEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
     addEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
     // While dragging
-    addEventListener(this.wrapper, 'mousemove', this.onWrapperMouseMove);
+    addEventListener(document, 'mousemove', this.onDocumentMouseMove);
     addEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
     // Start tapping
     addEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
@@ -334,7 +334,7 @@ Dragdealer.prototype = {
   unbindEventListeners: function() {
     removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
     removeEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
-    removeEventListener(this.wrapper, 'mousemove', this.onWrapperMouseMove);
+    removeEventListener(this.wrapper, 'mousemove', this.onDocumentMouseMove);
     removeEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
     removeEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
     removeEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
@@ -362,7 +362,7 @@ Dragdealer.prototype = {
     this.activity = false;
     this.startDrag();
   },
-  onWrapperMouseMove: function(e) {
+  onDocumentMouseMove: function(e) {
     Cursor.refresh(e);
     this.activity = true;
   },
