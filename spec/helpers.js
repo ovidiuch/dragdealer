@@ -14,13 +14,13 @@ var helpers = {
         handlePosition = $handle.offset();
 
     // Move to current handle position and press
-    $handle.simulate('mousemove', {
+    $(document).simulate('mousemove', {
       clientX: handlePosition.left,
       clientY: handlePosition.top
     });
 
     $handle.simulate('mousedown');
-    $handle.simulate('mousemove', {
+    $(document).simulate('mousemove', {
       clientX: wrapperPosition.left + x,
       clientY: wrapperPosition.top + y
     });
