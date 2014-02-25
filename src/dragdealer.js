@@ -364,7 +364,9 @@ Dragdealer.prototype = {
   },
   onDocumentMouseMove: function(e) {
     Cursor.refresh(e);
-    this.activity = true;
+    if (this.dragging) {
+      this.activity = true;
+    }
   },
   onWrapperTouchMove: function(e) {
     Cursor.refresh(e);
