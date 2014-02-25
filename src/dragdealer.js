@@ -334,7 +334,7 @@ Dragdealer.prototype = {
   unbindEventListeners: function() {
     removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
     removeEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
-    removeEventListener(this.wrapper, 'mousemove', this.onDocumentMouseMove);
+    removeEventListener(document, 'mousemove', this.onDocumentMouseMove);
     removeEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
     removeEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
     removeEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
