@@ -374,7 +374,7 @@ Dragdealer.prototype = {
     // defaults on touch devices. !this.activity denotes this is the first move
     // inside a drag action; you can drag in any direction after this point if
     // the dragging wasn't stopped
-    if (!this.activity && this.draggingOnDisabledAxis(e)) {
+    if (!this.activity && this.draggingOnDisabledAxis()) {
       if (this.dragging) {
         this.stopDrag();
       }
@@ -671,7 +671,7 @@ Dragdealer.prototype = {
   groupClone: function(a) {
     return [a[0], a[1]];
   },
-  draggingOnDisabledAxis: function(e) {
+  draggingOnDisabledAxis: function() {
     return (!this.options.horizontal && Cursor.xDiff > Cursor.yDiff) ||
            (!this.options.vertical && Cursor.yDiff > Cursor.xDiff);
   }
