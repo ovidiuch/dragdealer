@@ -6,6 +6,7 @@
 - Use proper event delegation [#17](https://github.com/skidding/dragdealer/issues/17)
 - [BUG] Sliding never ends when handle is bigger than wrapper [#21](https://github.com/skidding/dragdealer/issues/21)
 - [BUG] Horizontal drag control breaks vertical content scrolling on touch devices [#12](https://github.com/skidding/dragdealer/issues/12)
+- [BUG] Dragging outside the bounds is not possible [#24](https://github.com/skidding/dragdealer/pull/24)
 
 ## 0.9.6
 
