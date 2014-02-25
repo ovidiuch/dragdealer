@@ -457,20 +457,17 @@ Dragdealer.prototype = {
       this.callAnimationCallback();
     }
   },
-  startTap: function(target) {
+  startTap: function() {
     if (this.disabled) {
       return;
     }
     this.tapping = true;
     this.setWrapperOffset();
 
-    if (target === undefined) {
-      target = [
-        Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
-        Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
-      ];
-    }
-    this.setTargetValueByOffset(target);
+    this.setTargetValueByOffset([
+      Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
+      Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
+    ]);
   },
   stopTap: function() {
     if (this.disabled || !this.tapping) {
