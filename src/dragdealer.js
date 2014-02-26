@@ -692,17 +692,17 @@ var bind = function(fn, context) {
 
 var addEventListener = function(element, type, callback) {
   if (element.addEventListener) {
-    element.addEventListener(type, callback);
+    element.addEventListener(type, callback, false);
   } else if (element.attachEvent) {
-    element.attachEvent('on' + type, callback);
+    element.attachEvent('on' + type, callback, false);
   }
 };
 
 var removeEventListener = function(element, type, callback) {
   if (element.removeEventListener) {
-    element.removeEventListener(type, callback);
+    element.removeEventListener(type, callback, false);
   } else if (element.detachEvent) {
-    element.detachEvent('on' + type, callback);
+    element.detachEvent('on' + type, callback, false);
   }
 };
 
