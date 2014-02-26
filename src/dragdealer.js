@@ -694,7 +694,7 @@ var addEventListener = function(element, type, callback) {
   if (element.addEventListener) {
     element.addEventListener(type, callback, false);
   } else if (element.attachEvent) {
-    element.attachEvent('on' + type, callback, false);
+    element.attachEvent('on' + type, callback);
   }
 };
 
@@ -702,7 +702,7 @@ var removeEventListener = function(element, type, callback) {
   if (element.removeEventListener) {
     element.removeEventListener(type, callback, false);
   } else if (element.detachEvent) {
-    element.detachEvent('on' + type, callback, false);
+    element.detachEvent('on' + type, callback);
   }
 };
 
