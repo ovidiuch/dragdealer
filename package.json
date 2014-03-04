@@ -17,5 +17,6 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "main": "src/dragdealer.js"
 }
