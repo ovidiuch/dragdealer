@@ -6,6 +6,20 @@ Drag-based JavaScript component, embracing endless UI solutions
 
 Specs & (sweet) demos: __http://skidding.github.io/dragdealer__
 
+## Install
+
+The basic way to install Dragdealer is to include the [minified](https://raw.github.com/skidding/dragdealer/master/lib/dragdealer.min.js)
+script into your web page.
+
+### Node package
+
+It can also be installed through [npm](https://www.npmjs.org/package/dragdealer),
+using something like [browserify.](https://github.com/substack/node-browserify)
+
+```js
+var Dragdealer = require('dragdealer').Dragdealer;
+```
+
 ## Running tests
 
 Dragdealer has CI set up through [Travis CI](https://travis-ci.org) and [Sauce Labs](https://saucelabs.com) (who both offer their outstanding services for free to open-source projects.) Any pull-request will be tested automatically after each commit.
