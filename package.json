@@ -1,6 +1,6 @@
 {
   "name": "dragdealer",
-  "version": "0.9.7-SNAPSHOT",
+  "version": "0.9.7-snapshot",
   "description": "Drag-based JavaScript component, embracing endless UI solutions",
   "repository": {
     "type": "git",
