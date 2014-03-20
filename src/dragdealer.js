@@ -245,7 +245,7 @@ Dragdealer.prototype = {
     }
   },
   getHandleElement: function(wrapper, handleClass) {
-    var childElements = wrapper.getElementsByTagName('div'),
+    var childElements = wrapper.children,
         handleClassMatcher = new RegExp('(^|\\s)' + handleClass + '(\\s|$)'),
         i;
     for (i = 0; i < childElements.length; i++) {
