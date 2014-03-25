@@ -245,12 +245,21 @@ Dragdealer.prototype = {
     }
   },
   getHandleElement: function(wrapper, handleClass) {
-    var childElements = wrapper.children,
-        handleClassMatcher = new RegExp('(^|\\s)' + handleClass + '(\\s|$)'),
+    var childElements,
+        handleClassMatcher,
         i;
-    for (i = 0; i < childElements.length; i++) {
-      if (handleClassMatcher.test(childElements[i].className)) {
-        return childElements[i];
+    if (wrapper.getElementsByClassName) {
+      childElements = wrapper.getElementsByClassName(handleClass);
+      if (childElements.length > 0) {
+        return childElements[0];
+      }
+    } else {
+      handleClassMatcher = new RegExp('(^|\\s)' + handleClass + '(\\s|$)');
+      childElements = wrapper.getElementsByTagName('*');
+      for (i = 0; i < childElements.length; i++) {
+        if (handleClassMatcher.test(childElements[i].className)) {
+          return childElements[i];
+        }
       }
     }
   },
