@@ -586,6 +586,16 @@ Dragdealer.prototype = {
     }
   },
   renderHandlePosition: function() {
+
+    var transform = '';
+    if (Dragdealer.transform !== false) {
+      if (this.options.horizontal) transform += 'translateX(' + String(this.offset.current[0]) + 'px)';
+      if (this.options.vertical) transform += ' translateY(' + String(this.offset.current[1]) + 'px)';
+      transform += ' translateZ(0)';
+      this.handle.style[Dragdealer.transform] = transform;
+      return;
+    }
+
     if (this.options.horizontal) {
       this.handle.style.left = String(this.offset.current[0]) + 'px';
     }
@@ -646,7 +656,7 @@ Dragdealer.prototype = {
     ];
   },
   getOffsetByRatio: function(ratio, range, padding) {
-    return Math.round(ratio * range) + padding;
+    return (ratio * range).toFixed(2) + padding;
   },
   getStepNumber: function(value) {
     // Translate a [0-1] value into a number from 1 to N steps (set using the
@@ -794,17 +804,52 @@ var Position = {
    */
   get: function(obj) {
     var curleft = 0,
-        curtop = 0;
+        curtop = 0,
+        matchesX,
+        matchesY;
     if (obj.offsetParent) {
       do {
-        curleft += obj.offsetLeft;
-        curtop += obj.offsetTop;
+
+        if (Dragdealer.transform !== false && obj.style[Dragdealer.transform] !== 'none') {
+          matchesX = obj.style[Dragdealer.transform].match(/translateX\((.*)px\)/);
+          matchesY = obj.style[Dragdealer.transform].match(/translateY\((.*)px\)/);
+          curleft += matchesX ? parseFloat(matchesX[1]) : 0;
+          curtop += matchesY ? parseFloat(matchesY[1]) : 0;
+        } else {
+          curleft += obj.offsetLeft;
+          curtop += obj.offsetTop;  
+        }
       }
       while ((obj = obj.offsetParent));
     }
     return [curleft, curtop];
   }
 };
+
+
+var detectCSSFeature = function(featurename) {
+    var feature = false,
+    domPrefixes = 'Webkit Moz ms O'.split(' '),
+    elm = document.createElement('div'),
+    featurenameCapital = null;
+
+    featurename = featurename.toLowerCase();
+
+    if( elm.style[featurename] ) { feature = ''; } 
+
+    if( feature === false ) {
+        featurenameCapital = featurename.charAt(0).toUpperCase() + featurename.substr(1);
+        for( var i = 0; i < domPrefixes.length; i++ ) {
+            if( elm.style[domPrefixes[i] + featurenameCapital ] !== undefined ) {
+              feature = domPrefixes[i] + featurenameCapital;
+              break;
+            }
+        }
+    }
+    return feature; 
+};
+
+Dragdealer.transform = detectCSSFeature('transform');
 
 return Dragdealer;
 
