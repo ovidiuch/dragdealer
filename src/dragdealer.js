@@ -589,18 +589,18 @@ Dragdealer.prototype = {
 
     var transform = '';
     if (Dragdealer.transform !== false) {
-      if (this.options.horizontal) transform += 'translateX(' + String(this.offset.current[0]) + 'px)';
-      if (this.options.vertical) transform += ' translateY(' + String(this.offset.current[1]) + 'px)';
-      transform += ' translateZ(0)';
+      if (this.options.horizontal) transform += 'translateX(' + this.offset.current[0].toFixed(2) + 'px)';
+      if (this.options.vertical) transform += ' translateY(' + this.offset.current[1].toFixed(2) + 'px)';
+      if (Dragdealer.supports3d) transform += ' translateZ(0)';
       this.handle.style[Dragdealer.transform] = transform;
       return;
     }
 
     if (this.options.horizontal) {
-      this.handle.style.left = String(this.offset.current[0]) + 'px';
+      this.handle.style.left = Math.round(this.offset.current[0]) + 'px';
     }
     if (this.options.vertical) {
-      this.handle.style.top = String(this.offset.current[1]) + 'px';
+      this.handle.style.top = Math.round(this.offset.current[1]) + 'px';
     }
   },
   setTargetValue: function(value, loose) {
@@ -656,7 +656,7 @@ Dragdealer.prototype = {
     ];
   },
   getOffsetByRatio: function(ratio, range, padding) {
-    return (ratio * range).toFixed(2) + padding;
+    return ratio * range + padding;
   },
   getStepNumber: function(value) {
     // Translate a [0-1] value into a number from 1 to N steps (set using the
@@ -817,7 +817,7 @@ var Position = {
           curtop += matchesY ? parseFloat(matchesY[1]) : 0;
         } else {
           curleft += obj.offsetLeft;
-          curtop += obj.offsetTop;  
+          curtop += obj.offsetTop;
         }
       }
       while ((obj = obj.offsetParent));
@@ -835,7 +835,7 @@ var detectCSSFeature = function(featurename) {
 
     featurename = featurename.toLowerCase();
 
-    if( elm.style[featurename] ) { feature = ''; } 
+    if( elm.style[featurename] ) { feature = ''; }
 
     if( feature === false ) {
         featurenameCapital = featurename.charAt(0).toUpperCase() + featurename.substr(1);
@@ -846,10 +846,11 @@ var detectCSSFeature = function(featurename) {
             }
         }
     }
-    return feature; 
+    return feature;
 };
 
 Dragdealer.transform = detectCSSFeature('transform');
+Dragdealer.supports3d = detectCSSFeature('perspective') !== false;
 
 return Dragdealer;
 
