@@ -202,7 +202,8 @@ Dragdealer.prototype = {
     speed: 0.1,
     xPrecision: 0,
     yPrecision: 0,
-    handleClass: 'handle'
+    handleClass: 'handle',
+    activeClass: 'active'
   },
   init: function() {
     this.value = {
@@ -497,6 +498,9 @@ Dragdealer.prototype = {
       Cursor.x - Position.get(this.handle)[0],
       Cursor.y - Position.get(this.handle)[1]
     ];
+    if (!this.handle.className.match(this.options.activeClass)) {
+      this.handle.className += ' ' + this.options.activeClass;
+    }
   },
   stopDrag: function() {
     if (this.disabled || !this.dragging) {
@@ -511,6 +515,7 @@ Dragdealer.prototype = {
       target[1] += ratioChange[1] * 4;
     }
     this.setTargetValue(target);
+    this.handle.className = this.handle.className.replace(' ' + this.options.activeClass,'');
   },
   callAnimationCallback: function() {
     var value = this.value.current;
