@@ -2,10 +2,10 @@
   "name": "dragdealer",
   "version": "0.9.7-snapshot",
   "description": "Drag-based JavaScript component, embracing endless UI solutions",
-  "homepage": "http://skidding.github.io/dragdealer",
+  "homepage": "http://github.com/mildfuzz/dragdealer",
   "repository": {
     "type": "git",
-    "url": "git://github.com/skidding/dragdealer.git"
+    "url": "git://github.com/mildfuzz/dragdealer.git"
   },
   "main": "src/dragdealer.js",
   "ignore": [
