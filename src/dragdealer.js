@@ -137,7 +137,7 @@ var Dragdealer = function(wrapper, options) {
    *   - string handleClass='handle': Custom class of handle element.
    *
    *   - bool css3=true: Use css3 transform in modern browsers instead of
-   *                     style.top and style.left
+   *                     absolute positioning.
    *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
