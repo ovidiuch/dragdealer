@@ -136,6 +136,9 @@ var Dragdealer = function(wrapper, options) {
    *
    *   - string handleClass='handle': Custom class of handle element.
    *
+   *   - bool css3=true: Use css3 transform in modern browsers instead of
+   *                     style.top and style.left
+   *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
    *   - disable: Disable dragging of a Dragdealer instance. Just as with the
@@ -203,9 +206,15 @@ Dragdealer.prototype = {
     xPrecision: 0,
     yPrecision: 0,
     handleClass: 'handle',
+    css3: true,
     activeClass: 'active'
   },
   init: function() {
+    if (this.options.css3 && Dragdealer.backfaceVisibility && Dragdealer.perspective) {
+      // Trigger hardware acceleration in webkit browsers
+      this.handle.style[Dragdealer.perspective] = '1000px';
+      this.handle.style[Dragdealer.backfaceVisibility] = 'hidden';
+    }
     this.value = {
       prev: [-1, -1],
       current: [this.options.x || 0, this.options.y || 0],
@@ -593,10 +602,9 @@ Dragdealer.prototype = {
   renderHandlePosition: function() {
 
     var transform = '';
-    if (Dragdealer.transform !== false) {
+    if (this.options.css3 && Dragdealer.transform) {
       if (this.options.horizontal) transform += 'translateX(' + this.offset.current[0].toFixed(2) + 'px)';
       if (this.options.vertical) transform += ' translateY(' + this.offset.current[1].toFixed(2) + 'px)';
-      if (Dragdealer.supports3d) transform += ' translateZ(0)';
       this.handle.style[Dragdealer.transform] = transform;
       return;
     }
@@ -815,7 +823,7 @@ var Position = {
     if (obj.offsetParent) {
       do {
 
-        if (Dragdealer.transform !== false && obj.style[Dragdealer.transform] !== 'none') {
+        if (Dragdealer.transform && obj.style[Dragdealer.transform] !== 'none') {
           matchesX = obj.style[Dragdealer.transform].match(/translateX\((.*)px\)/);
           matchesY = obj.style[Dragdealer.transform].match(/translateY\((.*)px\)/);
           curleft += matchesX ? parseFloat(matchesX[1]) : 0;
@@ -832,30 +840,21 @@ var Position = {
 };
 
 
-var detectCSSFeature = function(featurename) {
-    var feature = false,
-    domPrefixes = 'Webkit Moz ms O'.split(' '),
-    elm = document.createElement('div'),
-    featurenameCapital = null;
-
-    featurename = featurename.toLowerCase();
-
-    if( elm.style[featurename] ) { feature = ''; }
-
-    if( feature === false ) {
-        featurenameCapital = featurename.charAt(0).toUpperCase() + featurename.substr(1);
-        for( var i = 0; i < domPrefixes.length; i++ ) {
-            if( elm.style[domPrefixes[i] + featurenameCapital ] !== undefined ) {
-              feature = domPrefixes[i] + featurenameCapital;
-              break;
-            }
-        }
+var getPrefixedStylePropName = function(propName) {
+  var domPrefixes = 'Webkit Moz ms O'.split(' '),
+      elStyle = document.documentElement.style;
+  if (elStyle[propName] !== undefined) return propName; // Is supported unprefixed
+  propName = propName.charAt(0).toUpperCase() + propName.substr(1);
+  for (var i = 0; i < domPrefixes.length; i++) {
+    if (elStyle[domPrefixes[i] + propName] !== undefined) {
+      return domPrefixes[i] + propName; // Is supported with prefix
     }
-    return feature;
+  }
 };
 
-Dragdealer.transform = detectCSSFeature('transform');
-Dragdealer.supports3d = detectCSSFeature('perspective') !== false;
+Dragdealer.transform = getPrefixedStylePropName('transform');
+Dragdealer.perspective = getPrefixedStylePropName('perspective');
+Dragdealer.backfaceVisibility = getPrefixedStylePropName('backfaceVisibility');
 
 return Dragdealer;
 
