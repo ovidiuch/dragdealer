@@ -209,10 +209,8 @@ Dragdealer.prototype = {
     css3: true
   },
   init: function() {
-    if (this.options.css3 && Dragdealer.backfaceVisibility && Dragdealer.perspective) {
-      // Trigger hardware acceleration in webkit browsers
-      this.handle.style[Dragdealer.perspective] = '1000px';
-      this.handle.style[Dragdealer.backfaceVisibility] = 'hidden';
+    if (this.options.css3) {
+      triggerWebkitHardwareAcceleration(this.handle);
     }
     this.value = {
       prev: [-1, -1],
@@ -597,18 +595,22 @@ Dragdealer.prototype = {
   renderHandlePosition: function() {
 
     var transform = '';
-    if (this.options.css3 && Dragdealer.transform) {
-      if (this.options.horizontal) transform += 'translateX(' + this.offset.current[0].toFixed(2) + 'px)';
-      if (this.options.vertical) transform += ' translateY(' + this.offset.current[1].toFixed(2) + 'px)';
-      this.handle.style[Dragdealer.transform] = transform;
+    if (this.options.css3 && StylePrefix.transform) {
+      if (this.options.horizontal) {
+        transform += 'translateX(' + this.offset.current[0] + 'px)';
+      }
+      if (this.options.vertical) {
+        transform += ' translateY(' + this.offset.current[1] + 'px)';
+      }
+      this.handle.style[StylePrefix.transform] = transform;
       return;
     }
 
     if (this.options.horizontal) {
-      this.handle.style.left = Math.round(this.offset.current[0]) + 'px';
+      this.handle.style.left = this.offset.current[0] + 'px';
     }
     if (this.options.vertical) {
-      this.handle.style.top = Math.round(this.offset.current[1]) + 'px';
+      this.handle.style.top = this.offset.current[1] + 'px';
     }
   },
   setTargetValue: function(value, loose) {
@@ -664,7 +666,7 @@ Dragdealer.prototype = {
     ];
   },
   getOffsetByRatio: function(ratio, range, padding) {
-    return ratio * range + padding;
+    return Math.round(ratio * range) + padding;
   },
   getStepNumber: function(value) {
     // Translate a [0-1] value into a number from 1 to N steps (set using the
@@ -802,15 +804,16 @@ var Cursor = {
 
 var Position = {
   /**
-   * Helper for extracting the absolute position of a DOM element, relative to
-   * the root-level document body.
+   * Helper for extracting position of a DOM element, relative to the viewport
    *
    * The get(obj) method accepts a DOM element as the only parameter, and
    * returns the position under a (x, y) tuple, as an array with two elements.
-   *
-   * Inspired from http://www.quirksmode.org/js/findpos.html
    */
   get: function(obj) {
+    // Dragdealer relies on getBoundingClientRect to calculate element offsets,
+    // but we want to be sure we don't throw any unhandled exceptions and break
+    // other code from the page if running from in very old browser that doesn't
+    // support this method
     var rect = {left: 0, top: 0};
     if (obj.getBoundingClientRect !== undefined) {
       rect = obj.getBoundingClientRect();
@@ -820,7 +823,13 @@ var Position = {
 };
 
 
-var getPrefixedStylePropName = function(propName) {
+var StylePrefix = {
+  transform: getPrefixedStylePropName('transform'),
+  perspective: getPrefixedStylePropName('perspective'),
+  backfaceVisibility: getPrefixedStylePropName('backfaceVisibility')
+}
+
+function getPrefixedStylePropName(propName) {
   var domPrefixes = 'Webkit Moz ms O'.split(' '),
       elStyle = document.documentElement.style;
   if (elStyle[propName] !== undefined) return propName; // Is supported unprefixed
@@ -832,9 +841,12 @@ var getPrefixedStylePropName = function(propName) {
   }
 };
 
-Dragdealer.transform = getPrefixedStylePropName('transform');
-Dragdealer.perspective = getPrefixedStylePropName('perspective');
-Dragdealer.backfaceVisibility = getPrefixedStylePropName('backfaceVisibility');
+function triggerWebkitHardwareAcceleration(element) {
+  if (StylePrefix.backfaceVisibility && StylePrefix.perspective) {
+    element.style[StylePrefix.perspective] = '1000px';
+    element.style[StylePrefix.backfaceVisibility] = 'hidden';
+  }
+};
 
 return Dragdealer;
 
