@@ -792,12 +792,12 @@ var Cursor = {
   set: function(e) {
     var lastX = this.x,
         lastY = this.y;
-    if (e.pageX || e.pageY) {
-      this.x = e.pageX;
-      this.y = e.pageY;
-    } else if (e.clientX || e.clientY) {
-      this.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-      this.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    if (e.clientX || e.clientY) {
+      this.x = e.clientX;
+      this.y = e.clientY;
+    } else if (e.pageX || e.pageY) {
+      this.x = e.pageX - document.body.scrollLeft - document.documentElement.scrollLeft;
+      this.y = e.pageY - document.body.scrollTop - document.documentElement.scrollTop;
     }
     this.xDiff = Math.abs(this.x - lastX);
     this.yDiff = Math.abs(this.y - lastY);
@@ -816,26 +816,11 @@ var Position = {
    * Inspired from http://www.quirksmode.org/js/findpos.html
    */
   get: function(obj) {
-    var curleft = 0,
-        curtop = 0,
-        matchesX,
-        matchesY;
-    if (obj.offsetParent) {
-      do {
-
-        if (Dragdealer.transform && obj.style[Dragdealer.transform] !== 'none') {
-          matchesX = obj.style[Dragdealer.transform].match(/translateX\((.*)px\)/);
-          matchesY = obj.style[Dragdealer.transform].match(/translateY\((.*)px\)/);
-          curleft += matchesX ? parseFloat(matchesX[1]) : 0;
-          curtop += matchesY ? parseFloat(matchesY[1]) : 0;
-        } else {
-          curleft += obj.offsetLeft;
-          curtop += obj.offsetTop;
-        }
-      }
-      while ((obj = obj.offsetParent));
+    var rect = {left: 0, top: 0};
+    if (obj.getBoundingClientRect !== undefined) {
+      rect = obj.getBoundingClientRect();
     }
-    return [curleft, curtop];
+    return [rect.left, rect.top];
   }
 };
 
