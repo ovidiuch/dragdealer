@@ -136,6 +136,9 @@ var Dragdealer = function(wrapper, options) {
    *
    *   - string handleClass='handle': Custom class of handle element.
    *
+   *   - bool css3=true: Use css3 transform in modern browsers instead of
+   *                     absolute positioning.
+   *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
    *   - disable: Disable dragging of a Dragdealer instance. Just as with the
@@ -202,9 +205,13 @@ Dragdealer.prototype = {
     speed: 0.1,
     xPrecision: 0,
     yPrecision: 0,
-    handleClass: 'handle'
+    handleClass: 'handle',
+    css3: true
   },
   init: function() {
+    if (this.options.css3) {
+      triggerWebkitHardwareAcceleration(this.handle);
+    }
     this.value = {
       prev: [-1, -1],
       current: [this.options.x || 0, this.options.y || 0],
@@ -586,11 +593,24 @@ Dragdealer.prototype = {
     }
   },
   renderHandlePosition: function() {
+
+    var transform = '';
+    if (this.options.css3 && StylePrefix.transform) {
+      if (this.options.horizontal) {
+        transform += 'translateX(' + this.offset.current[0] + 'px)';
+      }
+      if (this.options.vertical) {
+        transform += ' translateY(' + this.offset.current[1] + 'px)';
+      }
+      this.handle.style[StylePrefix.transform] = transform;
+      return;
+    }
+
     if (this.options.horizontal) {
-      this.handle.style.left = String(this.offset.current[0]) + 'px';
+      this.handle.style.left = this.offset.current[0] + 'px';
     }
     if (this.options.vertical) {
-      this.handle.style.top = String(this.offset.current[1]) + 'px';
+      this.handle.style.top = this.offset.current[1] + 'px';
     }
   },
   setTargetValue: function(value, loose) {
@@ -769,12 +789,12 @@ var Cursor = {
   set: function(e) {
     var lastX = this.x,
         lastY = this.y;
-    if (e.pageX || e.pageY) {
-      this.x = e.pageX;
-      this.y = e.pageY;
-    } else if (e.clientX || e.clientY) {
-      this.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-      this.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    if (e.clientX || e.clientY) {
+      this.x = e.clientX;
+      this.y = e.clientY;
+    } else if (e.pageX || e.pageY) {
+      this.x = e.pageX - document.body.scrollLeft - document.documentElement.scrollLeft;
+      this.y = e.pageY - document.body.scrollTop - document.documentElement.scrollTop;
     }
     this.xDiff = Math.abs(this.x - lastX);
     this.yDiff = Math.abs(this.y - lastY);
@@ -784,25 +804,47 @@ var Cursor = {
 
 var Position = {
   /**
-   * Helper for extracting the absolute position of a DOM element, relative to
-   * the root-level document body.
+   * Helper for extracting position of a DOM element, relative to the viewport
    *
    * The get(obj) method accepts a DOM element as the only parameter, and
    * returns the position under a (x, y) tuple, as an array with two elements.
-   *
-   * Inspired from http://www.quirksmode.org/js/findpos.html
    */
   get: function(obj) {
-    var curleft = 0,
-        curtop = 0;
-    if (obj.offsetParent) {
-      do {
-        curleft += obj.offsetLeft;
-        curtop += obj.offsetTop;
-      }
-      while ((obj = obj.offsetParent));
+    // Dragdealer relies on getBoundingClientRect to calculate element offsets,
+    // but we want to be sure we don't throw any unhandled exceptions and break
+    // other code from the page if running from in very old browser that doesn't
+    // support this method
+    var rect = {left: 0, top: 0};
+    if (obj.getBoundingClientRect !== undefined) {
+      rect = obj.getBoundingClientRect();
     }
-    return [curleft, curtop];
+    return [rect.left, rect.top];
+  }
+};
+
+
+var StylePrefix = {
+  transform: getPrefixedStylePropName('transform'),
+  perspective: getPrefixedStylePropName('perspective'),
+  backfaceVisibility: getPrefixedStylePropName('backfaceVisibility')
+}
+
+function getPrefixedStylePropName(propName) {
+  var domPrefixes = 'Webkit Moz ms O'.split(' '),
+      elStyle = document.documentElement.style;
+  if (elStyle[propName] !== undefined) return propName; // Is supported unprefixed
+  propName = propName.charAt(0).toUpperCase() + propName.substr(1);
+  for (var i = 0; i < domPrefixes.length; i++) {
+    if (elStyle[domPrefixes[i] + propName] !== undefined) {
+      return domPrefixes[i] + propName; // Is supported with prefix
+    }
+  }
+};
+
+function triggerWebkitHardwareAcceleration(element) {
+  if (StylePrefix.backfaceVisibility && StylePrefix.perspective) {
+    element.style[StylePrefix.perspective] = '1000px';
+    element.style[StylePrefix.backfaceVisibility] = 'hidden';
   }
 };
 
