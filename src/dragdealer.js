@@ -342,8 +342,7 @@ Dragdealer.prototype = {
     addEventListener(this.handle, 'click', this.onHandleClick);
     addEventListener(window, 'resize', this.onWindowResize);
 
-    this.timeStamp = new Date().getTime()
-    this.animate(false, true)
+    this.animate(false, true);
     this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
   },
   unbindEventListeners: function() {
@@ -535,10 +534,17 @@ Dragdealer.prototype = {
       this.options.callback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
-  animateWithRequestAnimationFrame: function () {
-    this.animate()
-    this.timeStamp = new Date().getTime()
-    this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame)
+  animateWithRequestAnimationFrame: function (time) {
+    if (time) {
+      // using requestAnimationFrame
+      this.timeOffset = this.timeStamp ? time - this.timeStamp : 0;
+      this.timeStamp = time;
+    } else {
+      // using setTimeout(callback, 25) polyfill
+      this.timeOffset = 25;
+    }
+    this.animate();
+    this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
   },
   animate: function(direct, first) {
     if (direct && !this.dragging) {
@@ -571,14 +577,13 @@ Dragdealer.prototype = {
       this.value.target[0] - this.value.current[0],
       this.value.target[1] - this.value.current[1]
     ];
-    var timeOffset = new Date().getTime() - this.timeStamp;
     if (!diff[0] && !diff[1]) {
       return false;
     }
     if (Math.abs(diff[0]) > this.valuePrecision[0] ||
         Math.abs(diff[1]) > this.valuePrecision[1]) {
-      this.value.current[0] += diff[0] * this.options.speed * timeOffset / 25;
-      this.value.current[1] += diff[1] * this.options.speed * timeOffset / 25;
+      this.value.current[0] += diff[0] * this.options.speed * this.timeOffset / 25;
+      this.value.current[1] += diff[1] * this.options.speed * this.timeOffset / 25;
     } else {
       this.groupCopy(this.value.current, this.value.target);
     }
@@ -854,7 +859,6 @@ function triggerWebkitHardwareAcceleration(element) {
 };
 
 
-var lastTime = 0;
 var vendors = ['webkit', 'moz'];
 var requestAnimationFrame = window.requestAnimationFrame;
 var cancelAnimationFrame = window.cancelAnimationFrame;
@@ -866,21 +870,10 @@ for(var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
 };
 
 if (!requestAnimationFrame) {
-  requestAnimationFrame = function (callback, element) {
-    var currTime = new Date().getTime();
-    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-    var id = window.setTimeout(function() {
-      callback(currTime + timeToCall);
-    }, timeToCall);
-    lastTime = currTime + timeToCall;
-    return id;
+  requestAnimationFrame = function (callback) {
+    return setTimeout(callback, 25);
   };
-}
-
-if (!cancelAnimationFrame) {
-  cancelAnimationFrame = function (id) {
-    clearTimeout(id);
-  };
+  cancelAnimationFrame = clearTimeout;
 };
 
 return Dragdealer;
