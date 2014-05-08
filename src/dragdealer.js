@@ -522,7 +522,7 @@ Dragdealer.prototype = {
       target[1] += ratioChange[1] * 4;
     }
     this.setTargetValue(target);
-    this.wrapper.className = this.handle.className.replace(' ' + this.options.activeClass,'');
+    this.wrapper.className = this.wrapper.className.replace(' ' + this.options.activeClass, '');
   },
   callAnimationCallback: function() {
     var value = this.value.current;
