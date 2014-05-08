@@ -206,7 +206,8 @@ Dragdealer.prototype = {
     xPrecision: 0,
     yPrecision: 0,
     handleClass: 'handle',
-    css3: true
+    css3: true,
+    requestAnimationFrame: true
   },
   init: function() {
     if (this.options.css3) {
@@ -313,6 +314,8 @@ Dragdealer.prototype = {
     ];
   },
   bindMethods: function() {
+    this.animateWithRequestAnimationFrame = bind(this.animateWithRequestAnimationFrame, this);
+    this.animate = bind(this.animate, this);
     this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
     this.onHandleTouchStart = bind(this.onHandleTouchStart, this);
     this.onDocumentMouseMove = bind(this.onDocumentMouseMove, this);
@@ -341,11 +344,13 @@ Dragdealer.prototype = {
     addEventListener(this.handle, 'click', this.onHandleClick);
     addEventListener(window, 'resize', this.onWindowResize);
 
-    var _this = this;
-    this.interval = setInterval(function() {
-      _this.animate();
-    }, 25);
     this.animate(false, true);
+    if (this.options.requestAnimationFrame && requestAnimationFrame) {
+      this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
+    } else {
+      this.timeOffset = 25
+      this.interval = setInterval(this.animate, this.timeOffset)
+    }
   },
   unbindEventListeners: function() {
     removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
@@ -359,7 +364,11 @@ Dragdealer.prototype = {
     removeEventListener(this.handle, 'click', this.onHandleClick);
     removeEventListener(window, 'resize', this.onWindowResize);
 
-    clearInterval(this.interval);
+    if (this.options.requestAnimationFrame && requestAnimationFrame) {
+      cancelAnimationFrame(this.interval);
+    } else {
+      clearInterval(this.interval);
+    }
   },
   onHandleMouseDown: function(e) {
     Cursor.refresh(e);
@@ -536,6 +545,12 @@ Dragdealer.prototype = {
       this.options.callback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
+  animateWithRequestAnimationFrame: function (time) {
+    this.timeOffset = this.timeStamp ? time - this.timeStamp : 0;
+    this.timeStamp = time;
+    this.animate();
+    this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
+  },
   animate: function(direct, first) {
     if (direct && !this.dragging) {
       return;
@@ -572,8 +587,8 @@ Dragdealer.prototype = {
     }
     if (Math.abs(diff[0]) > this.valuePrecision[0] ||
         Math.abs(diff[1]) > this.valuePrecision[1]) {
-      this.value.current[0] += diff[0] * this.options.speed;
-      this.value.current[1] += diff[1] * this.options.speed;
+      this.value.current[0] += diff[0] * this.options.speed * this.timeOffset / 25;
+      this.value.current[1] += diff[1] * this.options.speed * this.timeOffset / 25;
     } else {
       this.groupCopy(this.value.current, this.value.target);
     }
@@ -846,6 +861,16 @@ function triggerWebkitHardwareAcceleration(element) {
     element.style[StylePrefix.perspective] = '1000px';
     element.style[StylePrefix.backfaceVisibility] = 'hidden';
   }
+};
+
+var vendors = ['webkit', 'moz'];
+var requestAnimationFrame = window.requestAnimationFrame;
+var cancelAnimationFrame = window.cancelAnimationFrame;
+
+for(var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
+  requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+  cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
+                         window[vendors[x] + 'CancelRequestAnimationFrame'];
 };
 
 return Dragdealer;

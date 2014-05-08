@@ -4,6 +4,8 @@ var helpers = {
     loadFixtures(dragdealerId + '.html');
     loadStyleFixtures(dragdealerId + '.css');
 
+    options = options || {};
+    options.requestAnimationFrame = false;
     return new Dragdealer(dragdealerId, options);
   },
 
