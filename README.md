@@ -1,10 +1,22 @@
-Dragdealer.js
+Dragdealer.js [![Build Status](https://travis-ci.org/skidding/dragdealer.png?branch=master)](https://travis-ci.org/skidding/dragdealer)
 ===
 Drag-based JavaScript component, embracing endless UI solutions
 
-[![Build Status](https://travis-ci.org/skidding/dragdealer.png?branch=master)](https://travis-ci.org/skidding/dragdealer)
-
 Specs & (sweet) demos: __http://skidding.github.io/dragdealer__
+
+## Install
+
+The basic way to install Dragdealer is to include the [minified](https://raw.github.com/skidding/dragdealer/master/lib/dragdealer.min.js)
+script into your web page.
+
+### Node package
+
+It can also be installed through [npm](https://www.npmjs.org/package/dragdealer),
+using something like [browserify.](https://github.com/substack/node-browserify)
+
+```js
+var Dragdealer = require('dragdealer').Dragdealer;
+```
 
 ## Running tests
 

@@ -44,13 +44,13 @@ var helpers = {
 
     // Move to current handle position and start touch
     simulateTouchEvent($handle.get(0), 'touchstart', {
-      clientX: handlePosition.left,
-      clientY: handlePosition.top
+      pageX: handlePosition.left,
+      pageY: handlePosition.top
     });
 
     result = simulateTouchEvent($wrapper.get(0), 'touchmove', {
-      clientX: wrapperPosition.left + x,
-      clientY: wrapperPosition.top + y
+      pageX: wrapperPosition.left + x,
+      pageY: wrapperPosition.top + y
     });
 
     jasmine.Clock.tick(25);
