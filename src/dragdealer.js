@@ -207,7 +207,8 @@ Dragdealer.prototype = {
     yPrecision: 0,
     handleClass: 'handle',
     css3: true,
-    activeClass: 'active'
+    activeClass: 'active',
+    enableStepClick: true
   },
   init: function() {
     if (this.options.css3) {
@@ -481,10 +482,12 @@ Dragdealer.prototype = {
     this.tapping = true;
     this.setWrapperOffset();
 
-    this.setTargetValueByOffset([
-      Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
-      Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
-    ]);
+    if (this.options.enableStepClick) {
+      this.setTargetValueByOffset([
+        Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
+        Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
+      ]);
+    }
   },
   stopTap: function() {
     if (this.disabled || !this.tapping) {
