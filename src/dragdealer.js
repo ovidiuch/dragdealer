@@ -207,7 +207,8 @@ Dragdealer.prototype = {
     yPrecision: 0,
     handleClass: 'handle',
     css3: true,
-    activeClass: 'active'
+    activeClass: 'active',
+    tapping: true
   },
   init: function() {
     if (this.options.css3) {
@@ -475,9 +476,10 @@ Dragdealer.prototype = {
     }
   },
   startTap: function() {
-    if (this.disabled) {
+    if (this.disabled || !this.options.tapping) {
       return;
     }
+
     this.tapping = true;
     this.setWrapperOffset();
 
