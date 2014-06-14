@@ -139,6 +139,10 @@ var Dragdealer = function(wrapper, options) {
    *   - bool css3=true: Use css3 transform in modern browsers instead of
    *                     absolute positioning.
    *
+   *   - bool requestAnimationFrame=false: Animate with requestAnimationFrame
+   *                                       or setTimeout polyfill instead of
+   *                                       default setInterval animation.
+   *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
    *   - disable: Disable dragging of a Dragdealer instance. Just as with the
@@ -206,7 +210,8 @@ Dragdealer.prototype = {
     xPrecision: 0,
     yPrecision: 0,
     handleClass: 'handle',
-    css3: true
+    css3: true,
+    requestAnimationFrame: false
   },
   init: function() {
     if (this.options.css3) {
@@ -314,6 +319,7 @@ Dragdealer.prototype = {
   },
   bindMethods: function() {
     this.animateWithRequestAnimationFrame = bind(this.animateWithRequestAnimationFrame, this);
+    this.animate = bind(this.animate, this);
     this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
     this.onHandleTouchStart = bind(this.onHandleTouchStart, this);
     this.onDocumentMouseMove = bind(this.onDocumentMouseMove, this);
@@ -343,7 +349,12 @@ Dragdealer.prototype = {
     addEventListener(window, 'resize', this.onWindowResize);
 
     this.animate(false, true);
-    this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
+    if (this.options.requestAnimationFrame) {
+      this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
+    } else {
+      this.timeOffset = 25;
+      this.interval = setInterval(this.animate, this.timeOffset);
+    }
   },
   unbindEventListeners: function() {
     removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
@@ -356,8 +367,11 @@ Dragdealer.prototype = {
     removeEventListener(document, 'touchend', this.onDocumentTouchEnd);
     removeEventListener(this.handle, 'click', this.onHandleClick);
     removeEventListener(window, 'resize', this.onWindowResize);
-
-    cancelAnimationFrame(this.interval);
+    if (this.options.requestAnimationFrame) {
+      cancelAnimationFrame(this.interval);
+    } else {
+      clearInterval(this.interval);
+    }
   },
   onHandleMouseDown: function(e) {
     Cursor.refresh(e);
