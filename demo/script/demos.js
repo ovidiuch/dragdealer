@@ -57,7 +57,8 @@ $(function() {
   new Dragdealer('image-carousel', {
     steps: 4,
     speed: 0.3,
-    loose: true
+    loose: true,
+    requestAnimationFrame: true
   });
 
   var canvasMask = new Dragdealer('canvas-mask', {
@@ -66,7 +67,8 @@ $(function() {
     y: 1,
     vertical: true,
     speed: 0.2,
-    loose: true
+    loose: true,
+    requestAnimationFrame: true
   });
   // Bind event on the wrapper element to prevent it when a drag has been made
   // between mousedown and mouseup (by stopping propagation from handle)

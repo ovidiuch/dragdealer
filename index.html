@@ -392,7 +392,8 @@ new Dragdealer('slide-to-unlock-new', {
 new Dragdealer('image-carousel', {
   <strong>steps: 4,
   speed: 0.3,
-  loose: true</strong>
+  loose: true,
+  requestAnimationFrame: true</strong>
 });
 </pre>
           <div id="image-carousel" class="dragdealer">
@@ -436,7 +437,8 @@ var canvasMask = new Dragdealer('canvas-mask', {
   y: 1,
   <strong>vertical: true,
   speed: 0.2,
-  loose: true</strong>
+  loose: true,
+  requestAnimationFrame: true</strong>
 });
 
 // Bind event on the wrapper element to prevent it when a drag has been made
