@@ -182,6 +182,11 @@
               <strong>css3</strong><span class="default">=true</span>
               <span class="description">Use css3 transform in modern browsers instead of absolute positioning.</span>
             </li>
+            <li>
+              <span class="type">bool</span>
+              <strong>requestAnimationFrame</strong><span class="default">=false</span>
+              <span class="description">Animate with requestAnimationFrame or setTimeout polyfill instead of default setInterval animation.</span>
+            </li>
           </ul>
 
           <h4>Methods</h4>
@@ -387,7 +392,8 @@ new Dragdealer('slide-to-unlock-new', {
 new Dragdealer('image-carousel', {
   <strong>steps: 4,
   speed: 0.3,
-  loose: true</strong>
+  loose: true,
+  requestAnimationFrame: true</strong>
 });
 </pre>
           <div id="image-carousel" class="dragdealer">
@@ -431,7 +437,8 @@ var canvasMask = new Dragdealer('canvas-mask', {
   y: 1,
   <strong>vertical: true,
   speed: 0.2,
-  loose: true</strong>
+  loose: true,
+  requestAnimationFrame: true</strong>
 });
 
 // Bind event on the wrapper element to prevent it when a drag has been made
