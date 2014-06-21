@@ -211,7 +211,9 @@ Dragdealer.prototype = {
     yPrecision: 0,
     handleClass: 'handle',
     css3: true,
-    requestAnimationFrame: false
+    requestAnimationFrame: false,
+    activeClass: 'active',
+    tapping: true
   },
   init: function() {
     if (this.options.css3) {
@@ -486,9 +488,10 @@ Dragdealer.prototype = {
     }
   },
   startTap: function() {
-    if (this.disabled) {
+    if (this.disabled || !this.options.tapping) {
       return;
     }
+
     this.tapping = true;
     this.setWrapperOffset();
 
@@ -516,6 +519,9 @@ Dragdealer.prototype = {
       Cursor.x - Position.get(this.handle)[0],
       Cursor.y - Position.get(this.handle)[1]
     ];
+    if (!this.wrapper.className.match(this.options.activeClass)) {
+      this.wrapper.className += ' ' + this.options.activeClass;
+    }
   },
   stopDrag: function() {
     if (this.disabled || !this.dragging) {
@@ -530,6 +536,7 @@ Dragdealer.prototype = {
       target[1] += ratioChange[1] * 4;
     }
     this.setTargetValue(target);
+    this.wrapper.className = this.wrapper.className.replace(' ' + this.options.activeClass, '');
   },
   callAnimationCallback: function() {
     var value = this.value.current;
