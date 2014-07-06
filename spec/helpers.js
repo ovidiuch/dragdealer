@@ -1,9 +1,10 @@
 var helpers = {
 
   initDragdealer: function(dragdealerId, options) {
+    if (!options) options = {};
     loadFixtures(dragdealerId + '.html');
     loadStyleFixtures(dragdealerId + '.css');
-
+    options.requestAnimationFrame = this.createRequestAnimationFrameMock();
     return new Dragdealer(dragdealerId, options);
   },
 
@@ -27,7 +28,7 @@ var helpers = {
 
     // Dragdealer internal animation delay is 25ms (this should be fixed and
     // dragdealer should be updated instantly on mousemove or mouseup)
-    jasmine.Clock.tick(25);
+    this.callRequestAnimationFrameMock(25);
   },
 
   drop: function(dragdealerId, x, y, handleClass) {
@@ -53,7 +54,8 @@ var helpers = {
       pageY: wrapperPosition.top + y
     });
 
-    jasmine.Clock.tick(25);
+
+    this.callRequestAnimationFrameMock(25);
 
     // Return the result of touchmove event dispatch
     // to check if it was canceled or not
@@ -63,6 +65,25 @@ var helpers = {
   touchDrop: function(dragdealerId, x, y, handleClass) {
     var $handle = $('#' + dragdealerId).find('.' + (handleClass || 'handle'));
     simulateTouchEvent($handle.get(0), 'touchend');
+  },
+
+  createRequestAnimationFrameMock: function () {
+    var self = this;
+    this.time = 0;
+    this.memFunc = function () {};
+    return function mockAnimationFrame (func) {
+      self.memFunc = func;
+    };
+  },
+
+  callRequestAnimationFrameMock: function (milliseconds) {
+    if (this.time === 0) {
+      this.memFunc(0);
+    }
+    for (var t = 25; t <= milliseconds; t += 25) {
+      this.memFunc(this.time + t);
+    }
+    this.time += t;
   }
 
 };

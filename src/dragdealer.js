@@ -139,9 +139,10 @@ var Dragdealer = function(wrapper, options) {
    *   - bool css3=true: Use css3 transform in modern browsers instead of
    *                     absolute positioning.
    *
-   *   - bool requestAnimationFrame=false: Animate with requestAnimationFrame
-   *                                       or setTimeout polyfill instead of
-   *                                       default setInterval animation.
+   *   - func requestAnimationFrame: Provide custom requestAnimationFrame
+   *                                 function (used in tests).
+   *   - func cancelAnimationFrame: Provide custom cancelAnimationFrame
+   *                                function (used in tests).
    *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
@@ -184,8 +185,8 @@ var Dragdealer = function(wrapper, options) {
    *   setValue method expects. Once picked up, the ratios can be scaled and
    *   mapped to match any real-life system of coordinates or dimensions.
    */
-  this.bindMethods();
   this.options = this.applyDefaults(options || {});
+  this.bindMethods();
   this.wrapper = this.getWrapperElement(wrapper);
   if (!this.wrapper) {
     return;
@@ -197,6 +198,25 @@ var Dragdealer = function(wrapper, options) {
   this.init();
   this.bindEventListeners();
 };
+
+
+var vendors = ['webkit', 'moz'];
+var requestAnimationFrame = window.requestAnimationFrame;
+var cancelAnimationFrame = window.cancelAnimationFrame;
+
+for(var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
+  requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+  cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
+                         window[vendors[x] + 'CancelRequestAnimationFrame'];
+};
+
+if (!requestAnimationFrame) {
+  requestAnimationFrame = function (callback) {
+    return setTimeout(callback, 25);
+  };
+  cancelAnimationFrame = clearTimeout;
+};
+
 Dragdealer.prototype = {
   defaults: {
     disabled: false,
@@ -211,7 +231,8 @@ Dragdealer.prototype = {
     yPrecision: 0,
     handleClass: 'handle',
     css3: true,
-    requestAnimationFrame: false,
+    requestAnimationFrame: requestAnimationFrame,
+    cancelAnimationFrame: cancelAnimationFrame,
     activeClass: 'active',
     tapping: true
   },
@@ -351,12 +372,8 @@ Dragdealer.prototype = {
     addEventListener(window, 'resize', this.onWindowResize);
 
     this.animate(false, true);
-    if (this.options.requestAnimationFrame) {
-      this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
-    } else {
-      this.timeOffset = 25;
-      this.interval = setInterval(this.animate, this.timeOffset);
-    }
+    this.interval = this.options.requestAnimationFrame.call(window, this.animateWithRequestAnimationFrame);
+
   },
   unbindEventListeners: function() {
     removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
@@ -369,11 +386,7 @@ Dragdealer.prototype = {
     removeEventListener(document, 'touchend', this.onDocumentTouchEnd);
     removeEventListener(this.handle, 'click', this.onHandleClick);
     removeEventListener(window, 'resize', this.onWindowResize);
-    if (this.options.requestAnimationFrame) {
-      cancelAnimationFrame(this.interval);
-    } else {
-      clearInterval(this.interval);
-    }
+    this.options.cancelAnimationFrame.call(window, this.interval);
   },
   onHandleMouseDown: function(e) {
     Cursor.refresh(e);
@@ -565,7 +578,7 @@ Dragdealer.prototype = {
       this.timeOffset = 25;
     }
     this.animate();
-    this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
+    this.interval = this.options.requestAnimationFrame.call(window, this.animateWithRequestAnimationFrame);
   },
   animate: function(direct, first) {
     if (direct && !this.dragging) {
@@ -877,24 +890,6 @@ function triggerWebkitHardwareAcceleration(element) {
     element.style[StylePrefix.perspective] = '1000px';
     element.style[StylePrefix.backfaceVisibility] = 'hidden';
   }
-};
-
-
-var vendors = ['webkit', 'moz'];
-var requestAnimationFrame = window.requestAnimationFrame;
-var cancelAnimationFrame = window.cancelAnimationFrame;
-
-for(var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
-  requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-  cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
-                         window[vendors[x] + 'CancelRequestAnimationFrame'];
-};
-
-if (!requestAnimationFrame) {
-  requestAnimationFrame = function (callback) {
-    return setTimeout(callback, 25);
-  };
-  cancelAnimationFrame = clearTimeout;
 };
 
 return Dragdealer;
