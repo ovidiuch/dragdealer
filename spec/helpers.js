@@ -5,6 +5,7 @@ var helpers = {
     loadFixtures(dragdealerId + '.html');
     loadStyleFixtures(dragdealerId + '.css');
     options.requestAnimationFrame = this.createRequestAnimationFrameMock();
+    options.cancelAnimationFrame = this.createCancelAnimationFrameMock();
     return new Dragdealer(dragdealerId, options);
   },
 
@@ -14,6 +15,8 @@ var helpers = {
         wrapperPosition = $wrapper.offset(),
         handlePosition = $handle.offset();
 
+    this.callRequestAnimationFrameMock(0);
+
     // Move to current handle position and press
     $(document).simulate('mousemove', {
       clientX: handlePosition.left,
@@ -21,6 +24,7 @@ var helpers = {
     });
 
     $handle.simulate('mousedown');
+
     $(document).simulate('mousemove', {
       clientX: wrapperPosition.left + x,
       clientY: wrapperPosition.top + y
@@ -42,6 +46,8 @@ var helpers = {
         wrapperPosition = $wrapper.offset(),
         handlePosition = $handle.offset(),
         result;
+
+    this.callRequestAnimationFrameMock(0);
 
     // Move to current handle position and start touch
     simulateTouchEvent($handle.get(0), 'touchstart', {
@@ -73,6 +79,13 @@ var helpers = {
     this.memFunc = function () {};
     return function mockAnimationFrame (func) {
       self.memFunc = func;
+    };
+  },
+
+  createCancelAnimationFrameMock: function () {
+    var self = this;
+    return function mockCancelAnimationFrame (func) {
+      self.memFunc = function () {};
     };
   },
 
