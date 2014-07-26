@@ -200,23 +200,6 @@ var Dragdealer = function(wrapper, options) {
 };
 
 
-var vendors = ['webkit', 'moz'];
-var requestAnimationFrame = window.requestAnimationFrame;
-var cancelAnimationFrame = window.cancelAnimationFrame;
-
-for (var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
-  requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-  cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
-                         window[vendors[x] + 'CancelRequestAnimationFrame'];
-}
-
-if (!requestAnimationFrame) {
-  requestAnimationFrame = function (callback) {
-    return setTimeout(callback, 25);
-  };
-  cancelAnimationFrame = clearTimeout;
-}
-
 Dragdealer.prototype = {
   defaults: {
     disabled: false,
@@ -231,8 +214,8 @@ Dragdealer.prototype = {
     yPrecision: 0,
     handleClass: 'handle',
     css3: true,
-    requestAnimationFrame: requestAnimationFrame,
-    cancelAnimationFrame: cancelAnimationFrame,
+    requestAnimationFrame: false,
+    cancelAnimationFrame: false,
     activeClass: 'active',
     tapping: true
   },
@@ -341,6 +324,16 @@ Dragdealer.prototype = {
     ];
   },
   bindMethods: function() {
+    if (typeof this.options.requestAnimationFrame === 'function') {
+      this.requestAnimationFrame = bind(this.options.requestAnimationFrame, window);
+    } else {
+      this.requestAnimationFrame = bind(requestAnimationFrame, window);
+    }
+    if (typeof this.options.cancelAnimationFrame === 'function') {
+      this.cancelAnimationFrame = bind(this.options.cancelAnimationFrame, window);
+    } else {
+      this.cancelAnimationFrame = bind(cancelAnimationFrame, window);
+    }
     this.animateWithRequestAnimationFrame = bind(this.animateWithRequestAnimationFrame, this);
     this.animate = bind(this.animate, this);
     this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
@@ -372,7 +365,7 @@ Dragdealer.prototype = {
     addEventListener(window, 'resize', this.onWindowResize);
 
     this.animate(false, true);
-    this.interval = this.options.requestAnimationFrame.call(window, this.animateWithRequestAnimationFrame);
+    this.interval = this.requestAnimationFrame(this.animateWithRequestAnimationFrame);
 
   },
   unbindEventListeners: function() {
@@ -386,7 +379,7 @@ Dragdealer.prototype = {
     removeEventListener(document, 'touchend', this.onDocumentTouchEnd);
     removeEventListener(this.handle, 'click', this.onHandleClick);
     removeEventListener(window, 'resize', this.onWindowResize);
-    this.options.cancelAnimationFrame.call(window, this.interval);
+    this.cancelAnimationFrame(this.interval);
   },
   onHandleMouseDown: function(e) {
     Cursor.refresh(e);
@@ -578,7 +571,7 @@ Dragdealer.prototype = {
       this.timeOffset = 25;
     }
     this.animate();
-    this.interval = this.options.requestAnimationFrame.call(window, this.animateWithRequestAnimationFrame);
+    this.interval = this.requestAnimationFrame(this.animateWithRequestAnimationFrame);
   },
   animate: function(direct, first) {
     if (direct && !this.dragging) {
@@ -871,7 +864,7 @@ var StylePrefix = {
   transform: getPrefixedStylePropName('transform'),
   perspective: getPrefixedStylePropName('perspective'),
   backfaceVisibility: getPrefixedStylePropName('backfaceVisibility')
-}
+};
 
 function getPrefixedStylePropName(propName) {
   var domPrefixes = 'Webkit Moz ms O'.split(' '),
@@ -891,6 +884,23 @@ function triggerWebkitHardwareAcceleration(element) {
     element.style[StylePrefix.backfaceVisibility] = 'hidden';
   }
 };
+
+var vendors = ['webkit', 'moz'];
+var requestAnimationFrame = window.requestAnimationFrame;
+var cancelAnimationFrame = window.cancelAnimationFrame;
+
+for (var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
+  requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+  cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
+                         window[vendors[x] + 'CancelRequestAnimationFrame'];
+}
+
+if (!requestAnimationFrame) {
+  requestAnimationFrame = function (callback) {
+    return setTimeout(callback, 25);
+  };
+  cancelAnimationFrame = clearTimeout;
+}
 
 return Dragdealer;
 
