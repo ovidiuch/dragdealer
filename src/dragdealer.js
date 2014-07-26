@@ -139,10 +139,10 @@ var Dragdealer = function(wrapper, options) {
    *   - bool css3=true: Use css3 transform in modern browsers instead of
    *                     absolute positioning.
    *
-   *   - func requestAnimationFrame: Provide custom requestAnimationFrame
-   *                                 function (used in tests).
-   *   - func cancelAnimationFrame: Provide custom cancelAnimationFrame
-   *                                function (used in tests).
+   *   - fn customRequestAnimationFrame: Provide custom requestAnimationFrame
+   *                                     function (used in tests).
+   *   - fn customCancelAnimationFrame: Provide custom cancelAnimationFrame
+   *                                    function (used in tests).
    *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
@@ -214,8 +214,6 @@ Dragdealer.prototype = {
     yPrecision: 0,
     handleClass: 'handle',
     css3: true,
-    requestAnimationFrame: false,
-    cancelAnimationFrame: false,
     activeClass: 'active',
     tapping: true
   },
@@ -324,13 +322,13 @@ Dragdealer.prototype = {
     ];
   },
   bindMethods: function() {
-    if (typeof this.options.requestAnimationFrame === 'function') {
-      this.requestAnimationFrame = bind(this.options.requestAnimationFrame, window);
+    if (typeof(this.options.customRequestAnimationFrame) === 'function') {
+      this.requestAnimationFrame = bind(this.options.customRequestAnimationFrame, window);
     } else {
       this.requestAnimationFrame = bind(requestAnimationFrame, window);
     }
-    if (typeof this.options.cancelAnimationFrame === 'function') {
-      this.cancelAnimationFrame = bind(this.options.cancelAnimationFrame, window);
+    if (typeof(this.options.customCancelAnimationFrame) === 'function') {
+      this.cancelAnimationFrame = bind(this.options.customCancelAnimationFrame, window);
     } else {
       this.cancelAnimationFrame = bind(cancelAnimationFrame, window);
     }

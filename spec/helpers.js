@@ -4,8 +4,8 @@ var helpers = {
     if (!options) options = {};
     loadFixtures(dragdealerId + '.html');
     loadStyleFixtures(dragdealerId + '.css');
-    options.requestAnimationFrame = this.createRequestAnimationFrameMock();
-    options.cancelAnimationFrame = this.createCancelAnimationFrameMock();
+    options.customRequestAnimationFrame = this.createRequestAnimationFrameMock();
+    options.customCancelAnimationFrame = this.createCancelAnimationFrameMock();
     return new Dragdealer(dragdealerId, options);
   },
 

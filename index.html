@@ -183,9 +183,14 @@
               <span class="description">Use css3 transform in modern browsers instead of absolute positioning.</span>
             </li>
             <li>
-              <span class="type">bool</span>
-              <strong>requestAnimationFrame</strong><span class="default">=false</span>
-              <span class="description">Animate with requestAnimationFrame or setTimeout polyfill instead of default setInterval animation.</span>
+              <span class="type">fn</span>
+              <strong>customRequestAnimationFrame</strong>
+              <span class="description">Provide custom requestAnimationFrame function (used in tests).</span>
+            </li>
+            <li>
+              <span class="type">fn</span>
+              <strong>customCancelAnimationFrame</strong>
+              <span class="description">Provide custom cancelAnimationFrame function (used in tests).</span>
             </li>
           </ul>
 
