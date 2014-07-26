@@ -204,18 +204,18 @@ var vendors = ['webkit', 'moz'];
 var requestAnimationFrame = window.requestAnimationFrame;
 var cancelAnimationFrame = window.cancelAnimationFrame;
 
-for(var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
+for (var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
   requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
   cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
                          window[vendors[x] + 'CancelRequestAnimationFrame'];
-};
+}
 
 if (!requestAnimationFrame) {
   requestAnimationFrame = function (callback) {
     return setTimeout(callback, 25);
   };
   cancelAnimationFrame = clearTimeout;
-};
+}
 
 Dragdealer.prototype = {
   defaults: {

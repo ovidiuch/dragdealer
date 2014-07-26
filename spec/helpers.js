@@ -73,23 +73,23 @@ var helpers = {
     simulateTouchEvent($handle.get(0), 'touchend');
   },
 
-  createRequestAnimationFrameMock: function () {
+  createRequestAnimationFrameMock: function() {
     var self = this;
     this.time = 0;
-    this.memFunc = function () {};
-    return function mockAnimationFrame (func) {
+    this.memFunc = function() {};
+    return function mockAnimationFrame(func) {
       self.memFunc = func;
     };
   },
 
-  createCancelAnimationFrameMock: function () {
+  createCancelAnimationFrameMock: function() {
     var self = this;
-    return function mockCancelAnimationFrame (func) {
-      self.memFunc = function () {};
+    return function mockCancelAnimationFrame(func) {
+      self.memFunc = function() {};
     };
   },
 
-  callRequestAnimationFrameMock: function (milliseconds) {
+  callRequestAnimationFrameMock: function(milliseconds) {
     if (this.time === 0) {
       this.memFunc(0);
     }
