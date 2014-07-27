@@ -2,7 +2,6 @@ describe("Dragdealer callbacks", function() {
 
   beforeEach(function() {
     this.addMatchers(matchers);
-    jasmine.Clock.useMock();
   });
 
   describe("should call regular callback", function() {
@@ -95,7 +94,7 @@ describe("Dragdealer callbacks", function() {
       expect(callback).toHaveBeenCalledWith(0.075, 0.05);
 
       helpers.drop('square-slider');
-      jasmine.Clock.tick(3000);
+      helpers.callRequestAnimationFrameMock(3000);
       // We don't care about the number of calls, just the last call
       expect(callback).toHaveBeenCalledWith(0.375, 0.25);
     });
@@ -119,7 +118,7 @@ describe("Dragdealer callbacks", function() {
       expect(callback).toHaveBeenCalledWith(0.1, 0);
 
       helpers.drop('simple-slider');
-      jasmine.Clock.tick(3000);
+      helpers.callRequestAnimationFrameMock(3000);
       // We don't care about the number of calls, just the last call
       expect(callback).toHaveBeenCalledWith(0.5, 0);
     });
@@ -138,7 +137,7 @@ describe("Dragdealer callbacks", function() {
     expect(callback).toHaveBeenCalledWith(0.04, 0);
 
     helpers.drop('masked-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     // We want to make sure the value has reached 0.2 and is not something like
     // 0.19999948332063716
     expect(callback).toHaveBeenCalledWith(0.2, 0);

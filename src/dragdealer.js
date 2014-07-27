@@ -139,9 +139,10 @@ var Dragdealer = function(wrapper, options) {
    *   - bool css3=true: Use css3 transform in modern browsers instead of
    *                     absolute positioning.
    *
-   *   - bool requestAnimationFrame=false: Animate with requestAnimationFrame
-   *                                       or setTimeout polyfill instead of
-   *                                       default setInterval animation.
+   *   - fn customRequestAnimationFrame: Provide custom requestAnimationFrame
+   *                                     function (used in tests).
+   *   - fn customCancelAnimationFrame: Provide custom cancelAnimationFrame
+   *                                    function (used in tests).
    *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
@@ -184,8 +185,8 @@ var Dragdealer = function(wrapper, options) {
    *   setValue method expects. Once picked up, the ratios can be scaled and
    *   mapped to match any real-life system of coordinates or dimensions.
    */
-  this.bindMethods();
   this.options = this.applyDefaults(options || {});
+  this.bindMethods();
   this.wrapper = this.getWrapperElement(wrapper);
   if (!this.wrapper) {
     return;
@@ -197,6 +198,8 @@ var Dragdealer = function(wrapper, options) {
   this.init();
   this.bindEventListeners();
 };
+
+
 Dragdealer.prototype = {
   defaults: {
     disabled: false,
@@ -211,7 +214,6 @@ Dragdealer.prototype = {
     yPrecision: 0,
     handleClass: 'handle',
     css3: true,
-    requestAnimationFrame: false,
     activeClass: 'active',
     tapping: true
   },
@@ -320,6 +322,16 @@ Dragdealer.prototype = {
     ];
   },
   bindMethods: function() {
+    if (typeof(this.options.customRequestAnimationFrame) === 'function') {
+      this.requestAnimationFrame = bind(this.options.customRequestAnimationFrame, window);
+    } else {
+      this.requestAnimationFrame = bind(requestAnimationFrame, window);
+    }
+    if (typeof(this.options.customCancelAnimationFrame) === 'function') {
+      this.cancelAnimationFrame = bind(this.options.customCancelAnimationFrame, window);
+    } else {
+      this.cancelAnimationFrame = bind(cancelAnimationFrame, window);
+    }
     this.animateWithRequestAnimationFrame = bind(this.animateWithRequestAnimationFrame, this);
     this.animate = bind(this.animate, this);
     this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
@@ -351,12 +363,8 @@ Dragdealer.prototype = {
     addEventListener(window, 'resize', this.onWindowResize);
 
     this.animate(false, true);
-    if (this.options.requestAnimationFrame) {
-      this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
-    } else {
-      this.timeOffset = 25;
-      this.interval = setInterval(this.animate, this.timeOffset);
-    }
+    this.interval = this.requestAnimationFrame(this.animateWithRequestAnimationFrame);
+
   },
   unbindEventListeners: function() {
     removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
@@ -369,11 +377,7 @@ Dragdealer.prototype = {
     removeEventListener(document, 'touchend', this.onDocumentTouchEnd);
     removeEventListener(this.handle, 'click', this.onHandleClick);
     removeEventListener(window, 'resize', this.onWindowResize);
-    if (this.options.requestAnimationFrame) {
-      cancelAnimationFrame(this.interval);
-    } else {
-      clearInterval(this.interval);
-    }
+    this.cancelAnimationFrame(this.interval);
   },
   onHandleMouseDown: function(e) {
     Cursor.refresh(e);
@@ -565,7 +569,7 @@ Dragdealer.prototype = {
       this.timeOffset = 25;
     }
     this.animate();
-    this.interval = requestAnimationFrame(this.animateWithRequestAnimationFrame);
+    this.interval = this.requestAnimationFrame(this.animateWithRequestAnimationFrame);
   },
   animate: function(direct, first) {
     if (direct && !this.dragging) {
@@ -858,7 +862,7 @@ var StylePrefix = {
   transform: getPrefixedStylePropName('transform'),
   perspective: getPrefixedStylePropName('perspective'),
   backfaceVisibility: getPrefixedStylePropName('backfaceVisibility')
-}
+};
 
 function getPrefixedStylePropName(propName) {
   var domPrefixes = 'Webkit Moz ms O'.split(' '),
@@ -879,23 +883,22 @@ function triggerWebkitHardwareAcceleration(element) {
   }
 };
 
-
 var vendors = ['webkit', 'moz'];
 var requestAnimationFrame = window.requestAnimationFrame;
 var cancelAnimationFrame = window.cancelAnimationFrame;
 
-for(var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
+for (var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
   requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
   cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
                          window[vendors[x] + 'CancelRequestAnimationFrame'];
-};
+}
 
 if (!requestAnimationFrame) {
   requestAnimationFrame = function (callback) {
     return setTimeout(callback, 25);
   };
   cancelAnimationFrame = clearTimeout;
-};
+}
 
 return Dragdealer;
 

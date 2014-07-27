@@ -2,7 +2,6 @@ describe("Click events inside handle", function() {
 
   beforeEach(function() {
     this.addMatchers(matchers);
-    jasmine.Clock.useMock();
   });
 
   it("should be cancelled if mouse dragging", function() {

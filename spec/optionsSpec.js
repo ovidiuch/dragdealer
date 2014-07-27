@@ -2,7 +2,6 @@ describe("Initializing Dragdealer", function() {
 
   beforeEach(function() {
     this.addMatchers(matchers);
-    jasmine.Clock.useMock();
   });
 
   it("should set .disabled class when setting disabled true", function() {
