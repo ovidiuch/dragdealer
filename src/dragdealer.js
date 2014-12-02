@@ -526,6 +526,7 @@ Dragdealer.prototype = {
     if (!this.wrapper.className.match(this.options.activeClass)) {
       this.wrapper.className += ' ' + this.options.activeClass;
     }
+    this.callDragStartCallback();
   },
   stopDrag: function() {
     if (this.disabled || !this.dragging) {
@@ -557,6 +558,11 @@ Dragdealer.prototype = {
   callTargetCallback: function() {
     if (typeof(this.options.callback) == 'function') {
       this.options.callback.call(this, this.value.target[0], this.value.target[1]);
+    }
+  },
+  callDragStartCallback: function() {
+    if (typeof(this.options.dragCallback) == 'function') {
+      this.options.dragCallback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
   animateWithRequestAnimationFrame: function (time) {
