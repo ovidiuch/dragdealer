@@ -1,5 +1,5 @@
 /**
- * Dragdealer.js 0.9.7
+ * Dragdealer.js 0.9.8
  * http://github.com/skidding/dragdealer
  *
  * (c) 2010+ Ovidiu Cherecheș
