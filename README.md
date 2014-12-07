@@ -1,5 +1,5 @@
 Dragdealer.js [![Build Status](https://travis-ci.org/skidding/dragdealer.png?branch=master)](https://travis-ci.org/skidding/dragdealer)
-===
+====
 Drag-based JavaScript component, embracing endless UI solutions
 
 Specs & (sweet) demos: __http://skidding.github.io/dragdealer__

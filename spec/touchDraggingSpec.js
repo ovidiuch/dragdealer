@@ -150,7 +150,7 @@ describe("Touch Dragging Dragdealer", function() {
     // of it with every interval loop, normally we'd never move an entire 50px
     // with one touch move
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(250, 0);
   });
 
@@ -165,22 +165,22 @@ describe("Touch Dragging Dragdealer", function() {
 
     helpers.touchDragTo('simple-slider', 100, 0);
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(80, 0);
 
     helpers.touchDragTo('simple-slider', 50, 0);
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(80, 0);
 
     helpers.touchDragTo('simple-slider', 350, 0);
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(320, 0);
 
     helpers.touchDragTo('simple-slider', 210, 0);
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(240, 0);
   });
 
@@ -197,25 +197,25 @@ describe("Touch Dragging Dragdealer", function() {
     // is dragged 25px to the right, and will slide 125px, to 125, 0
     helpers.touchDragTo('simple-slider', 25, 0);
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(160, 0);
 
     // is dragged 15px to the left, and will slide 75px, to 135, 0
     helpers.touchDragTo('simple-slider', 155, 0);
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(160, 0);
 
     // is dragged 25px to the right, and will slide 125px, to 285, 0
     helpers.touchDragTo('simple-slider', 185, 0);
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(320, 0);
 
     // is dragged 20px to the left, and will slide 250px, to 70, 0
     helpers.touchDragTo('simple-slider', 270, 0);
     helpers.touchDrop('simple-slider');
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(80, 0);
   });
 
@@ -257,7 +257,7 @@ describe("Touch Dragging Dragdealer", function() {
     helpers.touchDragTo('simple-slider', -100, 0);
     helpers.touchDrop('simple-slider');
     expect('simple-slider').toHavePosition(-25, 0);
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(0, 0);
 
     // This goes outside the wrapper with 200px, since 400px is the rightmost
@@ -266,7 +266,7 @@ describe("Touch Dragging Dragdealer", function() {
     helpers.touchDragTo('simple-slider', 600, 0);
     helpers.touchDrop('simple-slider');
     expect('simple-slider').toHavePosition(450, 0);
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('simple-slider').toHavePosition(400, 0);
   });
 
@@ -281,13 +281,13 @@ describe("Touch Dragging Dragdealer", function() {
     helpers.touchDragTo('masked-slider', 100, 200);
     helpers.touchDrop('masked-slider');
     expect('masked-slider').toHavePosition(25, 50);
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('masked-slider').toHavePosition(0, 0);
 
     helpers.touchDragTo('masked-slider', -2000, -1000);
     helpers.touchDrop('masked-slider');
     expect('masked-slider').toHavePosition(-875, -625);
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     expect('masked-slider').toHavePosition(-500, -500);
   });
 
@@ -320,7 +320,7 @@ describe("Touch Dragging Dragdealer", function() {
     helpers.touchDragTo('simple-slider', 200, 0);
     helpers.touchDrop('simple-slider');
     dragdealer.unbindEventListeners();
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
     // The handle would reach the 400, 0 position if we wouldn't unbind it
     expect('simple-slider').toHavePosition(200, 0);
   });

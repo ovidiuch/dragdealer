@@ -52,7 +52,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    'saucelabs-jasmine': {
+    'saucelabs-custom': {
       all: {
         options: {
           urls: ["http://127.0.0.1:9999/#runner"],
@@ -74,5 +74,5 @@ module.exports = function(grunt) {
   }
 
   grunt.registerTask("dev", ["connect", "watch"]);
-  grunt.registerTask("test", ["connect", "saucelabs-jasmine"]);
+  grunt.registerTask("test", ["connect", "saucelabs-custom"]);
 };
