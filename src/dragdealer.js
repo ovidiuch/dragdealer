@@ -723,7 +723,11 @@ Dragdealer.prototype = {
         k = i;
       }
     }
-    return this.stepRatios[k];
+    var result = this.stepRatios[k];
+    if (result === undefined) {
+      result = 0;
+    }
+    return result;
   },
   groupCompare: function(a, b) {
     return a[0] == b[0] && a[1] == b[1];
