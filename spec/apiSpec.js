@@ -118,6 +118,7 @@ describe("Dragdealer API", function() {
     dragdealer.setStep(4, 1);
     expect(dragdealer.getStep()).toEqual([4, 1]);
   });
+
   it("should get initial value on getStep() if only one step is available", function() {
     var dragdealer = helpers.initDragdealer('square-slider', {
       steps: 1
