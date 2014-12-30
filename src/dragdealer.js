@@ -281,9 +281,14 @@ Dragdealer.prototype = {
   },
   calculateStepRatios: function() {
     var stepRatios = [];
-    if (this.options.steps > 1) {
+    if (this.options.steps >= 1) {
       for (var i = 0; i <= this.options.steps - 1; i++) {
-        stepRatios[i] = i / (this.options.steps - 1);
+        if (this.options.steps > 1) {
+          stepRatios[i] = i / (this.options.steps - 1);
+        } else {
+          // A single step will always have a 0 value
+          stepRatios[i] = 0;
+        }
       }
     }
     return stepRatios;
@@ -723,11 +728,7 @@ Dragdealer.prototype = {
         k = i;
       }
     }
-    var result = this.stepRatios[k];
-    if (result === undefined) {
-      result = 0;
-    }
-    return result;
+    return this.stepRatios[k];
   },
   groupCompare: function(a, b) {
     return a[0] == b[0] && a[1] == b[1];
