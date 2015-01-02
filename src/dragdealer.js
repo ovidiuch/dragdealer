@@ -532,6 +532,7 @@ Dragdealer.prototype = {
     if (!this.wrapper.className.match(this.options.activeClass)) {
       this.wrapper.className += ' ' + this.options.activeClass;
     }
+    this.callDragStartCallback();
   },
   stopDrag: function() {
     if (this.disabled || !this.dragging) {
@@ -547,6 +548,7 @@ Dragdealer.prototype = {
     }
     this.setTargetValue(target);
     this.wrapper.className = this.wrapper.className.replace(' ' + this.options.activeClass, '');
+    this.callDragStopCallback();
   },
   callAnimationCallback: function() {
     var value = this.value.current;
@@ -563,6 +565,16 @@ Dragdealer.prototype = {
   callTargetCallback: function() {
     if (typeof(this.options.callback) == 'function') {
       this.options.callback.call(this, this.value.target[0], this.value.target[1]);
+    }
+  },
+  callDragStartCallback: function() {
+    if (typeof(this.options.dragStartCallback) == 'function') {
+      this.options.dragStartCallback.call(this, this.value.target[0], this.value.target[1]);
+    }
+  },
+  callDragStopCallback: function() {
+    if (typeof(this.options.dragStopCallback) == 'function') {
+      this.options.dragStopCallback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
   animateWithRequestAnimationFrame: function (time) {
