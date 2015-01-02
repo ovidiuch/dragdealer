@@ -405,6 +405,7 @@ Dragdealer.prototype = {
     Cursor.refresh(e);
     if (this.dragging) {
       this.activity = true;
+      preventEventDefaults(e);
     }
   },
   onWrapperTouchMove: function(e) {
