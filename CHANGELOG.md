@@ -1,3 +1,10 @@
+## 0.9.8
+
+- CSS3 transform support [#41](https://github.com/skidding/dragdealer/pull/41)
+- add active class to wrapper [#44](https://github.com/skidding/dragdealer/issues/44)
+- Request animation frame [#47](https://github.com/skidding/dragdealer/issues/47)
+- add enabled/disable step click [#50](https://github.com/skidding/dragdealer/issues/50)
+
 ## 0.9.7
 
 - Allow to pass handle in options [#14](https://github.com/skidding/dragdealer/issues/14)
