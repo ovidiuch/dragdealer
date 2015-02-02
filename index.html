@@ -170,6 +170,16 @@
             </li>
             <li>
               <span class="type">fn</span>
+              <strong>dragStopCallback(x, y)</strong>
+              <span class="description">Same as callback(x,y) but only called after a drag motion, not after setting the step manually.</span>
+            </li>
+            <li>
+              <span class="type">fn</span>
+              <strong>dragStartCallback(x, y)</strong>
+              <span class="description">Same as dragStopCallback(x,y) but called at the beginning of a drag motion and with the sliders initial x, y values.</span>
+            </li>
+            <li>
+              <span class="type">fn</span>
               <strong>animationCallback(x, y)</strong>
               <span class="description">Called every animation loop, as long as the handle is being dragged or in the process of a sliding animation. The x, y positional values received by this callback reflect the exact position of the handle DOM element, which includes exceeding values (even negative values) when the <em>loose</em> option is set true.</span>
             </li>
