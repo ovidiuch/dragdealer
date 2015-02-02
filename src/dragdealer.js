@@ -125,6 +125,14 @@ var Dragdealer = function(wrapper, options) {
    *                        the handle at the time this callback is called
    *                        might not yet reflect the x, y values received.
    *
+   *   - fn dragStopCallback(x,y): Same as callback(x,y) but only called after
+   *                               a drag motion, not after setting the step
+   *                               manually.
+   *
+   *   - fn dragStartCallback(x,y): Same as dragStopCallback(x,y) but called at
+   *                                the beginning of a drag motion and with the
+   *                                sliders initial x, y values.
+   *
    *   - fn animationCallback(x, y): Called every animation loop, as long as
    *                                 the handle is being dragged or in the
    *                                 process of a sliding animation. The x, y
