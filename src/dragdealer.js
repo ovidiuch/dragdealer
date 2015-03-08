@@ -85,7 +85,7 @@ var Dragdealer = function(wrapper, options) {
    *                      dragging.
    *
    *   - number speed=0.1: Speed can be set between 0 and 1, with 1 being the
-   *                       fastest. It represents how fast the handle will snap
+   *                       fastest. It represents how fast the handle will slide
    *                       to position after you mouse up.
    *
    *   - bool slide=true: Slide handle after releasing it, depending on the
