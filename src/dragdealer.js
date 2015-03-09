@@ -84,6 +84,10 @@ var Dragdealer = function(wrapper, options) {
    *                      the handle to its closest step instantly, even when
    *                      dragging.
    *
+   *   - number speed=0.1: Speed can be set between 0 and 1, with 1 being the
+   *                       fastest. It represents how fast the handle will slide
+   *                       to position after you mouse up.
+   *
    *   - bool slide=true: Slide handle after releasing it, depending on the
    *                      movement speed before the mouse/touch release. The
    *                      formula for calculating how much will the handle
