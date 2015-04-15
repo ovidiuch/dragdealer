@@ -662,10 +662,10 @@ Dragdealer.prototype = {
     var transform = '';
     if (this.options.css3 && StylePrefix.transform) {
       if (this.options.horizontal) {
-        transform += 'translateX(' + this.offset.current[0] + 'px)';
+        transform += 'translate3d(' + this.offset.current[0] + 'px, 0, 0)';
       }
       if (this.options.vertical) {
-        transform += ' translateY(' + this.offset.current[1] + 'px)';
+        transform += ' translate3d(0, ' + this.offset.current[1] + 'px, 0)';
       }
       this.handle.style[StylePrefix.transform] = transform;
       return;
