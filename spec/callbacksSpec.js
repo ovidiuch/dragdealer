@@ -170,7 +170,7 @@ describe("Dragdealer callbacks", function() {
       helpers.drop('square-slider');
 
       expect(dragStopCallback.calls.length).toEqual(1);
-      expect(dragStopCallback).toHaveBeenCalledWith(0.5, 0.25);
+      expect(dragStopCallback).toHaveBeenCalledWith(0.5, 0.25, 200);
     });
 
     it("with projected values on drop with slide", function() {
@@ -184,7 +184,7 @@ describe("Dragdealer callbacks", function() {
       helpers.drop('square-slider');
 
       expect(dragStopCallback.calls.length).toEqual(1);
-      expect(dragStopCallback).toHaveBeenCalledWith(0.25, 0.125);
+      expect(dragStopCallback).toHaveBeenCalledWith(0.25, 0.125, 20);
     });
 
     it("with projected values on drop with slide to steps", function() {
@@ -202,7 +202,7 @@ describe("Dragdealer callbacks", function() {
       helpers.drop('simple-slider');
 
       expect(dragStopCallback.calls.length).toEqual(1);
-      expect(dragStopCallback).toHaveBeenCalledWith(0.4, 0);
+      expect(dragStopCallback).toHaveBeenCalledWith(0.4, 0,30);
     });
 
   });
