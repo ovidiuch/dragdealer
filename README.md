@@ -6,7 +6,7 @@ Specs & (sweet) demos: __http://skidding.github.io/dragdealer__
 
 ## Install
 
-The basic way to install Dragdealer is to include the [minified](https://raw.github.com/skidding/dragdealer/master/lib/dragdealer.min.js)
+The basic way to install Dragdealer is to include the [minified](https://cdnjs.cloudflare.com/ajax/libs/dragdealer/0.9.8/dragdealer.min.js)
 script into your web page.
 
 ### Node package
