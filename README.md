@@ -36,7 +36,7 @@ If you have SauceLabs credentials (SAUCE_USERNAME and SAUCE_ACCESS_KEY), run the
 
 ## Minifying
 
-`./node_modules/.bin/uglifyjs src/dragdealer.js -o lib/dragdealer.min.js`
+`node_modules/.bin/uglifyjs src/dragdealer.js -o src/dragdealer.min.js`
 
 Make sure you ran `npm install` in the project directory first. Also, you can use global paths if you have the npm modules installed globally (-g), but you shouldn't _need_ to.
 
