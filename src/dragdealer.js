@@ -84,6 +84,10 @@ var Dragdealer = function(wrapper, options) {
    *                      the handle to its closest step instantly, even when
    *                      dragging.
    *
+   *   - number speed=0.1: Speed can be set between 0 and 1, with 1 being the
+   *                       fastest. It represents how fast the handle will slide
+   *                       to position after you mouse up.
+   *
    *   - bool slide=true: Slide handle after releasing it, depending on the
    *                      movement speed before the mouse/touch release. The
    *                      formula for calculating how much will the handle
@@ -124,6 +128,14 @@ var Dragdealer = function(wrapper, options) {
    *                        options.) This implies that the actual position of
    *                        the handle at the time this callback is called
    *                        might not yet reflect the x, y values received.
+   *
+   *   - fn dragStopCallback(x,y): Same as callback(x,y) but only called after
+   *                               a drag motion, not after setting the step
+   *                               manually.
+   *
+   *   - fn dragStartCallback(x,y): Same as dragStopCallback(x,y) but called at
+   *                                the beginning of a drag motion and with the
+   *                                sliders initial x, y values.
    *
    *   - fn animationCallback(x, y): Called every animation loop, as long as
    *                                 the handle is being dragged or in the
@@ -281,9 +293,14 @@ Dragdealer.prototype = {
   },
   calculateStepRatios: function() {
     var stepRatios = [];
-    if (this.options.steps > 1) {
+    if (this.options.steps >= 1) {
       for (var i = 0; i <= this.options.steps - 1; i++) {
-        stepRatios[i] = i / (this.options.steps - 1);
+        if (this.options.steps > 1) {
+          stepRatios[i] = i / (this.options.steps - 1);
+        } else {
+          // A single step will always have a 0 value
+          stepRatios[i] = 0;
+        }
       }
     }
     return stepRatios;
@@ -400,6 +417,7 @@ Dragdealer.prototype = {
     Cursor.refresh(e);
     if (this.dragging) {
       this.activity = true;
+      preventEventDefaults(e);
     }
   },
   onWrapperTouchMove: function(e) {
@@ -526,6 +544,7 @@ Dragdealer.prototype = {
     if (!this.wrapper.className.match(this.options.activeClass)) {
       this.wrapper.className += ' ' + this.options.activeClass;
     }
+    this.callDragStartCallback();
   },
   stopDrag: function() {
     if (this.disabled || !this.dragging) {
@@ -541,6 +560,7 @@ Dragdealer.prototype = {
     }
     this.setTargetValue(target);
     this.wrapper.className = this.wrapper.className.replace(' ' + this.options.activeClass, '');
+    this.callDragStopCallback();
   },
   callAnimationCallback: function() {
     var value = this.value.current;
@@ -557,6 +577,16 @@ Dragdealer.prototype = {
   callTargetCallback: function() {
     if (typeof(this.options.callback) == 'function') {
       this.options.callback.call(this, this.value.target[0], this.value.target[1]);
+    }
+  },
+  callDragStartCallback: function() {
+    if (typeof(this.options.dragStartCallback) == 'function') {
+      this.options.dragStartCallback.call(this, this.value.target[0], this.value.target[1]);
+    }
+  },
+  callDragStopCallback: function() {
+    if (typeof(this.options.dragStopCallback) == 'function') {
+      this.options.dragStopCallback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
   animateWithRequestAnimationFrame: function (time) {
@@ -607,8 +637,8 @@ Dragdealer.prototype = {
     }
     if (Math.abs(diff[0]) > this.valuePrecision[0] ||
         Math.abs(diff[1]) > this.valuePrecision[1]) {
-      this.value.current[0] += diff[0] * this.options.speed * this.timeOffset / 25;
-      this.value.current[1] += diff[1] * this.options.speed * this.timeOffset / 25;
+      this.value.current[0] += diff[0] * Math.min(this.options.speed * this.timeOffset / 25, 1);
+      this.value.current[1] += diff[1] * Math.min(this.options.speed * this.timeOffset / 25, 1);
     } else {
       this.groupCopy(this.value.current, this.value.target);
     }
