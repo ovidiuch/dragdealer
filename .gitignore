@@ -1,2 +1,3 @@
 node_modules
 sauce_connect.log*
+src/dragdealer.min.js
