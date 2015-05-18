@@ -44,6 +44,20 @@ module.exports = function(grunt) {
   }];
 
   grunt.initConfig({
+    jasmine : {
+      all: {
+        src : 'src/**/*.js',
+        options: {
+          vendor: ['lib/jquery-1.10.2.js', 'lib/jasmine-jquery.js','lib/jquery.simulate.js'],
+          helpers: ['spec/matchers.js','spec/helpers.js','spec/setup.js', 'spec/phantomjs-setup.js'],
+          specs: 'spec/*Spec.js',
+          styles: 'src/*.css',
+          host: 'http://localhost:9999', 
+
+        }
+        
+      }
+    },
     connect: {
       server: {
         options: {
@@ -75,4 +89,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask("dev", ["connect", "watch"]);
   grunt.registerTask("test", ["connect", "saucelabs-custom"]);
+  grunt.registerTask("test-locally", ["connect", "jasmine"]);
+
 };

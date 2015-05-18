@@ -4,7 +4,7 @@ describe("Resizing Dragdealer", function() {
     this.addMatchers(matchers);
   });
 
-  it("should translate handle position after window resize", function() {
+  exceptInPhantomJsIt("should translate handle position after window resize", function() {
     var dragdealer = helpers.initDragdealer('simple-slider', {
       x: 0.5
     });
