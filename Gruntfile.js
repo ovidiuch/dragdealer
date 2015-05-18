@@ -88,7 +88,12 @@ module.exports = function(grunt) {
   }
 
   grunt.registerTask("dev", ["connect", "watch"]);
-  grunt.registerTask("test", ["connect", "saucelabs-custom"]);
   grunt.registerTask("test-locally", ["connect", "jasmine"]);
 
+  var secureEnvVars = process.env.TRAVIS_SECURE_ENV_VARS;
+  if (secureEnvVars === undefined || secureEnvVars === "true") {
+    grunt.registerTask("test", ["connect", "saucelabs-custom"]);  
+  } else {
+    grunt.registerTask("test", ["test-locally"]);    
+  }
 };
