@@ -1,4 +1,11 @@
 module.exports = function(grunt) {
+  function isSauceLabsAvailableInEnvironment() {
+    var sauceUser = process.env.SAUCE_USERNAME;
+    var sauceKey = process.env.SAUCE_ACCESS_KEY;
+
+    return !!sauceUser && !!sauceKey;
+  }
+
   var browsers = [{
     browserName: "chrome",
     platform: "OS X 10.8"
@@ -53,9 +60,7 @@ module.exports = function(grunt) {
           specs: 'spec/*Spec.js',
           styles: 'src/*.css',
           host: 'http://localhost:9999', 
-
         }
-        
       }
     },
     connect: {
@@ -88,12 +93,13 @@ module.exports = function(grunt) {
   }
 
   grunt.registerTask("dev", ["connect", "watch"]);
-  grunt.registerTask("test-locally", ["connect", "jasmine"]);
+  
+  grunt.registerTask("test-phantomjs", ["connect", "jasmine"]);
+  grunt.registerTask("test-saucelabs", ["connect", "saucelabs-custom"]);
 
-  var secureEnvVars = process.env.TRAVIS_SECURE_ENV_VARS;
-  if (secureEnvVars === undefined || secureEnvVars === "true") {
-    grunt.registerTask("test", ["connect", "saucelabs-custom"]);  
+  if (isSauceLabsAvailableInEnvironment()) {
+    grunt.registerTask("test", ["test-saucelabs"]);  
   } else {
-    grunt.registerTask("test", ["test-locally"]);    
+    grunt.registerTask("test", ["test-phantomjs"]);    
   }
 };
