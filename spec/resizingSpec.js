@@ -12,14 +12,9 @@ describe("Resizing Dragdealer", function() {
     // The handle has 100px, the wrapper range is 400px
     expect('simple-slider').toHavePosition(200, 0);
     $('#simple-slider').width(1000);
-    // Triggering a navitive window resize event in IE is impossible, that's
-    // why we just call the event listener function directly when dispatchEvent
-    // is not supported. See http://stackoverflow.com/a/6110456/128816
-    if (document.createEventObject) {
-      dragdealer.onWindowResize();
-    } else {
-      window.dispatchEvent(new Event('resize'));
-    }
+    
+    dragdealer.onWindowResize();
+    
     // The handle has 100px, the wrapper range is 900px
     expect('simple-slider').toHavePosition(450, 0);
   });
