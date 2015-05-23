@@ -1,11 +1,4 @@
 module.exports = function(grunt) {
-  function isSauceLabsAvailableInEnvironment() {
-    var sauceUser = process.env.SAUCE_USERNAME;
-    var sauceKey = process.env.SAUCE_ACCESS_KEY;
-
-    return !!sauceUser && !!sauceKey;
-  }
-
   var browsers = [{
     browserName: "chrome",
     platform: "OS X 10.8"
@@ -93,7 +86,7 @@ module.exports = function(grunt) {
   }
 
   grunt.registerTask("dev", ["connect", "watch"]);
-  
+
   grunt.registerTask("test-phantomjs", ["connect", "jasmine"]);
   grunt.registerTask("test-saucelabs", ["connect", "saucelabs-custom"]);
 
@@ -103,3 +96,10 @@ module.exports = function(grunt) {
     grunt.registerTask("test", ["test-phantomjs"]);    
   }
 };
+
+function isSauceLabsAvailableInEnvironment() {
+  var sauceUser = process.env.SAUCE_USERNAME;
+  var sauceKey = process.env.SAUCE_ACCESS_KEY;
+
+  return !!sauceUser && !!sauceKey;
+}
