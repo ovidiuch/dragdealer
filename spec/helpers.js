@@ -109,16 +109,3 @@ function simulateTouchEvent(element, type, touchOptions) {
   }
   return element.dispatchEvent(event);
 }
-
-function exceptInPhantomJsIt(testName, testCaseFunc) {
-    "use strict";
-
-    var isPhantomJs = Boolean(window.navigator.userAgent.match(/PhantomJS/));
-
-    if (isPhantomJs) {
-        window.console.warn("WARNING: The test '" + testName + "' is disabled in this environment");
-        return;
-    }
-
-    return it(testName, testCaseFunc);
-};
