@@ -552,16 +552,15 @@ Dragdealer.prototype = {
     this.callDragStartCallback();
   },
   stopDrag: function() {
-    var delta;
     if (this.disabled || !this.dragging) {
       return;
     }
     this.dragging = false;
-    if (this.options.horizontal) {
-      delta = Cursor.x - this.oldCursor.x;
-    } else {
-      delta = Cursor.y - this.oldCursor.y;
-    }
+    var deltaX = this.bounds.availWidth === 0 ? 0 :
+          ((Cursor.x - this.oldCursor.x) / this.bounds.availWidth),
+        deltaY = this.bounds.availHeight === 0 ? 0 :
+          ((Cursor.y - this.oldCursor.y) / this.bounds.availHeight),
+        delta = [deltaX, deltaY];
 
     var target = this.groupClone(this.value.current);
     if (this.options.slide) {
