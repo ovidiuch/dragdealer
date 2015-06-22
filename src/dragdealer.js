@@ -245,7 +245,7 @@ Dragdealer.prototype = {
       current: [0, 0],
       target: [0, 0]
     };
-    this.oldCursor = {x: 0, y: 0};
+    this.dragStartPosition = {x: 0, y: 0};
     this.change = [0, 0];
     this.stepRatios = this.calculateStepRatios();
 
@@ -541,7 +541,7 @@ Dragdealer.prototype = {
     this.dragging = true;
     this.setWrapperOffset();
 
-    this.oldCursor = {x: Cursor.x, y: Cursor.y};
+    this.dragStartPosition = {x: Cursor.x, y: Cursor.y};
     this.offset.mouse = [
       Cursor.x - Position.get(this.handle)[0],
       Cursor.y - Position.get(this.handle)[1]
@@ -557,9 +557,9 @@ Dragdealer.prototype = {
     }
     this.dragging = false;
     var deltaX = this.bounds.availWidth === 0 ? 0 :
-          ((Cursor.x - this.oldCursor.x) / this.bounds.availWidth),
+          ((Cursor.x - this.dragStartPosition.x) / this.bounds.availWidth),
         deltaY = this.bounds.availHeight === 0 ? 0 :
-          ((Cursor.y - this.oldCursor.y) / this.bounds.availHeight),
+          ((Cursor.y - this.dragStartPosition.y) / this.bounds.availHeight),
         delta = [deltaX, deltaY];
 
     var target = this.groupClone(this.value.current);
