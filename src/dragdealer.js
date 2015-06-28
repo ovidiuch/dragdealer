@@ -245,6 +245,7 @@ Dragdealer.prototype = {
       current: [0, 0],
       target: [0, 0]
     };
+    this.dragStartPosition = {x: 0, y: 0};
     this.change = [0, 0];
     this.stepRatios = this.calculateStepRatios();
 
@@ -488,6 +489,9 @@ Dragdealer.prototype = {
       this.getStepNumber(this.value.target[1])
     ];
   },
+  getStepWidth: function () {
+    return Math.abs(this.bounds.availWidth / this.options.steps);
+  },
   getValue: function() {
     return this.value.target;
   },
@@ -537,6 +541,7 @@ Dragdealer.prototype = {
     this.dragging = true;
     this.setWrapperOffset();
 
+    this.dragStartPosition = {x: Cursor.x, y: Cursor.y};
     this.offset.mouse = [
       Cursor.x - Position.get(this.handle)[0],
       Cursor.y - Position.get(this.handle)[1]
@@ -551,6 +556,11 @@ Dragdealer.prototype = {
       return;
     }
     this.dragging = false;
+    var deltaX = this.bounds.availWidth === 0 ? 0 :
+          ((Cursor.x - this.dragStartPosition.x) / this.bounds.availWidth),
+        deltaY = this.bounds.availHeight === 0 ? 0 :
+          ((Cursor.y - this.dragStartPosition.y) / this.bounds.availHeight),
+        delta = [deltaX, deltaY];
 
     var target = this.groupClone(this.value.current);
     if (this.options.slide) {
@@ -560,7 +570,7 @@ Dragdealer.prototype = {
     }
     this.setTargetValue(target);
     this.wrapper.className = this.wrapper.className.replace(' ' + this.options.activeClass, '');
-    this.callDragStopCallback();
+    this.callDragStopCallback(delta);
   },
   callAnimationCallback: function() {
     var value = this.value.current;
@@ -584,9 +594,9 @@ Dragdealer.prototype = {
       this.options.dragStartCallback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
-  callDragStopCallback: function() {
+  callDragStopCallback: function(delta) {
     if (typeof(this.options.dragStopCallback) == 'function') {
-      this.options.dragStopCallback.call(this, this.value.target[0], this.value.target[1]);
+      this.options.dragStopCallback.call(this, this.value.target[0], this.value.target[1], delta);
     }
   },
   animateWithRequestAnimationFrame: function (time) {
