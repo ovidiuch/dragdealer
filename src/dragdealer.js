@@ -415,6 +415,11 @@ Dragdealer.prototype = {
     this.startDrag();
   },
   onDocumentMouseMove: function(e) {
+    if((e.clientX - this.dragStartPosition.x) === 0 &&  (e.clientY - this.dragStartPosition.y) === 0) {
+      // This is required on some Windows8 machines that get mouse move events without actual mouse movement
+      return;
+    }
+
     Cursor.refresh(e);
     if (this.dragging) {
       this.activity = true;
