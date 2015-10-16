@@ -483,6 +483,12 @@ Dragdealer.prototype = {
     this.disabled = true;
     this.handle.className += ' disabled';
   },
+  startListeningToKeys: function() {
+      addEventListener(document, 'keydown', this.onKeyPress);
+  },
+  stopListeningToKeys: function() {
+      removeEventListener(document, 'keydown', this.onKeyPress);
+  },
   reflow: function() {
     this.setWrapperOffset();
     this.bounds = this.calculateBounds();
