@@ -203,7 +203,8 @@ Dragdealer.prototype = {
     xPrecision: 0,
     yPrecision: 0,
     handleClass: 'handle',
-    activeClass: 'active'
+    activeClass: 'active',
+    passThroughHoverClass: 'hover'
   },
   init: function() {
     this.value = {
@@ -263,14 +264,14 @@ Dragdealer.prototype = {
       };
     }.bind(this));
   },
-  shouldPromoteClickToNode: function(e) {
+  getNodeBeneath: function(e) {
       var zone,
           promote = false,
           i = 0;
       this.assignClickThroughZones();
       while (!promote && i < this.options.clickThroughZones.length) {
           zone = this.options.clickThroughZones[i].zone;
-          if (Cursor.x >= zone.top && Cursor.x <= (zone.top + zone.height) && Cursor.y >= zone.left && Cursor.y <= (zone.left + zone.width)) {
+          if (Cursor.y >= zone.top && Cursor.y <= (zone.top + zone.height) && Cursor.x >= zone.left && Cursor.x <= (zone.left + zone.width)) {
             promote = this.options.clickThroughZones[i].node;
           }
           i++;
@@ -367,6 +368,7 @@ Dragdealer.prototype = {
     addEventListener(this.handle, 'click', this.onHandleClick);
     addEventListener(window, 'resize', this.onWindowResize);
 
+
     var _this = this;
     this.interval = setInterval(function() {
       _this.animate();
@@ -408,7 +410,25 @@ Dragdealer.prototype = {
     Cursor.refresh(e);
     if (this.dragging) {
       this.activity = true;
+    } else {
+      this.doPassThroughHover(e);
     }
+    
+    
+  },
+  doPassThroughHover: function(e) {
+      var nodeBeneath = this.getNodeBeneath(e);
+      if (this.passThroughHoverClass && this.passThroughHoverClass !== nodeBeneath) {
+        this.passThroughHoverClass.classList.remove(this.options.passThroughHoverClass);
+        this.passThroughHoverClass = null;
+      }
+      if (nodeBeneath) {
+        this.passThroughHoverClass = nodeBeneath;
+        this.passThroughHoverClass.classList.add(this.options.passThroughHoverClass);
+        this.wrapper.classList.add('has-hover-pass-through');
+      } else {
+        this.wrapper.classList.remove('has-hover-pass-through');
+      }
   },
   onWrapperTouchMove: function(e) {
     Cursor.refresh(e);
@@ -420,7 +440,7 @@ Dragdealer.prototype = {
       if (this.dragging) {
         this.stopDrag();
       }
-      return;
+      
     }
     // Read comment in `onHandleTouchStart` above, to understand why we're
     // preventing defaults here and not there
@@ -430,7 +450,7 @@ Dragdealer.prototype = {
   onWrapperMouseDown: function(e) {
     Cursor.refresh(e);
     preventEventDefaults(e);
-    var promoteClickToNode = this.shouldPromoteClickToNode(e);
+    var promoteClickToNode = this.getNodeBeneath(e);
 
     if (promoteClickToNode) {
       promoteClickToNode.click();
@@ -452,7 +472,7 @@ Dragdealer.prototype = {
     Cursor.refresh(e);
     preventEventDefaults(e);
 
-    var promoteClickToNode = this.shouldPromoteClickToNode(e);
+    var promoteClickToNode = this.getNodeBeneath(e);
 
     if (promoteClickToNode) {
       promoteClickToNode.click();
