@@ -245,6 +245,38 @@ Dragdealer.prototype = {
       return wrapper;
     }
   },
+  assignClickThroughZones: function() {
+    if (!this.options.clickThroughSelectors) return;
+
+    this.options.clickThroughSelectors = ('clickThroughSelectors' in this.options) && ('length' in this.options.clickThroughSelectors) ? this.options.clickThroughSelectors : [this.options.clickThroughSelectors];
+    this.options.clickThroughZones = [];
+
+    this.options.clickThroughSelectors.forEach(function(selector) {
+      var node,
+          nodes = document.querySelectorAll(selector);
+      for (var i = 0; i < nodes.length; i++) {
+        node = nodes[i];
+        this.options.clickThroughZones.push({
+          zone: node.getBoundingClientRect(),
+          node: node
+        });
+      };
+    }.bind(this));
+  },
+  shouldPromoteClickToNode: function(e) {
+      var zone,
+          promote = false,
+          i = 0;
+      this.assignClickThroughZones();
+      while (!promote && i < this.options.clickThroughZones.length) {
+          zone = this.options.clickThroughZones[i].zone;
+          if (Cursor.x >= zone.top && Cursor.x <= (zone.top + zone.height) && Cursor.y >= zone.left && Cursor.y <= (zone.left + zone.width)) {
+            promote = this.options.clickThroughZones[i].node;
+          }
+          i++;
+      }
+      return promote;
+  },
   getHandleElement: function(wrapper, handleClass) {
     var childElements,
         handleClassMatcher,
@@ -398,12 +430,40 @@ Dragdealer.prototype = {
   onWrapperMouseDown: function(e) {
     Cursor.refresh(e);
     preventEventDefaults(e);
-    this.startTap();
+    var promoteClickToNode = this.shouldPromoteClickToNode(e);
+
+    if (promoteClickToNode) {
+      promoteClickToNode.click();
+      return;
+    }
+    if (this.options.jumpOnWrapper) {
+      this.jumpToCursor();
+    } else {
+      this.startTap();
+    }
+  },
+  jumpToCursor: function() {
+    var wrapperOffset = this.wrapper.getBoundingClientRect(),
+        handleSize = this.handle.getBoundingClientRect(),
+        value = this.getRatiosByOffsets([Cursor.x - wrapperOffset.left - (handleSize.height / 2), Cursor.y - wrapperOffset.top - (handleSize.width / 2)]);
+    this.setValue(value[0], value[1], true);
   },
   onWrapperTouchStart: function(e) {
     Cursor.refresh(e);
     preventEventDefaults(e);
-    this.startTap();
+
+    var promoteClickToNode = this.shouldPromoteClickToNode(e);
+
+    if (promoteClickToNode) {
+      promoteClickToNode.click();
+      return;
+    }
+
+    if (this.options.jumpOnWrapper) {
+      this.jumpToCursor();
+    } else {
+      this.startTap();
+    }
   },
   onDocumentMouseUp: function(e) {
     this.stopDrag();
