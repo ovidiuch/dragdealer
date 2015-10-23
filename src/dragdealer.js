@@ -411,7 +411,7 @@ Dragdealer.prototype = {
     if (this.dragging) {
       this.activity = true;
     } else {
-      this.doPassThroughHover(e);
+      this.options.disableHoverPassThrough || (this.doPassThroughHover(e));
     }
     
     
