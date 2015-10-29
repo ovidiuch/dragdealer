@@ -1,3 +1,13 @@
+## 0.9.9
+
+- Add startdrag and stopdrag callbacks [#66](https://github.com/skidding/dragdealer/pull/66)
+- [BUG] Fix ie8 selection [#67](https://github.com/skidding/dragdealer/pull/67)
+- [BUG] Fix getStep() when only one step is presented [#69](https://github.com/skidding/dragdealer/pull/69)
+- [BUG] rAF is paused when changing tabs [#70](https://github.com/skidding/dragdealer/pull/70)
+- Add translate3d instead of translateX/translateY [#83](https://github.com/skidding/dragdealer/pull/83)
+- Allow swiping for small finger movements [#83](https://github.com/skidding/dragdealer/pull/83)
+- [BUG] Fix slider move along with the click [#99](https://github.com/skidding/dragdealer/pull/99)
+
 ## 0.9.8
 
 - CSS3 transform support [#41](https://github.com/skidding/dragdealer/pull/41)
