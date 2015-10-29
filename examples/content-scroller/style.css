@@ -27,12 +27,14 @@ body {
   float: right;
   width: 40px;
   height: 300px;
+  border-radius: 3px;
 }
 
 .content-scroller .dragdealer .handle {
   width: 40px;
   height: 60px;
   text-align: center;
+  border-radius: 3px;
 }
 
 .content-scroller .dragdealer .handle i {

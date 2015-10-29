@@ -19,11 +19,13 @@ body {
 
   height: 60px;
   width: 740px;
+  border-radius: 3px;
 }
 
 #just-a-slider .handle {
   height: 60px;
   line-height: 60px;
+  border-radius: 3px;
 }
 
 #just-a-slider .value {

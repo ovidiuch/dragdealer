@@ -10,6 +10,16 @@ body {
    -webkit-text-size-adjust: 100%;
 }
 
+
+a {
+  color: #cc0000;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 #canvas-mask {
   position: absolute;
   left: 50%;
