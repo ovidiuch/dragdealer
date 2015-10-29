@@ -9,6 +9,8 @@ Specs & (sweet) demos: __http://skidding.github.io/dragdealer__
 The basic way to install Dragdealer is to include the [minified](https://cdnjs.cloudflare.com/ajax/libs/dragdealer/0.9.8/dragdealer.min.js)
 script into your web page.
 
+You can check the [examples](/examples) to see how you can add a particular slider from the demo to your own project.
+
 ### Node package
 
 It can also be installed through [npm](https://www.npmjs.org/package/dragdealer),
