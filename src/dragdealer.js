@@ -1,5 +1,5 @@
 /**
- * Dragdealer.js 0.9.6
+ * Dragdealer.js 0.9.8
  * http://github.com/skidding/dragdealer
  *
  * (c) 2010+ Ovidiu Cherecheș
@@ -10,6 +10,11 @@
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(factory);
+  } else if (typeof module === 'object' && module.exports) {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like enviroments that support module.exports,
+    // like Node.
+    module.exports.Dragdealer = factory();
   } else {
     // Browser globals
     root.Dragdealer = factory();
@@ -84,6 +89,10 @@ var Dragdealer = function(wrapper, options) {
    *                      the handle to its closest step instantly, even when
    *                      dragging.
    *
+   *   - number speed=0.1: Speed can be set between 0 and 1, with 1 being the
+   *                       fastest. It represents how fast the handle will slide
+   *                       to position after you mouse up.
+   *
    *   - bool slide=true: Slide handle after releasing it, depending on the
    *                      movement speed before the mouse/touch release. The
    *                      formula for calculating how much will the handle
@@ -125,6 +134,14 @@ var Dragdealer = function(wrapper, options) {
    *                        the handle at the time this callback is called
    *                        might not yet reflect the x, y values received.
    *
+   *   - fn dragStopCallback(x,y): Same as callback(x,y) but only called after
+   *                               a drag motion, not after setting the step
+   *                               manually.
+   *
+   *   - fn dragStartCallback(x,y): Same as dragStopCallback(x,y) but called at
+   *                                the beginning of a drag motion and with the
+   *                                sliders initial x, y values.
+   *
    *   - fn animationCallback(x, y): Called every animation loop, as long as
    *                                 the handle is being dragged or in the
    *                                 process of a sliding animation. The x, y
@@ -135,6 +152,14 @@ var Dragdealer = function(wrapper, options) {
    *                                 when the loose option is set true.
    *
    *   - string handleClass='handle': Custom class of handle element.
+   *
+   *   - bool css3=true: Use css3 transform in modern browsers instead of
+   *                     absolute positioning.
+   *
+   *   - fn customRequestAnimationFrame: Provide custom requestAnimationFrame
+   *                                     function (used in tests).
+   *   - fn customCancelAnimationFrame: Provide custom cancelAnimationFrame
+   *                                    function (used in tests).
    *
    * Dragdealer also has a few methods to interact with, post-initialization.
    *
@@ -177,8 +202,8 @@ var Dragdealer = function(wrapper, options) {
    *   setValue method expects. Once picked up, the ratios can be scaled and
    *   mapped to match any real-life system of coordinates or dimensions.
    */
-  this.bindMethods();
   this.options = this.applyDefaults(options || {});
+  this.bindMethods();
   this.wrapper = this.getWrapperElement(wrapper);
   if (!this.wrapper) {
     return;
@@ -190,6 +215,8 @@ var Dragdealer = function(wrapper, options) {
   this.init();
   this.bindEventListeners();
 };
+
+
 Dragdealer.prototype = {
   defaults: {
     disabled: false,
@@ -202,9 +229,15 @@ Dragdealer.prototype = {
     speed: 0.1,
     xPrecision: 0,
     yPrecision: 0,
-    handleClass: 'handle'
+    handleClass: 'handle',
+    css3: true,
+    activeClass: 'active',
+    tapping: true
   },
   init: function() {
+    if (this.options.css3) {
+      triggerWebkitHardwareAcceleration(this.handle);
+    }
     this.value = {
       prev: [-1, -1],
       current: [this.options.x || 0, this.options.y || 0],
@@ -217,6 +250,7 @@ Dragdealer.prototype = {
       current: [0, 0],
       target: [0, 0]
     };
+    this.dragStartPosition = {x: 0, y: 0};
     this.change = [0, 0];
     this.stepRatios = this.calculateStepRatios();
 
@@ -245,20 +279,34 @@ Dragdealer.prototype = {
     }
   },
   getHandleElement: function(wrapper, handleClass) {
-    var childElements = wrapper.getElementsByTagName('div'),
-        handleClassMatcher = new RegExp('(^|\\s)' + handleClass + '(\\s|$)'),
+    var childElements,
+        handleClassMatcher,
         i;
-    for (i = 0; i < childElements.length; i++) {
-      if (handleClassMatcher.test(childElements[i].className)) {
-        return childElements[i];
+    if (wrapper.getElementsByClassName) {
+      childElements = wrapper.getElementsByClassName(handleClass);
+      if (childElements.length > 0) {
+        return childElements[0];
+      }
+    } else {
+      handleClassMatcher = new RegExp('(^|\\s)' + handleClass + '(\\s|$)');
+      childElements = wrapper.getElementsByTagName('*');
+      for (i = 0; i < childElements.length; i++) {
+        if (handleClassMatcher.test(childElements[i].className)) {
+          return childElements[i];
+        }
       }
     }
   },
   calculateStepRatios: function() {
     var stepRatios = [];
-    if (this.options.steps > 1) {
+    if (this.options.steps >= 1) {
       for (var i = 0; i <= this.options.steps - 1; i++) {
-        stepRatios[i] = i / (this.options.steps - 1);
+        if (this.options.steps > 1) {
+          stepRatios[i] = i / (this.options.steps - 1);
+        } else {
+          // A single step will always have a 0 value
+          stepRatios[i] = 0;
+        }
       }
     }
     return stepRatios;
@@ -297,9 +345,21 @@ Dragdealer.prototype = {
     ];
   },
   bindMethods: function() {
+    if (typeof(this.options.customRequestAnimationFrame) === 'function') {
+      this.requestAnimationFrame = bind(this.options.customRequestAnimationFrame, window);
+    } else {
+      this.requestAnimationFrame = bind(requestAnimationFrame, window);
+    }
+    if (typeof(this.options.customCancelAnimationFrame) === 'function') {
+      this.cancelAnimationFrame = bind(this.options.customCancelAnimationFrame, window);
+    } else {
+      this.cancelAnimationFrame = bind(cancelAnimationFrame, window);
+    }
+    this.animateWithRequestAnimationFrame = bind(this.animateWithRequestAnimationFrame, this);
+    this.animate = bind(this.animate, this);
     this.onHandleMouseDown = bind(this.onHandleMouseDown, this);
     this.onHandleTouchStart = bind(this.onHandleTouchStart, this);
-    this.onWrapperMouseMove = bind(this.onWrapperMouseMove, this);
+    this.onDocumentMouseMove = bind(this.onDocumentMouseMove, this);
     this.onWrapperTouchMove = bind(this.onWrapperTouchMove, this);
     this.onWrapperMouseDown = bind(this.onWrapperMouseDown, this);
     this.onWrapperTouchStart = bind(this.onWrapperTouchStart, this);
@@ -313,7 +373,7 @@ Dragdealer.prototype = {
     addEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
     addEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
     // While dragging
-    addEventListener(this.wrapper, 'mousemove', this.onWrapperMouseMove);
+    addEventListener(document, 'mousemove', this.onDocumentMouseMove);
     addEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
     // Start tapping
     addEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
@@ -325,16 +385,14 @@ Dragdealer.prototype = {
     addEventListener(this.handle, 'click', this.onHandleClick);
     addEventListener(window, 'resize', this.onWindowResize);
 
-    var _this = this;
-    this.interval = setInterval(function() {
-      _this.animate();
-    }, 25);
     this.animate(false, true);
+    this.interval = this.requestAnimationFrame(this.animateWithRequestAnimationFrame);
+
   },
   unbindEventListeners: function() {
     removeEventListener(this.handle, 'mousedown', this.onHandleMouseDown);
     removeEventListener(this.handle, 'touchstart', this.onHandleTouchStart);
-    removeEventListener(this.wrapper, 'mousemove', this.onWrapperMouseMove);
+    removeEventListener(document, 'mousemove', this.onDocumentMouseMove);
     removeEventListener(this.wrapper, 'touchmove', this.onWrapperTouchMove);
     removeEventListener(this.wrapper, 'mousedown', this.onWrapperMouseDown);
     removeEventListener(this.wrapper, 'touchstart', this.onWrapperTouchStart);
@@ -342,8 +400,7 @@ Dragdealer.prototype = {
     removeEventListener(document, 'touchend', this.onDocumentTouchEnd);
     removeEventListener(this.handle, 'click', this.onHandleClick);
     removeEventListener(window, 'resize', this.onWindowResize);
-
-    clearInterval(this.interval);
+    this.cancelAnimationFrame(this.interval);
   },
   onHandleMouseDown: function(e) {
     Cursor.refresh(e);
@@ -362,9 +419,18 @@ Dragdealer.prototype = {
     this.activity = false;
     this.startDrag();
   },
-  onWrapperMouseMove: function(e) {
+  onDocumentMouseMove: function(e) {
+    if ((e.clientX - this.dragStartPosition.x) === 0 &&
+        (e.clientY - this.dragStartPosition.y) === 0) {
+      // This is required on some Windows8 machines that get mouse move events without actual mouse movement
+      return;
+    }
+
     Cursor.refresh(e);
-    this.activity = true;
+    if (this.dragging) {
+      this.activity = true;
+      preventEventDefaults(e);
+    }
   },
   onWrapperTouchMove: function(e) {
     Cursor.refresh(e);
@@ -372,7 +438,7 @@ Dragdealer.prototype = {
     // defaults on touch devices. !this.activity denotes this is the first move
     // inside a drag action; you can drag in any direction after this point if
     // the dragging wasn't stopped
-    if (!this.activity && this.draggingOnDisabledAxis(e)) {
+    if (!this.activity && this.draggingOnDisabledAxis()) {
       if (this.dragging) {
         this.stopDrag();
       }
@@ -434,6 +500,9 @@ Dragdealer.prototype = {
       this.getStepNumber(this.value.target[1])
     ];
   },
+  getStepWidth: function () {
+    return Math.abs(this.bounds.availWidth / this.options.steps);
+  },
   getValue: function() {
     return this.value.target;
   },
@@ -455,20 +524,18 @@ Dragdealer.prototype = {
       this.callAnimationCallback();
     }
   },
-  startTap: function(target) {
-    if (this.disabled) {
+  startTap: function() {
+    if (this.disabled || !this.options.tapping) {
       return;
     }
+
     this.tapping = true;
     this.setWrapperOffset();
 
-    if (target === undefined) {
-      target = [
-        Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
-        Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
-      ];
-    }
-    this.setTargetValueByOffset(target);
+    this.setTargetValueByOffset([
+      Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
+      Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
+    ]);
   },
   stopTap: function() {
     if (this.disabled || !this.tapping) {
@@ -485,16 +552,26 @@ Dragdealer.prototype = {
     this.dragging = true;
     this.setWrapperOffset();
 
+    this.dragStartPosition = {x: Cursor.x, y: Cursor.y};
     this.offset.mouse = [
       Cursor.x - Position.get(this.handle)[0],
       Cursor.y - Position.get(this.handle)[1]
     ];
+    if (!this.wrapper.className.match(this.options.activeClass)) {
+      this.wrapper.className += ' ' + this.options.activeClass;
+    }
+    this.callDragStartCallback();
   },
   stopDrag: function() {
     if (this.disabled || !this.dragging) {
       return;
     }
     this.dragging = false;
+    var deltaX = this.bounds.availWidth === 0 ? 0 :
+          ((Cursor.x - this.dragStartPosition.x) / this.bounds.availWidth),
+        deltaY = this.bounds.availHeight === 0 ? 0 :
+          ((Cursor.y - this.dragStartPosition.y) / this.bounds.availHeight),
+        delta = [deltaX, deltaY];
 
     var target = this.groupClone(this.value.current);
     if (this.options.slide) {
@@ -503,6 +580,8 @@ Dragdealer.prototype = {
       target[1] += ratioChange[1] * 4;
     }
     this.setTargetValue(target);
+    this.wrapper.className = this.wrapper.className.replace(' ' + this.options.activeClass, '');
+    this.callDragStopCallback(delta);
   },
   callAnimationCallback: function() {
     var value = this.value.current;
@@ -520,6 +599,28 @@ Dragdealer.prototype = {
     if (typeof(this.options.callback) == 'function') {
       this.options.callback.call(this, this.value.target[0], this.value.target[1]);
     }
+  },
+  callDragStartCallback: function() {
+    if (typeof(this.options.dragStartCallback) == 'function') {
+      this.options.dragStartCallback.call(this, this.value.target[0], this.value.target[1]);
+    }
+  },
+  callDragStopCallback: function(delta) {
+    if (typeof(this.options.dragStopCallback) == 'function') {
+      this.options.dragStopCallback.call(this, this.value.target[0], this.value.target[1], delta);
+    }
+  },
+  animateWithRequestAnimationFrame: function (time) {
+    if (time) {
+      // using requestAnimationFrame
+      this.timeOffset = this.timeStamp ? time - this.timeStamp : 0;
+      this.timeStamp = time;
+    } else {
+      // using setTimeout(callback, 25) polyfill
+      this.timeOffset = 25;
+    }
+    this.animate();
+    this.interval = this.requestAnimationFrame(this.animateWithRequestAnimationFrame);
   },
   animate: function(direct, first) {
     if (direct && !this.dragging) {
@@ -557,8 +658,8 @@ Dragdealer.prototype = {
     }
     if (Math.abs(diff[0]) > this.valuePrecision[0] ||
         Math.abs(diff[1]) > this.valuePrecision[1]) {
-      this.value.current[0] += diff[0] * this.options.speed;
-      this.value.current[1] += diff[1] * this.options.speed;
+      this.value.current[0] += diff[0] * Math.min(this.options.speed * this.timeOffset / 25, 1);
+      this.value.current[1] += diff[1] * Math.min(this.options.speed * this.timeOffset / 25, 1);
     } else {
       this.groupCopy(this.value.current, this.value.target);
     }
@@ -578,11 +679,24 @@ Dragdealer.prototype = {
     }
   },
   renderHandlePosition: function() {
+
+    var transform = '';
+    if (this.options.css3 && StylePrefix.transform) {
+      if (this.options.horizontal) {
+        transform += 'translateX(' + this.offset.current[0] + 'px)';
+      }
+      if (this.options.vertical) {
+        transform += ' translateY(' + this.offset.current[1] + 'px)';
+      }
+      this.handle.style[StylePrefix.transform] = transform;
+      return;
+    }
+
     if (this.options.horizontal) {
-      this.handle.style.left = String(this.offset.current[0]) + 'px';
+      this.handle.style.left = this.offset.current[0] + 'px';
     }
     if (this.options.vertical) {
-      this.handle.style.top = String(this.offset.current[1]) + 'px';
+      this.handle.style.top = this.offset.current[1] + 'px';
     }
   },
   setTargetValue: function(value, loose) {
@@ -672,7 +786,7 @@ Dragdealer.prototype = {
   groupClone: function(a) {
     return [a[0], a[1]];
   },
-  draggingOnDisabledAxis: function(e) {
+  draggingOnDisabledAxis: function() {
     return (!this.options.horizontal && Cursor.xDiff > Cursor.yDiff) ||
            (!this.options.vertical && Cursor.yDiff > Cursor.xDiff);
   }
@@ -693,7 +807,7 @@ var bind = function(fn, context) {
 
 var addEventListener = function(element, type, callback) {
   if (element.addEventListener) {
-    element.addEventListener(type, callback);
+    element.addEventListener(type, callback, false);
   } else if (element.attachEvent) {
     element.attachEvent('on' + type, callback);
   }
@@ -701,7 +815,7 @@ var addEventListener = function(element, type, callback) {
 
 var removeEventListener = function(element, type, callback) {
   if (element.removeEventListener) {
-    element.removeEventListener(type, callback);
+    element.removeEventListener(type, callback, false);
   } else if (element.detachEvent) {
     element.detachEvent('on' + type, callback);
   }
@@ -761,12 +875,12 @@ var Cursor = {
   set: function(e) {
     var lastX = this.x,
         lastY = this.y;
-    if (e.pageX || e.pageY) {
-      this.x = e.pageX;
-      this.y = e.pageY;
-    } else if (e.clientX || e.clientY) {
-      this.x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-      this.y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    if (e.clientX || e.clientY) {
+      this.x = e.clientX;
+      this.y = e.clientY;
+    } else if (e.pageX || e.pageY) {
+      this.x = e.pageX - document.body.scrollLeft - document.documentElement.scrollLeft;
+      this.y = e.pageY - document.body.scrollTop - document.documentElement.scrollTop;
     }
     this.xDiff = Math.abs(this.x - lastX);
     this.yDiff = Math.abs(this.y - lastY);
@@ -776,27 +890,66 @@ var Cursor = {
 
 var Position = {
   /**
-   * Helper for extracting the absolute position of a DOM element, relative to
-   * the root-level document body.
+   * Helper for extracting position of a DOM element, relative to the viewport
    *
    * The get(obj) method accepts a DOM element as the only parameter, and
    * returns the position under a (x, y) tuple, as an array with two elements.
-   *
-   * Inspired from http://www.quirksmode.org/js/findpos.html
    */
   get: function(obj) {
-    var curleft = 0,
-        curtop = 0;
-    if (obj.offsetParent) {
-      do {
-        curleft += obj.offsetLeft;
-        curtop += obj.offsetTop;
-      }
-      while ((obj = obj.offsetParent));
+    // Dragdealer relies on getBoundingClientRect to calculate element offsets,
+    // but we want to be sure we don't throw any unhandled exceptions and break
+    // other code from the page if running from in very old browser that doesn't
+    // support this method
+    var rect = {left: 0, top: 0};
+    if (obj.getBoundingClientRect !== undefined) {
+      rect = obj.getBoundingClientRect();
     }
-    return [curleft, curtop];
+    return [rect.left, rect.top];
   }
 };
+
+
+var StylePrefix = {
+  transform: getPrefixedStylePropName('transform'),
+  perspective: getPrefixedStylePropName('perspective'),
+  backfaceVisibility: getPrefixedStylePropName('backfaceVisibility')
+};
+
+function getPrefixedStylePropName(propName) {
+  var domPrefixes = 'Webkit Moz ms O'.split(' '),
+      elStyle = document.documentElement.style;
+  if (elStyle[propName] !== undefined) return propName; // Is supported unprefixed
+  propName = propName.charAt(0).toUpperCase() + propName.substr(1);
+  for (var i = 0; i < domPrefixes.length; i++) {
+    if (elStyle[domPrefixes[i] + propName] !== undefined) {
+      return domPrefixes[i] + propName; // Is supported with prefix
+    }
+  }
+};
+
+function triggerWebkitHardwareAcceleration(element) {
+  if (StylePrefix.backfaceVisibility && StylePrefix.perspective) {
+    element.style[StylePrefix.perspective] = '1000px';
+    element.style[StylePrefix.backfaceVisibility] = 'hidden';
+  }
+};
+
+var vendors = ['webkit', 'moz'];
+var requestAnimationFrame = window.requestAnimationFrame;
+var cancelAnimationFrame = window.cancelAnimationFrame;
+
+for (var x = 0; x < vendors.length && !requestAnimationFrame; ++x) {
+  requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+  cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
+                         window[vendors[x] + 'CancelRequestAnimationFrame'];
+}
+
+if (!requestAnimationFrame) {
+  requestAnimationFrame = function (callback) {
+    return setTimeout(callback, 25);
+  };
+  cancelAnimationFrame = clearTimeout;
+}
 
 return Dragdealer;
 

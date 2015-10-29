@@ -2,7 +2,6 @@ describe("Click events inside handle", function() {
 
   beforeEach(function() {
     this.addMatchers(matchers);
-    jasmine.Clock.useMock();
   });
 
   it("should be cancelled if mouse dragging", function() {
@@ -34,6 +33,32 @@ describe("Click events inside handle", function() {
       .simulate('mousedown')
       .simulate('mouseup')
       .simulate('click');
+
+    expect(clickHandler.calls.length).toEqual(1);
+    expect(clickHandler.calls[0].args[0].isDefaultPrevented()).toBe(false);
+  });
+
+  it("should be passed through if mouse moving without changing position", function() {
+    var clickHandler = jasmine.createSpy();
+    var someX = 42;
+    var someY = 42;
+    helpers.initDragdealer('content-slider');
+
+    var wrapperPosition = $('#content-slider').offset();
+
+    $('#content-slider').click(clickHandler);
+    $('#content-slider .inner-button')
+        .simulate('mousemove',{ // to have a consistent startDrag position
+          clientX: someX,
+          clientY: someY
+        })
+        .simulate('mousedown')
+        .simulate('mousemove',{
+          clientX: someX,
+          clientY: someY
+        })
+        .simulate('mouseup')
+        .simulate('click');
 
     expect(clickHandler.calls.length).toEqual(1);
     expect(clickHandler.calls[0].args[0].isDefaultPrevented()).toBe(false);

@@ -1,10 +1,21 @@
-## 0.9.7 (future release)
+## 0.9.8
+
+- CSS3 transform support [#41](https://github.com/skidding/dragdealer/pull/41)
+- add active class to wrapper [#44](https://github.com/skidding/dragdealer/issues/44)
+- Request animation frame [#47](https://github.com/skidding/dragdealer/issues/47)
+- add enabled/disable step click [#50](https://github.com/skidding/dragdealer/issues/50)
+
+## 0.9.7
 
 - Allow to pass handle in options [#14](https://github.com/skidding/dragdealer/issues/14)
 - Avoid unnecessary global variables [#15](https://github.com/skidding/dragdealer/issues/15)
+- Wrap module in UMD wrapper [#16](https://github.com/skidding/dragdealer/issues/16)
 - Use proper event delegation [#17](https://github.com/skidding/dragdealer/issues/17)
 - [BUG] Sliding never ends when handle is bigger than wrapper [#21](https://github.com/skidding/dragdealer/issues/21)
 - [BUG] Horizontal drag control breaks vertical content scrolling on touch devices [#12](https://github.com/skidding/dragdealer/issues/12)
+- [BUG] Dragging outside the bounds is not possible [#24](https://github.com/skidding/dragdealer/pull/24)
+- [BUG] Resolving eventListener issue in FF6 and earlier [#26](https://github.com/skidding/dragdealer/pull/26)
+- Allow handle to be any kind of tag not limited to direct children [#34](https://github.com/skidding/dragdealer/pull/34)
 
 ## 0.9.6
 

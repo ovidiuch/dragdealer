@@ -44,6 +44,18 @@ module.exports = function(grunt) {
   }];
 
   grunt.initConfig({
+    jasmine : {
+      all: {
+        src : 'src/**/*.js',
+        options: {
+          vendor: ['lib/jquery-1.10.2.js', 'lib/jasmine-jquery.js','lib/jquery.simulate.js'],
+          helpers: ['spec/matchers.js','spec/helpers.js','spec/setup.js', 'spec/phantomjs-setup.js'],
+          specs: 'spec/*Spec.js',
+          styles: 'src/*.css',
+          host: 'http://localhost:9999', 
+        }
+      }
+    },
     connect: {
       server: {
         options: {
@@ -52,7 +64,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    'saucelabs-jasmine': {
+    'saucelabs-custom': {
       all: {
         options: {
           urls: ["http://127.0.0.1:9999/#runner"],
@@ -74,5 +86,20 @@ module.exports = function(grunt) {
   }
 
   grunt.registerTask("dev", ["connect", "watch"]);
-  grunt.registerTask("test", ["connect", "saucelabs-jasmine"]);
+
+  grunt.registerTask("test-phantomjs", ["connect", "jasmine"]);
+  grunt.registerTask("test-saucelabs", ["connect", "saucelabs-custom"]);
+
+  if (isSauceLabsAvailableInEnvironment()) {
+    grunt.registerTask("test", ["test-saucelabs"]);  
+  } else {
+    grunt.registerTask("test", ["test-phantomjs"]);    
+  }
 };
+
+function isSauceLabsAvailableInEnvironment() {
+  var sauceUser = process.env.SAUCE_USERNAME;
+  var sauceKey = process.env.SAUCE_ACCESS_KEY;
+
+  return !!sauceUser && !!sauceKey;
+}

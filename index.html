@@ -9,6 +9,7 @@
   <script src="lib/jquery-1.10.2.js"></script>
   <script src="lib/jquery.simulate.js"></script>
   <script src="lib/jasmine.js"></script>
+  <script src="lib/jasmine-jsreporter.js"></script>
   <script src="lib/jasmine-html.js"></script>
   <script src="lib/jasmine-jquery.js"></script>
 
@@ -26,6 +27,7 @@
   <script src="spec/apiSpec.js"></script>
   <script src="spec/resizingSpec.js"></script>
   <script src="spec/eventsSpec.js"></script>
+  <script src="spec/setup.js"></script>
   <script src="spec/browser-runner.js"></script>
 
   <link href="demo/style/index.css" type="text/css" rel="stylesheet">
@@ -169,6 +171,16 @@
             </li>
             <li>
               <span class="type">fn</span>
+              <strong>dragStopCallback(x, y)</strong>
+              <span class="description">Same as callback(x,y) but only called after a drag motion, not after setting the step manually.</span>
+            </li>
+            <li>
+              <span class="type">fn</span>
+              <strong>dragStartCallback(x, y)</strong>
+              <span class="description">Same as dragStopCallback(x,y) but called at the beginning of a drag motion and with the sliders initial x, y values.</span>
+            </li>
+            <li>
+              <span class="type">fn</span>
               <strong>animationCallback(x, y)</strong>
               <span class="description">Called every animation loop, as long as the handle is being dragged or in the process of a sliding animation. The x, y positional values received by this callback reflect the exact position of the handle DOM element, which includes exceeding values (even negative values) when the <em>loose</em> option is set true.</span>
             </li>
@@ -176,6 +188,21 @@
               <span class="type">string</span>
               <strong>handleClass</strong><span class="default">=handle</span>
               <span class="description">Custom class of handle element.</span>
+            </li>
+            <li>
+              <span class="type">bool</span>
+              <strong>css3</strong><span class="default">=true</span>
+              <span class="description">Use css3 transform in modern browsers instead of absolute positioning.</span>
+            </li>
+            <li>
+              <span class="type">fn</span>
+              <strong>customRequestAnimationFrame</strong>
+              <span class="description">Provide custom requestAnimationFrame function (used in tests).</span>
+            </li>
+            <li>
+              <span class="type">fn</span>
+              <strong>customCancelAnimationFrame</strong>
+              <span class="description">Provide custom cancelAnimationFrame function (used in tests).</span>
             </li>
           </ul>
 
@@ -327,7 +354,7 @@ And it's all</p>
           <p class="secondary">Please note that this is not a complete solution for a custom scrollbar, nor does it try to be. You could make the content scrollable with a few lines of code but I for one think generic <em>custom scrollbars</em> are sent from hell.</p>
 
           <h4><em>"slide to unlock"</em></h4>
-          <p>This is how this project started, somebody wanted in iPhone-like slider. Classic.</p>
+          <p>This is how this project started, somebody wanted an iPhone-like slider. Classic.</p>
 
 <pre class="code">
 new Dragdealer('slide-to-unlock-old', {
@@ -382,7 +409,8 @@ new Dragdealer('slide-to-unlock-new', {
 new Dragdealer('image-carousel', {
   <strong>steps: 4,
   speed: 0.3,
-  loose: true</strong>
+  loose: true,
+  requestAnimationFrame: true</strong>
 });
 </pre>
           <div id="image-carousel" class="dragdealer">
@@ -426,7 +454,8 @@ var canvasMask = new Dragdealer('canvas-mask', {
   y: 1,
   <strong>vertical: true,
   speed: 0.2,
-  loose: true</strong>
+  loose: true,
+  requestAnimationFrame: true</strong>
 });
 
 // Bind event on the wrapper element to prevent it when a drag has been made
@@ -503,3 +532,4 @@ $('#canvas-mask').on('click', '.menu a', function(e) {
     </div>
   </div>
 </body>
+</html>

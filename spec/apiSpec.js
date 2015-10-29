@@ -2,7 +2,6 @@ describe("Dragdealer API", function() {
 
   beforeEach(function() {
     this.addMatchers(matchers);
-    jasmine.Clock.useMock();
   });
 
   it("should set .disabled class on disable()", function() {
@@ -120,6 +119,14 @@ describe("Dragdealer API", function() {
     expect(dragdealer.getStep()).toEqual([4, 1]);
   });
 
+  it("should get initial value on getStep() if only one step is available", function() {
+    var dragdealer = helpers.initDragdealer('square-slider', {
+      steps: 1
+    });
+
+    expect(dragdealer.getStep()).toEqual([1,1]);
+  });
+
   it("should slide handle to position on setValue(x, y)", function() {
     var callback = jasmine.createSpy(),
         animationCallback = jasmine.createSpy(),
@@ -131,7 +138,7 @@ describe("Dragdealer API", function() {
     });
 
     dragdealer.setValue(1, 0.5);
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
 
     expect('square-slider').toHavePosition(400, 200);
     expect(callback).toHaveBeenCalledWith(1, 0.5);
@@ -149,7 +156,7 @@ describe("Dragdealer API", function() {
     });
 
     dragdealer.setValue(1, 0.5, true);
-    jasmine.Clock.tick(25);
+    helpers.callRequestAnimationFrameMock(25);
 
     expect('square-slider').toHavePosition(400, 200);
     expect(callback).toHaveBeenCalledWith(1, 0.5);
@@ -166,7 +173,7 @@ describe("Dragdealer API", function() {
     });
 
     dragdealer.setStep(2, 0);
-    jasmine.Clock.tick(3000);
+    helpers.callRequestAnimationFrameMock(3000);
 
     expect('simple-slider').toHavePosition(80, 0);
     expect(callback).toHaveBeenCalledWith(0.2, 0);
@@ -183,7 +190,7 @@ describe("Dragdealer API", function() {
     });
 
     dragdealer.setStep(2, 0, true);
-    jasmine.Clock.tick(25);
+    helpers.callRequestAnimationFrameMock(25);
 
     expect('simple-slider').toHavePosition(80, 0);
     expect(callback).toHaveBeenCalledWith(0.2, 0);
