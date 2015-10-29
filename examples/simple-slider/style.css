@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #fcfcfc;
+  color: #222;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  /* Fix for preserving font sizes on iPhones (at least) */
+   -webkit-text-size-adjust: 100%;
+}
+
+.dragdealer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  height: 40px;
+  width: 740px;
+  background: #e1e1e1;
+  border-radius: 3px;
+}
+
+.dragdealer .red-bar {
+  height: 40px;
+  font-size: 16px;
+  line-height: 40px;
+  border-radius: 3px;
+}
