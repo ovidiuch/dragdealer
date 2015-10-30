@@ -1,0 +1,86 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #fcfcfc;
+  color: #222;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  /* Fix for preserving font sizes on iPhones (at least) */
+   -webkit-text-size-adjust: 100%;
+}
+
+.slide-to-unlock {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  width: 400px;
+  height: 80px;
+}
+
+.slide-to-unlock .dragdealer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0;
+  background: none;
+  height: auto;
+}
+
+.slide-to-unlock .handle {
+  height: 100%;
+  border-radius: 0;
+}
+
+.slide-to-unlock .disabled {
+  background: none;
+}
+
+.slide-to-unlock .slide-text {
+  position: absolute;
+  top: 0;
+  height: 80px;
+  font-size: 30px;
+  line-height: 80px;
+  text-align: center;
+}
+
+.old-slider {
+  border-radius: 16px;
+  background: #222;
+  background-image: -webkit-linear-gradient(top, #111 0%, #333 100%);
+  background-image: -moz-linear-gradient(top, #111 0%, #333 100%);
+  background-image: -o-linear-gradient(top, #111 0%, #333 100%);
+  background-image: linear-gradient(to bottom, #111 0%, #333 100%);
+}
+
+.old-slider .dragdealer {
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+}
+
+.old-slider .slide-text {
+  right: 0;
+  width: 290px;
+  height: 70px;
+  color: #999;
+  line-height: 70px;
+  cursor: default;
+}
+
+.old-slider .handle {
+  width: 100px;
+  border-radius: 12px;
+  background: #ccc;
+  background-image: -webkit-linear-gradient(top, #f1f1f1 0%, #aaa 100%);
+  background-image: -moz-linear-gradient(top, #f1f1f1 0%, #aaa 100%);
+  background-image: -o-linear-gradient(top, #f1f1f1 0%, #aaa 100%);
+  background-image: linear-gradient(to bottom, #f1f1f1 0%, #aaa 100%);
+}

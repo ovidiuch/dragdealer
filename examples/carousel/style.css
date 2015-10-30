@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #fcfcfc;
+  color: #222;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  /* Fix for preserving font sizes on iPhones (at least) */
+   -webkit-text-size-adjust: 100%;
+}
+
+#image-carousel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  width: 740px;
+  height: 400px;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+#image-carousel .handle {
+  width: 400%;
+  height: 100%;
+  border-radius: 0;
+}
+
+#image-carousel .handle .slide {
+  float: left;
+  position: relative;
+  width: 25%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+#image-carousel .handle .img1 {
+  background-image: url('images/aston-martin-db4.jpg');
+}
+
+#image-carousel .handle .img2 {
+  background-image: url('images/mercedes-benz-300sl.jpg');
+}
+
+#image-carousel .handle .img3 {
+  background-image: url('images/jaguar-e-type.jpg');
+}
+
+#image-carousel .handle .img4 {
+  background-image: url('images/maserati-a6.jpg');
+}
+
+#image-carousel .handle .slide .info {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 10px 15px;
+  background: #fff;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+#image-carousel .handle .slide .info p {
+  margin: 0;
+}
+
+#image-carousel .handle .slide .info .title {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 30px;
+}
+
+#image-carousel .handle .slide .info .description {
+  color: #333;
+  font-size: 16px;
+  line-height: 20px;
+}

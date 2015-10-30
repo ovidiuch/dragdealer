@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #fcfcfc;
+  color: #222;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  /* Fix for preserving font sizes on iPhones (at least) */
+   -webkit-text-size-adjust: 100%;
+}
+
+
+a {
+  color: #cc0000;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#canvas-mask {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  height: 500px;
+  width: 740px;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+#canvas-mask .handle {
+  width: 200%;
+  height: 200%;
+  border-radius: 0;
+  background: url('images/canvas-mask.jpg') no-repeat center center;
+}
+
+#canvas-mask .handle .page {
+  float: left;
+  position: relative;
+  width: 50%;
+  height: 50%;
+}
+
+#canvas-mask .handle .page .menu {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  margin: 0;
+  padding: 10px 15px;
+  background: #000;
+  background: rgba(0, 0, 0, 0.75);
+  color: #666;
+  cursor: default;
+}
+
+#canvas-mask .handle .page .body {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  margin: 0;
+  padding: 10px 15px;
+  background: #fff;
+  background: rgba(255, 255, 255, 0.5);
+  color: #000;
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 30px;
+  line-height: 40px;
+}

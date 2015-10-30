@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dragdealer - Simple slider</title>
+
+  <!-- FontAwesome -->
+  <link href="../../lib/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+
+  <!-- Jquery -->
+  <script src="../../lib/jquery-1.10.2.js"></script>
+
+  <!-- Dragdealer JS -->
+  <script src="../../src/dragdealer.js"></script>
+  <!-- Dragdealer CSS -->
+  <link  href="../../src/dragdealer.css" rel="stylesheet" type="text/css">
+
+  <!-- Example script -->
+  <script src="script.js"></script>
+  <!-- Example style -->
+  <link href="style.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+
+  <div id="canvas-mask" class="dragdealer">
+    <div class="handle">
+      <div class="page">
+        <p class="menu">
+          <a href="#" data-x="0" data-y="1">Two-dimensional</a> |
+          <a href="#" data-x="1" data-y="1">Elastic</a> |
+          <a href="#" data-x="1" data-y="0">Interactive</a> |
+          <strong>Open</strong>
+        </p>
+        <p class="body">
+          Dragdealer is <strong>open source</strong>, <br >
+          see you on <a href="https://github.com/skidding/dragdealer">GitHub</a>
+        </p>
+      </div>
+      <div class="page">
+        <p class="menu">
+          <a href="#" data-x="0" data-y="1">Two-dimensional</a> |
+          <a href="#" data-x="1" data-y="1">Elastic</a> |
+          <strong>Interactive</strong> |
+          <a href="#" data-x="0" data-y="0">Open</a>
+        </p>
+        <p class="body">
+          The dragged surface can host <strong>rich content</strong>, <br>
+          including links for scrolling inside itself
+        </p>
+      </div>
+      <div class="page">
+        <p class="menu">
+          <strong>Two-dimensional</strong> |
+          <a href="#" data-x="1" data-y="1">Elastic</a> |
+          <a href="#" data-x="1" data-y="0">Interactive</a> |
+          <a href="#" data-x="0" data-y="0">Open</a>
+        </p>
+        <p class="body">
+          The masked content can be discovered through <br>
+          both <strong>horizontal and vertical dragging</strong>
+        </p>
+      </div>
+      <div class="page">
+        <p class="menu">
+          <a href="#" data-x="0" data-y="1">Two-dimensional</a> |
+          <strong>Elastic</strong> |
+          <a href="#" data-x="1" data-y="0">Interactive</a> |
+          <a href="#" data-x="0" data-y="0">Open</a>
+        </p>
+        <p class="body">
+          The surface boundaries have an <strong>elastic ease</strong> and <br>
+          the corners can be slightly pulled inwards
+        </p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

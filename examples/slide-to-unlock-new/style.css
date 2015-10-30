@@ -1,0 +1,69 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #fcfcfc;
+  color: #222;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  /* Fix for preserving font sizes on iPhones (at least) */
+   -webkit-text-size-adjust: 100%;
+}
+
+.slide-to-unlock {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  width: 400px;
+  height: 80px;
+}
+
+.slide-to-unlock .dragdealer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0;
+  background: none;
+  height: auto;
+}
+
+.slide-to-unlock .handle {
+  height: 100%;
+  border-radius: 0;
+}
+
+.slide-to-unlock .disabled {
+  background: none;
+}
+
+.slide-to-unlock .slide-text {
+  position: absolute;
+  top: 0;
+  height: 80px;
+  font-size: 30px;
+  line-height: 80px;
+  text-align: center;
+}
+
+.new-slider {
+  background: #333344;
+}
+
+.new-slider .dragdealer {
+  overflow: hidden;
+}
+
+.new-slider .handle {
+  width: 200%;
+}
+
+.new-slider .slide-text {
+  left: 50%;
+  width: 50%;
+  color: #9999aa;
+}

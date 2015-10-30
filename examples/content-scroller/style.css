@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #fcfcfc;
+  color: #222;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  /* Fix for preserving font sizes on iPhones (at least) */
+   -webkit-text-size-adjust: 100%;
+}
+
+
+.content-scroller {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  width: 740px;
+  height: 500px;
+  margin: 15px auto;
+}
+
+.content-scroller .dragdealer {
+  float: right;
+  width: 40px;
+  height: 300px;
+  border-radius: 3px;
+}
+
+.content-scroller .dragdealer .handle {
+  width: 40px;
+  height: 60px;
+  text-align: center;
+  border-radius: 3px;
+}
+
+.content-scroller .dragdealer .handle i {
+  line-height: 60px;
+}
+
+.content-scroller .content-mask {
+  height: 298px;
+  margin: 0 55px 0 0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.content-scroller .content-body {
+  /* Incorporate the margins of the paragraphs inside */
+  overflow: hidden;
+  background: #fff;
+}
+
+.content-scroller .content-body p {
+  margin: 15px;
+  color: #333;
+  font-family: monospace;
+  line-height: 24px;
+}
