@@ -130,6 +130,11 @@
               <span class="description">Limit the positioning of the handle within the bounds of the wrapper, by defining a virtual grid made out of a number of equally-spaced steps. This restricts placing the handle anywhere in-between these steps. E.g. setting 3 steps to a regular slider will only allow you to move it to the left, to the right or exactly in the middle.</span>
             </li>
             <li>
+              <span class="type">number</span>
+              <strong>inertia</strong><span class="default">=4</span>
+              <span class="description">Controls the speed or time it takes to dampen or slow after throwing the object. Preferred range is between 0 (doesn't throw prop) and 10 (makes the prop fly till hitting edge).</span>
+            </li>
+            <li>
               <span class="type">bool</span>
               <strong>snap</strong><span class="default">=false</span>
               <span class="description">When a number of steps is set, snap the position of the handle to its closest step instantly, even when dragging.</span>
@@ -168,6 +173,11 @@
               <span class="type">fn</span>
               <strong>callback(x, y)</strong>
               <span class="description">Called when releasing handle, with the projected x, y position of the handle. Projected value means the value the slider will have after finishing a sliding animation, caused by either a step restriction or drag motion (see <em>steps</em> and <em>slide</em> options.)</span>
+            </li>
+            <li>
+              <span class="type">fn</span>
+              <strong>clickCallback(x, y)</strong>
+              <span class="description">Only fires when a click is instantiated. Does not fire if dragging occurs. Will not fire until tap or click is released.</span>
             </li>
             <li>
               <span class="type">fn</span>
@@ -246,6 +256,7 @@
 
 <pre class="code">
 new Dragdealer('just-a-slider', {
+  <strong>inertia</strong>: 8,
   <strong>animationCallback</strong>: function(x, y) {
     $('#just-a-slider .value').text(Math.round(<strong>x</strong> * 100));
   }

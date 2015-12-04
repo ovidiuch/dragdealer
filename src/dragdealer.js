@@ -125,6 +125,11 @@ var Dragdealer = function(wrapper, options) {
    *
    *   - number right=0: Right padding between the wrapper and the handle.
    *
+   *   - number inertia=4: Controls the speed or time it takes to dampen or
+   *                        slow after throwing the object. Preferred range is
+   *                        between 0 (doesn't throw prop) and 10 (makes the
+   *                        prop fly till hitting edge).
+   *
    *   - fn callback(x, y): Called when releasing handle, with the projected
    *                        x, y position of the handle. Projected value means
    *                        the value the slider will have after finishing a
@@ -134,13 +139,19 @@ var Dragdealer = function(wrapper, options) {
    *                        the handle at the time this callback is called
    *                        might not yet reflect the x, y values received.
    *
+   *   - fn clickCallback(x,y): Only fires when a click is instantiated. Does
+   *                            not fire if dragging occurs. Will not fire until
+   *                            tap or click is released.
+   *
    *   - fn dragStopCallback(x,y): Same as callback(x,y) but only called after
    *                               a drag motion, not after setting the step
-   *                               manually.
+   *                               manually. This neve fires unless you actually
+   *                               begin dragging, else clickCallback is called.
    *
    *   - fn dragStartCallback(x,y): Same as dragStopCallback(x,y) but called at
    *                                the beginning of a drag motion and with the
-   *                                sliders initial x, y values.
+   *                                sliders initial x, y values. Only calls when
+   *                                when user actually drags and not on click.
    *
    *   - fn animationCallback(x, y): Called every animation loop, as long as
    *                                 the handle is being dragged or in the
@@ -224,6 +235,7 @@ Dragdealer.prototype = {
     vertical: false,
     slide: true,
     steps: 0,
+    inertia: 4,
     snap: false,
     loose: false,
     speed: 0.1,
@@ -257,6 +269,8 @@ Dragdealer.prototype = {
     this.activity = false;
     this.dragging = false;
     this.tapping = false;
+    this.hasStartedDrag = false;
+    this.dragNeverCaptured = false;
 
     this.reflow();
     if (this.options.disabled) {
@@ -560,12 +574,12 @@ Dragdealer.prototype = {
     if (!this.wrapper.className.match(this.options.activeClass)) {
       this.wrapper.className += ' ' + this.options.activeClass;
     }
-    this.callDragStartCallback();
   },
   stopDrag: function() {
     if (this.disabled || !this.dragging) {
       return;
     }
+
     this.dragging = false;
     var deltaX = this.bounds.availWidth === 0 ? 0 :
           ((Cursor.x - this.dragStartPosition.x) / this.bounds.availWidth),
@@ -576,12 +590,20 @@ Dragdealer.prototype = {
     var target = this.groupClone(this.value.current);
     if (this.options.slide) {
       var ratioChange = this.change;
-      target[0] += ratioChange[0] * 4;
-      target[1] += ratioChange[1] * 4;
+      target[0] += ratioChange[0] * this.options.inertia;
+      target[1] += ratioChange[1] * this.options.inertia;
     }
     this.setTargetValue(target);
     this.wrapper.className = this.wrapper.className.replace(' ' + this.options.activeClass, '');
-    this.callDragStopCallback(delta);
+    if (this.hasStartedDrag) {
+      this.callDragStopCallback(delta);
+    }
+    if (this.dragNeverCaptured) {
+      this.callClickCallback();
+    }
+
+    this.hasStartedDrag = false;
+    this.hasClicked = false;
   },
   callAnimationCallback: function() {
     var value = this.value.current;
@@ -593,6 +615,11 @@ Dragdealer.prototype = {
         this.options.animationCallback.call(this, value[0], value[1]);
       }
       this.groupCopy(this.value.prev, value);
+    }
+  },
+  callClickCallback: function() {
+    if (typeof(this.options.clickCallback) == 'function') {
+      this.options.clickCallback.call(this, this.value.target[0], this.value.target[1]);
     }
   },
   callTargetCallback: function() {
@@ -626,6 +653,18 @@ Dragdealer.prototype = {
     if (direct && !this.dragging) {
       return;
     }
+
+    if ((Cursor.x !== this.dragStartPosition.x ||
+        Cursor.y !== this.dragStartPosition.y)) {
+      if (!this.hasStartedDrag && this.dragging) {
+        this.callDragStartCallback();
+        this.hasStartedDrag = true;
+        this.dragNeverCaptured = false;
+      }
+    } else {
+      this.dragNeverCaptured = true;
+    }
+
     if (this.dragging) {
       var prevTarget = this.groupClone(this.value.target);
 

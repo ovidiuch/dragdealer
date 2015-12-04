@@ -2,6 +2,7 @@ $(function() {
   new Dragdealer('demo-simple-slider');
 
   new Dragdealer('just-a-slider', {
+    inertia: 8,
     animationCallback: function(x, y) {
       $('#just-a-slider .value').text(Math.round(x * 100));
     }
