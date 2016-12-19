@@ -204,7 +204,7 @@ var Dragdealer = function(wrapper, options) {
    */
   this.options = this.applyDefaults(options || {});
   this.bindMethods();
-  this.wrapper = this.getWrapperElement(wrapper);
+  this.wrapper = this.getWrapperElement(wrapper, options);
   if (!this.wrapper) {
     return;
   }
@@ -271,9 +271,18 @@ Dragdealer.prototype = {
     }
     return options;
   },
-  getWrapperElement: function(wrapper) {
+  getWrapperElement: function(wrapper, options) {
     if (typeof(wrapper) == 'string') {
-      return document.getElementById(wrapper);
+      var items = document.querySelectorAll(wrapper);
+      var itemsLenght = items.length;
+      
+      if (itemsLenght > 1) {
+        for (var i = 0; i < itemsLenght; i++) {
+          new Dragdealer(items[i], options);
+        }
+      } else {
+        return document.querySelector(wrapper);
+      }
     } else {
       return wrapper;
     }
