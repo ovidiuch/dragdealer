@@ -532,10 +532,28 @@ Dragdealer.prototype = {
     this.tapping = true;
     this.setWrapperOffset();
 
-    this.setTargetValueByOffset([
-      Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
-      Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
-    ]);
+    //Check if the slider is a stepped snap slider:
+    if(this.options.snap && this.options.steps){
+      //If we have a snap slider, it makes more sense that when a user click on the wrapper
+      //the handle will snap to the closest step, instead of moving with a ratio until it
+      //reachs the step.
+      //Check for the closest stepRatio
+      var cursorRatio = (Cursor.x - this.offset.wrapper[0])/this.bounds.availWidth;
+      var closestStep = 1;
+      var stepDistance = Math.abs(cursorRatio - this.stepRatios[0]);
+      for(var i = 1; i < this.stepRatios.length; i++){
+        if(Math.abs(cursorRatio - this.stepRatios[i]) < stepDistance){
+          closestStep = i+1;
+          stepDistance = Math.abs(cursorRatio - this.stepRatios[i]);
+        }
+      }
+      this.setValue(this.stepRatios[closestStep-1], 0, true);
+    } else {
+      this.setTargetValueByOffset([
+        Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
+        Cursor.y - this.offset.wrapper[1] - (this.handle.offsetHeight / 2)
+      ]);
+    }
   },
   stopTap: function() {
     if (this.disabled || !this.tapping) {
