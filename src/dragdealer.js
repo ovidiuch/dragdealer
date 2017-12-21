@@ -537,17 +537,9 @@ Dragdealer.prototype = {
       //If we have a snap slider, it makes more sense that when a user click on the wrapper
       //the handle will snap to the closest step, instead of moving with a ratio until it
       //reachs the step.
-      //Check for the closest stepRatio
+      //Check for the closest step and set it as the current value
       var cursorRatio = (Cursor.x - this.offset.wrapper[0])/this.bounds.availWidth;
-      var closestStep = 1;
-      var stepDistance = Math.abs(cursorRatio - this.stepRatios[0]);
-      for(var i = 1; i < this.stepRatios.length; i++){
-        if(Math.abs(cursorRatio - this.stepRatios[i]) < stepDistance){
-          closestStep = i+1;
-          stepDistance = Math.abs(cursorRatio - this.stepRatios[i]);
-        }
-      }
-      this.setValue(this.stepRatios[closestStep-1], 0, true);
+      this.setValue(this.getClosestStep(cursorRatio), 0, true);
     } else {
       this.setTargetValueByOffset([
         Cursor.x - this.offset.wrapper[0] - (this.handle.offsetWidth / 2),
