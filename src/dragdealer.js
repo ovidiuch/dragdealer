@@ -533,13 +533,13 @@ Dragdealer.prototype = {
     this.setWrapperOffset();
 
     //Check if the slider is a stepped snap slider:
-    if(this.options.snap && this.options.steps){
+    if (this.options.snap && this.options.steps) {
       //If we have a snap slider, it makes more sense that when a user click on the wrapper
       //the handle will snap to the closest step, instead of moving with a ratio until it
-      //reachs the step.
+      //reaches the step.
       //Check for the closest step and set it as the current value
-      var cursorXRatio = (Cursor.x - this.offset.wrapper[0])/this.bounds.availWidth;
-      var cursorYRatio = (Cursor.y - this.offset.wrapper[1])/this.bounds.availHeight;
+      var cursorXRatio = (Cursor.x - this.offset.wrapper[0]) / this.bounds.availWidth;
+      var cursorYRatio = (Cursor.y - this.offset.wrapper[1]) / this.bounds.availHeight;
       this.setValue(this.getClosestStep(cursorXRatio), this.getClosestStep(cursorYRatio), true);
     } else {
       this.setTargetValueByOffset([
