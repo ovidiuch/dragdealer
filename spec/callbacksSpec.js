@@ -1,7 +1,7 @@
 describe("Dragdealer callbacks", function() {
 
   beforeEach(function() {
-    this.addMatchers(matchers);
+    jasmine.addMatchers(matchers);
   });
 
   describe("should call regular callback", function() {
@@ -15,7 +15,7 @@ describe("Dragdealer callbacks", function() {
       helpers.dragTo('square-slider', 200, 100);
       helpers.drop('square-slider');
 
-      expect(callback.calls.length).toEqual(1);
+      expect(callback.calls.all().length).toEqual(1);
       expect(callback).toHaveBeenCalledWith(0.5, 0.25);
     });
 
@@ -29,7 +29,7 @@ describe("Dragdealer callbacks", function() {
       helpers.dragTo('square-slider', 20, 10);
       helpers.drop('square-slider');
 
-      expect(callback.calls.length).toEqual(1);
+      expect(callback.calls.all().length).toEqual(1);
       expect(callback).toHaveBeenCalledWith(0.25, 0.125);
     });
 
@@ -47,7 +47,7 @@ describe("Dragdealer callbacks", function() {
       helpers.dragTo('simple-slider', 30, 0);
       helpers.drop('simple-slider');
 
-      expect(callback.calls.length).toEqual(1);
+      expect(callback.calls.all().length).toEqual(1);
       expect(callback).toHaveBeenCalledWith(0.4, 0);
     });
   });
@@ -62,7 +62,7 @@ describe("Dragdealer callbacks", function() {
         y: 1
       });
 
-      expect(callback.calls.length).toEqual(1);
+      expect(callback.calls.all().length).toEqual(1);
       expect(callback).toHaveBeenCalledWith(0.5, 1);
     });
 
@@ -73,11 +73,11 @@ describe("Dragdealer callbacks", function() {
       });
       helpers.dragTo('square-slider', 200, 100);
       // Add one extra call for the initial one
-      expect(callback.calls.length).toEqual(2);
+      expect(callback.calls.all().length).toEqual(2);
       expect(callback).toHaveBeenCalledWith(0.5, 0.25);
 
       helpers.dragTo('square-slider', 300, 50);
-      expect(callback.calls.length).toEqual(3);
+      expect(callback.calls.all().length).toEqual(3);
       expect(callback).toHaveBeenCalledWith(0.75, 0.125);
     });
 
@@ -90,7 +90,7 @@ describe("Dragdealer callbacks", function() {
       // will slide to 150px, 100px
       helpers.dragTo('square-slider', 30, 20);
       // Add one extra call for the initial one
-      expect(callback.calls.length).toEqual(2);
+      expect(callback.calls.all().length).toEqual(2);
       expect(callback).toHaveBeenCalledWith(0.075, 0.05);
 
       helpers.drop('square-slider');
@@ -114,7 +114,7 @@ describe("Dragdealer callbacks", function() {
       // step)
       helpers.dragTo('simple-slider', 50, 0);
       // Add one extra call for the initial one
-      expect(callback.calls.length).toEqual(2);
+      expect(callback.calls.all().length).toEqual(2);
       expect(callback).toHaveBeenCalledWith(0.1, 0);
 
       helpers.drop('simple-slider');
@@ -133,7 +133,7 @@ describe("Dragdealer callbacks", function() {
     });
     helpers.dragTo('masked-slider', -20, 0);
     // Add one extra call for the initial one
-    expect(callback.calls.length).toEqual(2);
+    expect(callback.calls.all().length).toEqual(2);
     expect(callback).toHaveBeenCalledWith(0.04, 0);
 
     helpers.drop('masked-slider');
@@ -152,7 +152,7 @@ describe("Dragdealer callbacks", function() {
       });
       helpers.dragTo('square-slider', 200, 100);
 
-      expect(dragStartCallback.calls.length).toEqual(1);
+      expect(dragStartCallback.calls.all().length).toEqual(1);
       expect(dragStartCallback).toHaveBeenCalledWith(0, 0);
     });
 
@@ -169,7 +169,7 @@ describe("Dragdealer callbacks", function() {
       helpers.dragTo('square-slider', 200, 100);
       helpers.drop('square-slider');
 
-      expect(dragStopCallback.calls.length).toEqual(1);
+      expect(dragStopCallback.calls.all().length).toEqual(1);
       expect(dragStopCallback).toHaveBeenCalledWith(0.5, 0.25, [0.5, 0.25]);
     });
 
@@ -183,7 +183,7 @@ describe("Dragdealer callbacks", function() {
       helpers.dragTo('square-slider', 20, 10);
       helpers.drop('square-slider');
 
-      expect(dragStopCallback.calls.length).toEqual(1);
+      expect(dragStopCallback.calls.all().length).toEqual(1);
       expect(dragStopCallback).toHaveBeenCalledWith(0.25, 0.125, [0.05, 0.025]);
     });
 
@@ -201,7 +201,7 @@ describe("Dragdealer callbacks", function() {
       helpers.dragTo('simple-slider', 30, 0);
       helpers.drop('simple-slider');
 
-      expect(dragStopCallback.calls.length).toEqual(1);
+      expect(dragStopCallback.calls.all().length).toEqual(1);
       expect(dragStopCallback).toHaveBeenCalledWith(0.4, 0, [0.075, 0]);
     });
 

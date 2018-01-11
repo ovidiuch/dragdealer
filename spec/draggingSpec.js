@@ -1,7 +1,7 @@
 describe("Dragging Dragdealer", function() {
 
   beforeEach(function() {
-    this.addMatchers(matchers);
+    jasmine.addMatchers(matchers);
   });
 
   it("should move handle along with mouse after pressing", function() {

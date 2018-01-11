@@ -1,12 +1,17 @@
 var matchers = {
+  toHavePosition: function() {
+    return {
+      compare: function(actual, x, y, handleClass) {
+        var $handle = $('#' + actual).find('.' + (handleClass || 'handle')),
+            position = $handle.position();
 
-  toHavePosition: function(x, y, handleClass) {
-    var $handle = $('#' + this.actual).find('.' + (handleClass || 'handle')),
-        position = $handle.position();
-    this.message = function() {
-      return "Expected " + position.left + ", " + position.top +
-             " to be " + x + ", " + y;
+        return {
+          pass: position.left == x && position.top == y,
+          message:
+            "Expected " + position.left + ", " + position.top +
+            " to be " + x + ", " + y
+        };
+      }
     };
-    return position.left == x && position.top == y;
   }
 };

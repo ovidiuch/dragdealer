@@ -1,7 +1,7 @@
 describe("Click events inside handle", function() {
 
   beforeEach(function() {
-    this.addMatchers(matchers);
+    jasmine.addMatchers(matchers);
   });
 
   it("should be cancelled if mouse dragging", function() {
@@ -20,7 +20,7 @@ describe("Click events inside handle", function() {
       .simulate('mouseup')
       .simulate('click');
 
-    expect(clickHandler.calls.length).toEqual(0);
+    expect(clickHandler.calls.all().length).toEqual(0);
   });
 
   it("should be passed through if not mouse dragging", function() {
@@ -34,8 +34,8 @@ describe("Click events inside handle", function() {
       .simulate('mouseup')
       .simulate('click');
 
-    expect(clickHandler.calls.length).toEqual(1);
-    expect(clickHandler.calls[0].args[0].isDefaultPrevented()).toBe(false);
+    expect(clickHandler.calls.all().length).toEqual(1);
+    expect(clickHandler.calls.first().args[0].isDefaultPrevented()).toBe(false);
   });
 
   it("should be passed through if mouse moving without changing position", function() {
@@ -60,16 +60,20 @@ describe("Click events inside handle", function() {
         .simulate('mouseup')
         .simulate('click');
 
-    expect(clickHandler.calls.length).toEqual(1);
-    expect(clickHandler.calls[0].args[0].isDefaultPrevented()).toBe(false);
+    expect(clickHandler.calls.all().length).toEqual(1);
+    expect(clickHandler.calls.first().args[0].isDefaultPrevented()).toBe(false);
   });
 });
 
 describe("Previous DOM events", function() {
 
   beforeEach(function() {
-    this.addMatchers(matchers);
-    jasmine.Clock.useMock();
+    jasmine.addMatchers(matchers);
+    jasmine.clock().install();
+  });
+
+  afterEach(function() {
+    jasmine.clock().uninstall();
   });
 
   it("should be preserved after instantiating Dragdealer", function() {
@@ -84,7 +88,7 @@ describe("Previous DOM events", function() {
     helpers.initDragdealer('simple-slider');
 
     $handle.simulate('mousedown');
-    expect(mouseDownHandler.calls.length).toEqual(1);
+    expect(mouseDownHandler.calls.all().length).toEqual(1);
   });
 
   it("should be preserved after unbinding a Dragdealer instance", function() {
