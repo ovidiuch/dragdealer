@@ -1,10 +1,13 @@
 describe("Touch Dragging Dragdealer", function() {
 
   beforeEach(function() {
-    this.addMatchers(matchers);
-    jasmine.Clock.useMock();
+    jasmine.addMatchers(matchers);
+    jasmine.clock().install();
   });
 
+  afterEach(function() {
+    jasmine.clock().uninstall();
+  });
 
   it("should not prevent touchmove event when dragging along disabled axis", function() {
     var isCanceled;

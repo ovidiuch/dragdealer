@@ -1,7 +1,7 @@
 describe("Dragdealer API", function() {
 
   beforeEach(function() {
-    this.addMatchers(matchers);
+    jasmine.addMatchers(matchers);
   });
 
   it("should set .disabled class on disable()", function() {

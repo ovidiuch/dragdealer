@@ -1,4 +1,4 @@
-var helpers = {
+window.helpers = {
 
   initDragdealer: function(dragdealerId, options) {
     if (!options) options = {};

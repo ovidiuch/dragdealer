@@ -52,7 +52,7 @@ module.exports = function(grunt) {
           helpers: ['spec/matchers.js','spec/helpers.js','spec/setup.js', 'spec/phantomjs-setup.js'],
           specs: 'spec/*Spec.js',
           styles: 'src/*.css',
-          host: 'http://localhost:9999', 
+          host: 'http://localhost:9999',
         }
       }
     },
@@ -91,9 +91,9 @@ module.exports = function(grunt) {
   grunt.registerTask("test-saucelabs", ["connect", "saucelabs-custom"]);
 
   if (isSauceLabsAvailableInEnvironment()) {
-    grunt.registerTask("test", ["test-saucelabs"]);  
+    grunt.registerTask("test", ["test-saucelabs"]);
   } else {
-    grunt.registerTask("test", ["test-phantomjs"]);    
+    grunt.registerTask("test", ["test-phantomjs"]);
   }
 };
 

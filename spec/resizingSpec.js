@@ -1,7 +1,7 @@
 describe("Resizing Dragdealer", function() {
 
   beforeEach(function() {
-    this.addMatchers(matchers);
+    jasmine.addMatchers(matchers);
   });
 
   it("should translate handle position after window resize", function() {
