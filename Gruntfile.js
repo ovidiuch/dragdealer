@@ -43,6 +43,20 @@ module.exports = function(grunt) {
     version: "10"
   }];
 
+  // SauceLabs hasn't worked with more than 3 browsers lately... :(
+  var browsersSubset = [{
+    browserName: "chrome",
+    platform: "linux"
+  }, {
+    browserName: "safari",
+    version: "6",
+    platform: "OS X 10.8"
+  }, {
+    browserName: "internet explorer",
+    platform: "XP",
+    version: "8"
+  }];
+
   grunt.initConfig({
     jasmine : {
       all: {
@@ -68,12 +82,10 @@ module.exports = function(grunt) {
       all: {
         options: {
           urls: ["http://127.0.0.1:9999/#runner"],
-          browsers: browsers,
+          tunnelTimeout: 10,
           build: process.env.TRAVIS_JOB_ID,
-          testname: 'drag tests',
-          sauceConfig: {
-            'video-upload-on-pass': false
-          }
+          browsers: browsersSubset,
+          testname: "drag tests"
         }
       }
     },
