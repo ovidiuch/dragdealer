@@ -1,38 +1,14 @@
 module.exports = function(grunt) {
   var browsers = [{
     browserName: "chrome",
-    platform: "OS X 10.8"
-  }, {
-    browserName: "chrome",
-    platform: "XP"
+    platform: "macOS 10.12"
   }, {
     browserName: "chrome",
     platform: "linux"
   }, {
-    browserName: "firefox",
-    version: "19",
-    platform: "XP"
-  }, {
     browserName: "safari",
-    version: "6",
-    platform: "OS X 10.8"
-  }, {
-    browserName: "opera",
-    platform: "Windows 2008",
-    version: "12"
-// Tests pass on IE6, but a misc error is thrown. TODO: Sort out with SauceLabs
-//  }, {
-//    browserName: "internet explorer",
-//    platform: "XP",
-//    version: "6"
-  }, {
-    browserName: "internet explorer",
-    platform: "XP",
-    version: "7"
-  }, {
-    browserName: "internet explorer",
-    platform: "XP",
-    version: "8"
+    version: "7",
+    platform: "OS X 10.9"
   }, {
     browserName: "internet explorer",
     platform: "VISTA",
