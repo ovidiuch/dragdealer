@@ -71,7 +71,6 @@ module.exports = function(grunt) {
           browsers: browsers,
           build: process.env.TRAVIS_JOB_ID,
           testname: 'drag tests',
-          throttled: 3,
           sauceConfig: {
             'video-upload-on-pass': false
           }
