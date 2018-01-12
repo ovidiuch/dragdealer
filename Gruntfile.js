@@ -43,20 +43,6 @@ module.exports = function(grunt) {
     version: "10"
   }];
 
-  // SauceLabs hasn't worked with more than 3 browsers lately... :(
-  var browsersSubset = [{
-    browserName: "chrome",
-    platform: "linux"
-  }, {
-    browserName: "internet explorer",
-    platform: "VISTA",
-    version: "9"
-  }, {
-    browserName: "internet explorer",
-    platform: "WIN8",
-    version: "10"
-  }];
-
   grunt.initConfig({
     jasmine : {
       all: {
@@ -84,8 +70,8 @@ module.exports = function(grunt) {
           urls: ["http://127.0.0.1:9999/#runner"],
           tunnelTimeout: 5,
           build: process.env.TRAVIS_JOB_ID,
-          throttled: 1,
-          browsers: browsersSubset,
+          throttled: 2,
+          browsers: browsers,
           testname: "pasta tests",
           tags: ["master"]
         }
