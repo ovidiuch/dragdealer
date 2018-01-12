@@ -1,3 +1,8 @@
+## 0.10.0
+
+- Fix Sauce Labs integration
+- Change startTap() behavior when option.snap=true [#122](https://github.com/skidding/dragdealer/pull/122)
+
 ## 0.9.9
 
 - Add startdrag and stopdrag callbacks [#66](https://github.com/skidding/dragdealer/pull/66)
