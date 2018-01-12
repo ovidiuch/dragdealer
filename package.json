@@ -13,7 +13,7 @@
     "grunt-saucelabs": "~8.3.3",
     "grunt-contrib-connect": "~0.1.2",
     "grunt-contrib-watch": "~0.2.0",
-    "grunt-contrib-jasmine": "https://github.com/skidding/grunt-contrib-jasmine/#v0.5.3-phantom2x",
+    "grunt-contrib-jasmine": "https://github.com/skidding/grunt-contrib-jasmine#v0.5.3-phantom2x",
     "uglify-js": "~2.4.8"
   },
   "scripts": {
