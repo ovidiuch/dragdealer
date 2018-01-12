@@ -48,13 +48,13 @@ module.exports = function(grunt) {
     browserName: "chrome",
     platform: "linux"
   }, {
-    browserName: "safari",
-    version: "6",
-    platform: "OS X 10.8"
+    browserName: "internet explorer",
+    platform: "VISTA",
+    version: "9"
   }, {
     browserName: "internet explorer",
-    platform: "XP",
-    version: "8"
+    platform: "WIN8",
+    version: "10"
   }];
 
   grunt.initConfig({
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
           urls: ["http://127.0.0.1:9999/#runner"],
           tunnelTimeout: 5,
           build: process.env.TRAVIS_JOB_ID,
-          concurrency: 3,
+          throttled: 1,
           browsers: browsersSubset,
           testname: "pasta tests",
           tags: ["master"]
