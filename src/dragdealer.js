@@ -450,9 +450,12 @@ Dragdealer.prototype = {
     this.activity = true;
   },
   onWrapperMouseDown: function(e) {
-    Cursor.refresh(e);
-    preventEventDefaults(e);
-    this.startTap();
+      if (!this.options.scrollToTap) {
+          return;
+      }
+      Cursor.refresh(e);
+      preventEventDefaults(e);
+      this.startTap();
   },
   onWrapperTouchStart: function(e) {
     Cursor.refresh(e);
