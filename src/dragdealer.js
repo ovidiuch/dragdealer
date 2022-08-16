@@ -125,6 +125,8 @@ var Dragdealer = function(wrapper, options) {
    *
    *   - number right=0: Right padding between the wrapper and the handle.
    *
+   *   - bool scrollToTap=false: Option to only allow movement on handle drag.
+   *
    *   - fn callback(x, y): Called when releasing handle, with the projected
    *                        x, y position of the handle. Projected value means
    *                        the value the slider will have after finishing a
