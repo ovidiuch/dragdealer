@@ -229,6 +229,7 @@ Dragdealer.prototype = {
     snap: false,
     loose: false,
     speed: 0.1,
+    scrollToTap: false,
     xPrecision: 0,
     yPrecision: 0,
     handleClass: 'handle',
