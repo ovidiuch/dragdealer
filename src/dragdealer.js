@@ -125,6 +125,8 @@ var Dragdealer = function(wrapper, options) {
    *
    *   - number right=0: Right padding between the wrapper and the handle.
    *
+   *   - bool scrollToTap=true: Option to only allow movement on handle drag.
+   *
    *   - fn callback(x, y): Called when releasing handle, with the projected
    *                        x, y position of the handle. Projected value means
    *                        the value the slider will have after finishing a
@@ -227,6 +229,7 @@ Dragdealer.prototype = {
     snap: false,
     loose: false,
     speed: 0.1,
+    scrollToTap: true,
     xPrecision: 0,
     yPrecision: 0,
     handleClass: 'handle',
@@ -410,7 +413,7 @@ Dragdealer.prototype = {
     this.startDrag();
   },
   onHandleTouchStart: function(e) {
-    Cursor.refresh(e);
+  	Cursor.refresh(e);
     // Unlike in the `mousedown` event handler, we don't prevent defaults here,
     // because this would disable the dragging altogether. Instead, we prevent
     // it in the `touchmove` handler. Read more about touch events
@@ -433,6 +436,9 @@ Dragdealer.prototype = {
     }
   },
   onWrapperTouchMove: function(e) {
+    if (!this.options.scrollToTap && (e.target != this.handle && e.target != this.wrapper) ) {
+    	return;
+    }
     Cursor.refresh(e);
     // Dragging on a disabled axis (horizontal or vertical) shouldn't prevent
     // defaults on touch devices. !this.activity denotes this is the first move
@@ -451,11 +457,15 @@ Dragdealer.prototype = {
   },
   onWrapperMouseDown: function(e) {
     Cursor.refresh(e);
-    preventEventDefaults(e);
-    this.startTap();
+      preventEventDefaults(e);
+      this.startTap();
   },
   onWrapperTouchStart: function(e) {
-    Cursor.refresh(e);
+  	if (!this.options.scrollToTap && (e.target != this.handle && e.target != this.wrapper) ) {
+    	return;
+    }
+   
+  	Cursor.refresh(e);
     preventEventDefaults(e);
     this.startTap();
   },
